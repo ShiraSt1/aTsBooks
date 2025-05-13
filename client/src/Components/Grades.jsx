@@ -19,7 +19,7 @@ const Grades = () => {
     //GET - getAllGrades/
     const getGrades = async () => {
         try {
-            const res = await axios.get('${process.env.REACT_APP_API_URL}api/grade')
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`)
             if (res.status === 200) {
                 setGradesData(res.data)
             }
