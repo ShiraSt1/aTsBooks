@@ -4,7 +4,7 @@ const cors = require("cors")
 const nodemailer = require('nodemailer');
 const corsOptions = require("./config/corsOptions")
 const connectDB = require("./config/dbConn.js")
-const { default: mongoose } = require("mongoose")
+const mongoose  = require("mongoose")
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
@@ -31,8 +31,23 @@ app.use("/api/course", require("./routes/course.js"))
 
 app.get('/', (req, res) => { res.send("this is the home page") })
 
-mongoose.connection.once("open", () => {
-  console.log("success")
-  app.listen(PORT, () => { console.log(`server runing on port ${PORT}`) })
-})
-mongoose.connection.on("error", (err) => { console.log(err) })
+// mongoose.connection.once("open", () => {
+//   console.log("success")
+//   app.listen(PORT, () => { console.log(`server runing on port ${PORT}`) })
+// })
+// mongoose.connection.on("error", (err) => { console.log(err) })
+const startServer = async () => {
+  try {
+    await connectDB(); // מחכה לחיבור למסד הנתונים
+    console.log("Connected to MongoDB");
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1); // מסיים את התהליך אם משהו נכשל
+  }
+};
+
+startServer();
