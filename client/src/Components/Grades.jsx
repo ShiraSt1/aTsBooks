@@ -43,7 +43,7 @@ const Grades = () => {
             image: imageRef.current.value ? imageRef.current.value : " "
         }
         try {
-            const res = await axios.post('${process.env.REACT_APP_API_URL}api/grade', newGrade, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}api/grade`, newGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 201) {

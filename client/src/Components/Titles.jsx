@@ -138,7 +138,7 @@ const Titles = () => {
         formData.append('customName', newFileName); // שליחת שם מותאם אישית
 
         try {
-            await axios.post('${process.env.REACT_APP_API_URL}api/file', formData, {
+            await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
             });
             fetchTitles();
@@ -164,7 +164,7 @@ const Titles = () => {
                 {book?.image && (
                     <div className="flex justify-content-center md:w-4">
                         <img
-                            src={`http://localhost:7000${book.image}`}
+                            src={`${process.env.REACT_APP_API_URL}${book.image}`}
                             alt="Book"
                             className="border-round shadow-2"
                             style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}

@@ -26,7 +26,7 @@ const Grade = (props) => {
             // image: imageRef.current.value ? imageRef.current.value : props.grade.body,
         };
         try {
-            const res = await axios.put('${process.env.REACT_APP_API_URL}api/grade', updatedGrade, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}api/grade`, updatedGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 200) {
