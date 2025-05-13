@@ -5,26 +5,21 @@ const path = require("path");
 const mime = require("mime-types");
 const { log } = require("console");
 
-
-
 const uploadFile = async (req, res) => {
   try {
     const { title } = req.body;
-
     if (!req.file) {
-      return res.status(400).send({ message: "לא נבחר קובץ להעלאה" });
+      return res.status(400).send({ message: "No file has been uploaded" });
     }
-
     const newFile = await File.create({
       name: req.file.originalname,
       path: req.file.path,
       size: Number((req.file.size / 1024).toFixed(2)),
       title: title,
     });
-
     res.status(201).send(newFile);
   } catch (err) {
-    res.status(500).send({ message: "שגיאה בהעלאת קובץ", error: err.message });
+    res.status(500).send({ message: "Error uploading File", error: err.message });
   }
 };
 
@@ -40,7 +35,7 @@ const getFilesByTitle = async (req, res) => {
     res.status(200).send(files);
   } catch (err) {
     res.status(500).send({
-      message: "שגיאה בהבאת קבצים לפי כותרת",
+      message: "Error fetching files by title",
       error: err.message,
     });
   }
@@ -51,7 +46,7 @@ const getAllFiles = async (req, res) => {
     const files = await File.find().populate("title").exec();
     res.status(200).send(files);
   } catch (err) {
-    res.status(500).send({ message: "שגיאה בהבאת הקבצים", error: err.message });
+    res.status(500).send({ message: "Error fetching files ", error: err.message });
   }
 };
 
@@ -59,15 +54,13 @@ const downloadFile = async (req, res) => {
   try {
     const { fileId } = req.params;
     const file = await File.findById(fileId);
-
     if (!file) {
-      return res.status(404).send({ message: "קובץ לא נמצא" });
+      return res.status(404).send({ message: "No file found" });
     }
-
     res.download(file.path, file.name);
   } catch (err) {
     res.status(500).send({
-      message: "שגיאה בהורדת קובץ",
+      message: "Error downloading file",
       error: err.message,
     });
   }
@@ -76,61 +69,52 @@ const downloadFile = async (req, res) => {
 const deleteFileFunction = async (fileId) => {
   const file = await File.findById(fileId);
   if (!file) throw new Error("File not found");
-
   try {
     await fs.promises.unlink(path.resolve(file.path));
   } catch (err) {
     if (err.code !== "ENOENT") throw err; // מסמך שלא נמצא - ממשיכים למחוק מה-DB
   }
-
   await File.deleteOne({ _id: fileId });
 };
 
 const deleteFile = async (req, res) => {
   const { fileId } = req.params;
-
   try {
     await deleteFileFunction(fileId);
-    res.status(200).send({ message: "קובץ נמחק בהצלחה" });
+    res.status(200).send({ message: "File deleted successfuly" });
   } catch (err) {
-    console.error("שגיאה במחיקת הקובץ:", err.message);
+    console.error("Error in deleting file: ", err.message);
     res.status(500).send({
-      message: "שגיאה במחיקת קובץ",
+      message: "Error in deleting file",
       error: err.message,
     });
   }
 };
 
-
 const updateFile = async (req, res) => {
   try {
     const { fileId } = req.params;
-
     const existingFile = await File.findById(fileId);
     if (!existingFile) {
-      return res.status(404).send({ message: "קובץ לא נמצא" });
+      return res.status(404).send({ message: "File not found" });
     }
-
     if (!req.file) {
-      return res.status(400).send({ message: "לא נבחר קובץ חדש לעדכון" });
+      return res.status(400).send({ message: "No file has been chosen for update" });
     }
-
     // מחיקת הקובץ הישן מהדיסק
     const oldFilePath = path.join(__dirname, "..", existingFile.path);
     if (fs.existsSync(oldFilePath)) {
       fs.unlinkSync(oldFilePath);
     }
-
     // עדכון במסד הנתונים עם המידע החדש
     existingFile.name = req.file.originalname;
     existingFile.path = req.file.path;
     existingFile.size = Number((req.file.size / 1024).toFixed(2));
     await existingFile.save();
-
     res.status(200).send(existingFile);
   } catch (err) {
-    console.error("שגיאה בעדכון קובץ:", err);
-    res.status(500).send({ message: "שגיאה בעדכון קובץ", error: err.message });
+    console.error("Error in update file:", err);
+    res.status(500).send({ message: "Error in update file", error: err.message });
   }
 };
 
@@ -140,11 +124,9 @@ const viewFileContent = async (req, res) => {
   try {
     const { fileId } = req.params;
     const file = await File.findById(fileId);
-
     if (!file) {
-      return res.status(404).send({ message: "קובץ לא נמצא" });
+      return res.status(404).send({ message: "File not found" });
     }
-
     const absolutePath = path.resolve(file.path);
     const contentType = mime.lookup(file.name) || "application/octet-stream";
 
@@ -156,13 +138,13 @@ const viewFileContent = async (req, res) => {
 
     stream.on("error", (err) => {
       res.status(500).send({
-        message: "שגיאה בקריאת הקובץ",
+        message: "Error reading file content",
         error: err.message,
       });
     });
   } catch (err) {
     res.status(500).send({
-      message: "שגיאה בהצגת תוכן הקובץ",
+      message: "Error viewing file content",
       error: err.message,
     });
   }

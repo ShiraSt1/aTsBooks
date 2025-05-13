@@ -4,30 +4,29 @@ const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 require('dotenv').config();
+const sendEmail = require('../utils/sendEmail');
+const { log } = require("console");
 
 //פונקצית שליחת מייל
-const sendEmail = async (to, subject, html) => {
+const sendEmailFunction = async (to, subject, html) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.office365.com',
         port: 587,
         secure: false,
         auth: {
-            user: process.env.OUTLOOK_USER,
-            pass: process.env.OUTLOOK_PASS,
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS,
         },
     });
     const mailOptions = {
-        from: process.env.OUTLOOK_USER,
+        from: process.env.GMAIL_USER,
         to: to,
         subject: subject,
         html: html,
         replyTo: '',
     };
-    console.log(to)
     try {
-        console.log('Sending email...');
         const response = await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully:', response);
         return response;
     } catch (error) {
         console.error('Error in sendEmail:', error.message);
@@ -36,38 +35,28 @@ const sendEmail = async (to, subject, html) => {
 };
 
 
-
 //get all user
-
 const getAllUser = async (req, res) => {
-
     const users = await User.find().lean()
     if (!users?.length)
         return res.status(404).json({ message: 'No users found' })
     res.json(users)
 }
 
-
-
 //update
-
 const updateUser = async (req, res) => {
     const { _id, name, phone, email } = req.body
     const user = await User.findById(_id)
-if(!email||!name)
-    {
-        return res.status(409).json({ message: 'email and name is required' }) 
+    if (!email || !name) {
+        return res.status(409).json({ message: 'email and name is required' })
     }
     if (!user)
         return res.status(400).json({ message: 'No user found' })
     const oldEmail = user.email
     if (oldEmail != email) {
         const foundEmail = await User.findOne({ email }).lean()
-        console.log(foundEmail)
         if (foundEmail) {
-            console.log("*********")
             return res.status(401).json({ message: 'Cant connect' })
-
         }
     }
     user.name = name
@@ -78,24 +67,18 @@ if(!email||!name)
     res.json(updateUser)
 }
 
-
-
-
 //register
-
 const register = async (req, res) => {
-    console.log("jjj");
     const { password, name, email, phone } = req.body
+
     if (!name || !password || !email) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-
+    
     const duplicate = await User.findOne({ email: email }).lean()
     if (duplicate) {
-        console.log("lll");
         return res.status(409).json({ message: "Duplicate email" })
     }
-
     const hashedpwd = await bcrypt.hash(password, 10)
     const userobject = { name, email, phone, confirm: false, roles: "User", password: hashedpwd }
     const user = await User.create(userobject)
@@ -104,7 +87,6 @@ const register = async (req, res) => {
         return res.status(400).json({ message: 'Invalid user received' })
     }
     const projectLink = 'http://localhost:3000'; // שימי כאן את הקישור לפרויקט
-
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -125,23 +107,12 @@ const register = async (req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.OUTLOOK_Admin, 'New Registration on Final Project 🎉', emailHtml)
+    sendEmail(process.env.GMAIL_ADMIN, 'New Registration on Final Project 🎉', emailHtml)
 
     return res.status(201).json({
-
         message: `New user ${user.email} created`
     })
-
-
 };
-
-
-
-
-
-
-
-
 
 //login
 const login = async (req, res) => {
@@ -149,24 +120,15 @@ const login = async (req, res) => {
     if (!email || !password)
         return res.status(400).json({ message: 'All fields are required' })
     const foundUser = await User.findOne({ email }).lean()
-    console.log(foundUser)
     if (!foundUser) {
-        console.log("*********")
         return res.status(401).json({ message: 'Cant connect' })
-
     }
-
     const Match = await bcrypt.compare(password, foundUser.password)
-    console.log(Match)
-    console.log(password)
-    console.log(foundUser.password)
     if (!Match) return res.status(401).json({ message: 'Cant connect' })
-
 
     if (!foundUser.confirm && foundUser.roles != "Admin") {
         return res.status(403).json({ message: 'You are not confirmed to login yet.' });
     }
-
 
     const NewUser = {
         _id: foundUser._id,
@@ -174,14 +136,11 @@ const login = async (req, res) => {
         email: foundUser.email,
         phone: foundUser.phone,
         roles: foundUser.roles
-
     }
-
     const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
     res.json({ accessToken, user: NewUser })
-
-
 }
+
 const confirmUser = async (req, res) => {
     const { _id } = req.body
 
@@ -190,17 +149,15 @@ const confirmUser = async (req, res) => {
         return res.status(400).json({ message: 'No user found' })
 
     user.confirm = !user.confirm
-    // user.roles="User"
     const updateUser = await user.save()
     const users = await User.find().lean()
     const projectLink = 'http://localhost:3000//login';
-    //sent email:
 
     if (user.confirm) {
         try {
             const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="color: #1756DD;">hi! "${user.name}" Welcome to the Final Project 🎉</h2>
+        <h2 style="color: #1756DD;">hi! "${user.name}" Welcome to the aTsBooks</h2>
         <p>
             Your registration has been successfully completed! You can now log in and start exploring the project.
         </p>
@@ -218,8 +175,9 @@ const confirmUser = async (req, res) => {
 `;
             await sendEmail(
                 user.email,
-                'New Registration on Final Project 🎉',
-                emailHtml
+                'aTsBooks Registration Confirmation',
+                emailHtml,
+                GMAIL_ADMIN
             );
         }
         catch (err) {
@@ -235,7 +193,7 @@ const confirmUser = async (req, res) => {
                     Hello,"${user.name}"
                 </p>
                 <p>
-                    We regret to inform you that your access to the Final Project website has been blocked.
+                    We regret to inform you that your access to taTsBooks has been blocked.
                 </p>
                 <p>
                     If you believe this is a mistake or you would like to appeal, please contact our support team for further assistance.
@@ -252,7 +210,8 @@ const confirmUser = async (req, res) => {
             await sendEmail(
                 user.email,
                 'Access to Final Project Website Blocked 🚫',
-                emailHtml
+                emailHtml,
+                GMAIL_ADMIN
             );
         }
         catch (err) {
@@ -262,22 +221,14 @@ const confirmUser = async (req, res) => {
     res.json(users)
 }
 
-
-
 const deleteUser = async (req, res) => {
     const { id } = req.params
     const user = await User.findById(id)
     if (!user)
         return res.status(400).json({ message: 'No user found' })
     const result = await user.deleteOne()
-    // const users = await User.find().lean()
-    // if (!users?.length)
-    //     return res.status(400).json({ message: 'No users found' })
     res.json(user)
-
 }
-
-
 
 // Store the verification codes in memory (for simplicity; use a database in production).
 const verificationCodes = {};
@@ -288,7 +239,6 @@ const sendVerificationCode = async (req, res) => {
     if (!email) {
         return res.status(400).json({ message: 'Email is required.' });
     }
-
     try {
         // Find the user by email
         const user = await User.findOne({ email }).exec();
@@ -310,13 +260,8 @@ const sendVerificationCode = async (req, res) => {
         `;
 
         await sendEmail(email, 'Password Reset Verification Code', emailHtml);
-        console.log(email);
-
-
         res.status(200).json({ message: 'Verification code sent to email.' });
     } catch (err) {
-        console.log("😉🤞🌹💋🐱‍🐉🐱‍👓🐱‍🚀✔✔🤳🤳🎉🎉😎👍👍🎶😎😎");
-
         res.status(500).json({ message: 'Error sending verification code.', error: err.message });
     }
 };
@@ -340,7 +285,6 @@ const resetPasswordWithCode = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
-        console.log(newPassword);
 
         // Hash the new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -360,9 +304,4 @@ const resetPasswordWithCode = async (req, res) => {
     }
 };
 
-
 module.exports = { register, login, getAllUser, updateUser, deleteUser, confirmUser, sendVerificationCode, resetPasswordWithCode }
-
-
-
-

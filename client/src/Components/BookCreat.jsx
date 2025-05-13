@@ -11,16 +11,13 @@ import { useSelector } from "react-redux";
 const BookCreate = (props) => {
     const { createBook, visibleCreatBook, setVisibleCreatBook } = props;
     const { token } = useSelector((state) => state.token);
-    
     const [name, setName] = useState(""); // שינוי ל-State עבור שם הספר
     const [selectedGrades, setSelectedGrades] = useState([]);
     const [grades, setGrades] = useState([]);
     const [nameError, setNameError] = useState(false);
     const [imageError, setImageError] = useState(false);
-
     const [selectedimage, setselectedImage] = useState(null);
     const [preview, setPreview] = useState(null);
-
     const { gradeId } = useParams();
 
     const AvailablGrade = async () => {
@@ -28,7 +25,6 @@ const BookCreate = (props) => {
             const res = await axios.get('http://localhost:7000/api/grade', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-
             if (res.status === 204) {
                 setGrades([]);
             } else {
@@ -38,7 +34,6 @@ const BookCreate = (props) => {
                     id: grade._id,
                 }));
                 setGrades(gradeOptions);
-
                 if (gradeId) {
                     const selectedGrade = gradeOptions.find((grade) => grade.id === gradeId);
                     if (selectedGrade) {
@@ -57,7 +52,6 @@ const BookCreate = (props) => {
     }, [gradeId]);
 
     const handleCreateClick = () => {
-
         createBook(name, selectedGrades, selectedimage);
         setVisibleCreatBook(false);
     };

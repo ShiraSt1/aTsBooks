@@ -9,9 +9,7 @@ import { FileUpload } from "primereact/fileupload";
 const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book
     const [selectedImage, setSelectedImage] = useState(null); // תמונה שנבחרה
-
     const [preview, setPreview] = useState(book?.image ? `http://localhost:7000${book.image}` : "");
-
     const [grades, setGrades] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]);
     const nameRef = useRef("");
@@ -53,6 +51,7 @@ const BookUpdate = (props) => {
             setPreview(`http://localhost:7000${book.image}`);
         }
     }, [book.image]);
+    
     // העלאת תמונה חדשה
     const handleImageUpload = (e) => {
         const file = e.files[0];

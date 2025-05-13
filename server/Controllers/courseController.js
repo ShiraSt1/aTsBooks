@@ -1,123 +1,39 @@
-// const fs = require("fs");
-// const path = require("path");
-// const { exec } = require("child_process");
-// require("dotenv").config();
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const sendEmail = require('../utils/sendEmail');
 
-// const nodemailer = require("nodemailer");
-// // const OpenAI = require("openai"); // גרסה חדשה
-// const { log } = require("console");
+const registerToCourse = (req, res) => {
+    const { firstName, lastName, email, schoolName, grade } = req.body
+console.log(req.body);
 
-// // const openai = new OpenAI({
-// //   apiKey: process.env.OPENAI_API_KEY
-// // });
+    if (!firstName || !lastName || !email || !schoolName || !grade) {
+        return res.status(400).json({ message: 'All fields are required' })
+    }
 
-// const ffmpeg = require("fluent-ffmpeg");
-// // console.log("❤❤🤣🤣 ",ffmpeg)
-// async function transcribeAudio(filePath) {
-//     const wavPath = filePath + ".wav";
+    const emailHtml = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color:rgb(23, 86, 221);">New Registration Pending Approval</h2>
+        <p>
+        A new girl is interested in joining the program!<br /><br />
+        <strong>First Name:</strong> ${firstName}<br />
+        <strong>Last Name:</strong> ${lastName}<br />
+        <strong>School:</strong> ${schoolName}<br />
+        <strong>Grade:</strong> ${grade}<br />
+        <strong>Email:</strong> <a href="mailto:${email}" style="color:rgb(23, 86, 221);">${email}</a>
+        </p>
+        <p>
+            Press reply below to answer her email.
+        </p>
+        <hr style="border: none; border-top: 1px solid #ddd;" />
+        <p style="font-size: 0.9em; color: #888;">This is an automated email. Please do not reply to it.</p>
+    </div>
+`;
 
-//     return new Promise((resolve, reject) => {
-//         // המרת הקובץ ל-wav באמצעות fluent-ffmpeg
-//         ffmpeg(filePath)
-//             .audioFrequency(16000)
-//             .audioChannels(1)
-//             .audioCodec('pcm_s16le')
-//             .output(wavPath)
-//             .on('end', () => {
-//                 // הפעלת whisper אחרי ההמרה
-//                 exec(`whisper ${wavPath} --language English --model small --fp16 False`, (error, stdout, stderr) => {
-//                     if (error) {
-//                         console.error("Error running whisper:", error);
-//                         reject("Error during transcription");
-//                         return;
-//                     }
-//                     resolve(stdout);
-//                 });
-//             })
-//             .on('error', (err) => {
-//                 console.error("Error converting file:", err);
-//                 reject("Error converting audio");
-//             })
-//             .run();
-//     });
-// }
+    sendEmail(process.env.GMAIL_ADMIN, 'A new registration to Take It Easy 🎉', emailHtml, email)
 
+    return res.status(201).json({
+        message: `An email sent to administrator`
+    })
+}
 
-// const handleCourseSubmission = async (req, res) => {
-//   console.log("1111");
-
-//   if (!req.file) {
-//     console.log("No audio file uploaded");
-//     return res.status(400).send("No audio file uploaded");
-//   }
-//   console.log(req.file);
-
-//   const filePath = path.join(__dirname, "..", req.file.path);
-//   console.log("333");
-
-//   try {
-//     const transcript ="hi helo" //await transcribeAudio(filePath);
-//     const prompt = `This is a transcript in English. Please rate the English level from 1 to 10 and provide a short feedback. Text: "${transcript}"`;
-//     console.log("444");
-
-//     const completion = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo",
-//       messages: [
-//         {
-//           role: "user",
-//           content: prompt,
-//         },
-//       ],
-//       max_tokens: 150,
-//     });
-
-//     const result = completion.choices[0].message.content.trim();
-//     const level = parseInt(result.match(/\d+/)[0], 10);
-//     const feedback = result.replace(/\d+/g, "").trim();
-
-//     const { firstName, lastName, schoolName, email, grade } = req.body;
-
-//     const emailBody = `
-// 📋 New English Course Sign-Up Request:
-// 👤 Name: ${firstName} ${lastName}
-// 🏫 School: ${schoolName}
-// ✉️ Email: ${email}
-// 🎓 Grade: ${grade}
-// 📈 English Level: ${level}
-// 📝 Feedback: ${feedback}
-// `;
-
-//     // const transporter = nodemailer.createTransport({
-//     //   service: "gmail",
-//     //   auth: {
-//     //     user: process.env.EMAIL_USER,
-//     //     pass: process.env.EMAIL_PASS, // סיסמת אפליקציה
-//     //   },
-//     // });
-
-//     // const mailOptions = {
-//     //   from: `"Course Bot" <${process.env.EMAIL_USER}>`,
-//     //   to: process.env.ADMIN_EMAIL,
-//     //   subject: "New English Course Registration",
-//     //   text: emailBody,
-//     //   attachments: [
-//     //     {
-//     //       filename: req.file.originalname,
-//     //       path: filePath,
-//     //     },
-//     //   ],
-//     // };
-
-//     // await transporter.sendMail(mailOptions);
-
-//     fs.unlinkSync(filePath); // מחיקת הקובץ
-//     console.log("File deleted successfully");
-//     res.json({ firstName, level, feedback });
-
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Error processing the file");
-//   }
-// };
-
-// module.exports = { handleCourseSubmission };
+module.exports = { registerToCourse }

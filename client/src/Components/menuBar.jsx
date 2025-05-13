@@ -1,4 +1,3 @@
-// const [user, setUser] = useState({ name: "UserName" });
 import React, { Suspense, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menubar } from 'primereact/menubar';
@@ -7,20 +6,14 @@ import { setToken, logOut } from '../redux/tokenSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateUser from './UserUpdate';
 import EnglishCourseSignUp  from './EnglishCourseSignUp'
+
 const MenuBar = () => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const { token } = useSelector((state) => state.token);
   const { user } = useSelector((state) => state.token);
   const dispatch = useDispatch();
-
   const [menuVisible, setMenuVisible] = useState(false); // מצב הצגת התפריט
   const navigate = useNavigate();
-
-  // const [user,setUser]=useState("UserName")
-  // useEffect(()=>{
-  // setUser(u)
-  // },[u])
-  // הגדרת אפשרויות בתפריט הירידה (Register, LogOut)
   const userMenu = [
     !token ? {
       label: 'Register',
@@ -36,29 +29,22 @@ const MenuBar = () => {
         setShowUpdateDialog(true)
         setMenuVisible(false);
       }
-    }
-
-    ,
-
+    },
     {
-      label: token ? "LogOut"
-
-        : 'Login',
+      label: token ? "LogOut": 'Login',
       icon: 'pi pi-user',
       command: () => {
         if (token) {
-          //  setUser({ name: "UserName", confirm: false });
           dispatch(logOut())
-
           navigate('/Home');
         } else {
           navigate('./Login');
-
         }
       }
     }
   ];
-  //  // הכפתור בצד ימין, עם שם המשתמש, לצד החץ
+
+  // הכפתור בצד ימין, עם שם המשתמש, לצד החץ
   const end = (
     <div className="user-container">
          {user?.name || 'User Name'}
@@ -79,6 +65,7 @@ const MenuBar = () => {
       )}
     </div>
   );
+
   const items1 = [
     {
       label: 'Home',
@@ -94,7 +81,6 @@ const MenuBar = () => {
         navigate('./Grades');
       }
     },
-    
       {
         label: 'Books',
         icon: 'pi pi-user',
@@ -108,9 +94,8 @@ const MenuBar = () => {
       command: () => {
         navigate('./Course');
       }},
-    // user === UserName &&
-
    ]
+
   const items2 = [
     {
       label: 'Home',
@@ -133,8 +118,6 @@ const MenuBar = () => {
         navigate('./Books');
       }
     },
-    // user === UserName &&
-
     {
       label: 'Users',
       icon: 'pi pi-user',
@@ -143,9 +126,9 @@ const MenuBar = () => {
       }
     }
   ];
+
   return (
     <>
-
       <div className="card-menuBar">
       { 
       user?
@@ -156,17 +139,14 @@ const MenuBar = () => {
           user={user}
         /> :<></>}{
           user?.roles=="Admin" ?
-
             <Menubar model={items2}
               end={end}
             /> : <Menubar model={items1}
             end={end}
-
-
             />}
       </div>
     </>
   )
 };
-export default MenuBar;
 
+export default MenuBar;

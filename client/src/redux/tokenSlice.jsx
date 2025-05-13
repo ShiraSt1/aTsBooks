@@ -10,13 +10,11 @@ const tokenSlice = createSlice({
         setToken(state, action) {
             state.token = action.payload.token
             state.user=action.payload.user
-            console.log(state.user);
         },
         
         logOut(state, action) {
             state.token = null;
             state.user=null;
-
         }
     }
 })

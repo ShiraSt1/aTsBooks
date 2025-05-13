@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Divider } from 'primereact/divider';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
 import { Password } from 'primereact/password';
-import { FloatLabel } from 'primereact/floatlabel';
-
-import { useContext } from 'react';
 import '../Styles/register.css'
-
 
 const Register = () => {
     const [error, setError] = useState('');
@@ -18,43 +10,39 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [name, setName] = useState('');
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({
         email: "",
         name: "",
         password: "",
         phone: "",
     });
-    const navigate = useNavigate();
-
-
 
     const createUser = async (name, email, phone, password) => {
-        const newUser = {
-            name,
-            email,
-            phone,
-            password
-        };
-
+        const newUser = {name,email,phone,password};
         try {
             const res = await axios.post('http://localhost:7000/api/user/register', newUser);
-            if (res.status === 409)
+            console.log("server responded:", res?res.data:"no response");
+            
+            if (res.status === 409){
+                console.log("duplicate email");
                 alert("email exits")
-            if (res.status === 200 || res.status === 201) {
-                console.log("res.data", res.data);
+            }
+            else if (res.status === 200 || res.status === 201) {
                 alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
                 navigate('../login')
             }
         } catch (e) {
+            alert("An error occurred while creating the user. Please try again later. Eror:",e);
             console.error(e);
         }
     };
+
     useEffect(() => {
         validateEmail(email); //****
         validateName(name); //****
         validatePassword(password); //****
     }, [email, name, password]);
-
 
     const validateEmail = (value) => {
         setEmail(value);
@@ -99,11 +87,9 @@ const Register = () => {
         }
         setPhone(value);
     };
+
     const isFormValid = Object.values(errors).every((error) => error === "") &&
         email && name && password;
-
-
-
 
     return (
         <div className="register-page-container">
@@ -138,9 +124,9 @@ const Register = () => {
                         <label className="register-label">Password</label>
                         <Password
                             value={password}
+                            inputClassName="register-input"
                             onChange={(e) => validatePassword(e.target.value)}
                             placeholder="Enter your password"
-                        // inputClassName="register-input"
                         />
                         {errors.password && <small className="register-error">{errors.password}</small>}
                     </div>
@@ -168,12 +154,6 @@ const Register = () => {
             </div>
         </div>
     );
-
-
-
-   
-
-
 };
 
 export default Register;

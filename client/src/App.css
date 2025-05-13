@@ -36,7 +36,6 @@
     transform: rotate(360deg);
   }
 }
-/*  */
 .user-container {
   display: flex;
   align-items: center;
@@ -151,8 +150,6 @@ var(--surface-card);
   justify-content: flex-end;
 }
 
-
-
 /* YourCustomStyles.css */
 
 .signup-form-container {
@@ -234,7 +231,6 @@ var(--surface-card);
   height: auto;
   z-index: 999; /* כדי שיהיה מעל כל דבר */
 }
-
 
 .center-image-container {
   display: flex;

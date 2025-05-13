@@ -11,11 +11,6 @@ const fileSchema = new mongoose.Schema({
         lowercase: true,
         required: true
      },
-    // type: {
-    //     type: String,
-    //     required: true,
-    //     enum: ["pdf", "audio", "image", "video", "mp3", "wav", "txt", "doc", "docx"]
-    // },
     size: {
         type: Number,  // שדה גודל כמספר (בייטים)
         required: true

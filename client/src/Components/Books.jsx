@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
-import { classNames } from 'primereact/utils';
+import { DataView } from 'primereact/dataview';
 import axios from 'axios';
 import BookCreate from "./BookCreat";
 import BookUpdate from './BookUpdate';
 import { useSelector } from "react-redux";
-import { Link, useParams } from 'react-router-dom';
-import Tittles from './Titles';
-import { Route } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Grades.css';
-
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -19,17 +16,14 @@ export default function BooksDataView() {
     const [selectedBook, setSelectedBook] = useState({});
     const [flagGradeId, setFlagGradeId] = useState(false);
     const [gradeName, setGradeName] = useState('');
-
     const [visibleCreatBook, setVisibleCreatBook] = useState(false);
     const [visible, setVisible] = useState(false);
     const { gradeId } = useParams(); // Get gradeId from URL
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
-
-   
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("🎉🎉🎉🎉🎉")
         if (gradeId) {
             getGradeName(gradeId);
             getBooksByGrade(gradeId); // Fetch books for the specific grade
@@ -37,7 +31,6 @@ export default function BooksDataView() {
             getBooks();
             setGradeName(''); // Fetch all books if no gradeId is provided
         }
-
     }, [gradeId, flagGradeId]);
 
     const getGradeName = async (Id) => {
@@ -47,7 +40,6 @@ export default function BooksDataView() {
                 setGradeName(res.data.name); // עדכון שם הכיתה ב-state
             }
         } catch (e) {
-            console.log("🐱‍🚀🐱‍👓🐱‍🚀🐱‍🚀🐱‍👓🐱‍🚀🐱‍👓");
             console.error('Error fetching grade name:', e);
             setGradeName(''); // במידה ויש שגיאה, איפוס שם הכיתה
         }
@@ -57,14 +49,9 @@ export default function BooksDataView() {
         try {
             const res = await axios.get('http://localhost:7000/api/book');
             if (res.status === 200) {
-        console.log("✔✔✔✔✔✔✔")
-
-                console.log(res.data);
                 setBooks(res.data);
             }
         } catch (e) {
-        console.log("🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️")
-
             console.error(e);
         }
     };
@@ -73,38 +60,37 @@ export default function BooksDataView() {
         try {
             const res = await axios.get(`http://localhost:7000/api/book/grade/${Id}`
             );
-
             if (res.status === 200) {
-                console.log(res.data);
                 setBooks(res.data);
             }
         } catch (e) {
             if (e.status === 400) {
                 alert("there are no book for this grade")
-                // navigate('/Grades')
             }
-            console.log(e);
         }
     };
 
+    const [loading, setLoading] = useState(false);
+
     const deleteBook = async (bookId) => {
+        setLoading(true)
         try {
             const res = await axios.delete(`http://localhost:7000/api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            // setBooks(res.data);
             setFlagGradeId(!flagGradeId)
         } catch (err) {
             console.error('Error deleting book:', err);
-        }
+        }finally {
+            setLoading(false);
+          }
     };
 
     const updateBook = async (name, selectedItem, image, book) => {
-        console.log(selectedItem, name, image, book);
+        setLoading(true)
 
         const updatebook = {
             ...book,
-
             name: name ? name : book.name,
             grades: selectedItem,
             image: image ? image : book.image,
@@ -117,25 +103,24 @@ export default function BooksDataView() {
                 }
             });
             if (res.status === 200) {
-                console.log("res.data", res.data);
                 setFlagGradeId(!flagGradeId)
             }
         } catch (e) {
 
             console.error(e);
-        }
+        }finally {
+            setLoading(false);
+          }
     };
+
     const createBook = async (name, selectedItem, image) => {
-        console.log("🤣🤣😂😂");
+        setLoading(true)
         if (!image)
             alert("confirm the image")
-
-
         const formData = new FormData();
         formData.append('name', name);
         formData.append('grades', JSON.stringify(selectedItem));
         formData.append('image', image); // הוספת הקובץ ל-FormData
-
         try {
             const res = await axios.post('http://localhost:7000/api/book', formData, {
                 headers: {
@@ -151,31 +136,26 @@ export default function BooksDataView() {
                 }
             }
         } catch (e) {
-
-alert(e.res.data.mes)
+            alert(e.res.data.mes)
             if (e.status === 400)
-                
-            console.error("Error creating book:", e);
-        
-        if(e.status===402)
-            alert("this book name alrady exits")
-}
+                console.error("Error creating book:", e);
+            if (e.status === 402)
+                alert("this book name alrady exits")
+        }finally {
+            setLoading(false);
+          }
     };
 
-    const navigate = useNavigate();
     const handleNavigation = (id) => {
         if (!token) {
-            
-            // console.log(user.confirm ,"ppp",user?.roles)
-            console.log(user)
-            alert('You are not allowed to view the book files.')  
+            alert('You are not allowed to view the book files.')
         }
         else {
             navigate(`/Titles/${id}`);
             // אם המשתמש אינו מורשה, מפעיל פונקציה להצגת דיאלוג
-            
         }
     };
+
     const gridItem = (book) => (
         <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={book._id}>
             <div
@@ -206,7 +186,6 @@ alert(e.res.data.mes)
                         <>
                             <Button
                                 icon="pi pi-pencil"
-                                // className="p-button-rounded p-button-warning"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setVisible(true);
@@ -216,7 +195,6 @@ alert(e.res.data.mes)
                             />
                             <Button
                                 icon="pi pi-trash"
-                                // className="p-button-rounded p-button-danger"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     deleteBook(book._id);
@@ -243,11 +221,17 @@ alert(e.res.data.mes)
 
     return (
         <div>
-             <div>
-        {gradeName && (
-            <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
-        )}
-         </div>
+            {loading && (
+                                <div style={{ margin: "20px" }}>
+                                  <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="5" />
+                                  <p>Wait just a moment please...</p>
+                                </div>
+                              )}
+            <div>
+                {gradeName && (
+                    <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
+                )}
+            </div>
             {user?.roles === "Admin" && (
                 <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatBook(true)} className="add-button" />)}
             <BookCreate createBook={createBook} setVisibleCreatBook={setVisibleCreatBook} visibleCreatBook={visibleCreatBook} />
@@ -255,7 +239,6 @@ alert(e.res.data.mes)
                 <DataView value={Array.isArray(books) ? books : []} listTemplate={listTemplate} layout={layout} />
             </div>
             {selectedBook ? <BookUpdate updateBook={updateBook} setVisible={setVisible} visible={visible} book={selectedBook} /> : <></>}
-
         </div>
     );
 }

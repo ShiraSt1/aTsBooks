@@ -1,6 +1,5 @@
 const Grade = require("../models/Grade");
 const Book = require("../models/Book")
-
 const { deleteBook } = require('../Controllers/bookController');
 
 // create
@@ -13,7 +12,7 @@ const creatNewGrade = async (req, res) => {
     if (duplicate) {
         return res.status(409).json({ message: "Duplicate grade name" });
     }
-    
+
     const grade = await Grade.create({ name, image });
     if (!grade) {
         return res.status(500).json({ message: "Failed to create grade" });
@@ -42,7 +41,6 @@ const getAllGrade = async (req, res) => {
     }
 };
 
-
 const getGradeById = async (req, res) => {
     const { id } = req.params;
     const grade = await Grade.findById(id).lean();
@@ -58,9 +56,7 @@ const updateGrade = async (req, res) => {
     if (!name) {
         return res.status(400).json({ message: "Name is required" });
     }
-    console.log(_id, name, image);
     const grade = await Grade.findById(_id);
-    console.log(grade);
     if (!grade) {
         return res.status(400).json({ message: `Grade with ID ${_id} not found` });
     }
@@ -69,25 +65,19 @@ const updateGrade = async (req, res) => {
     if (duplicate && duplicate._id.toString() !== _id) {
         return res.status(409).json({ message: "Duplicate grade name" });
     }
-//change the books of this grade
+    //change the books of this grade
 
-const books = await Book.find({ grades: _id }).exec();
-if (books.length > 0) {
-    await Promise.all(
-        books.map(async (book) => {
-            // עדכון הספר
-            book.grades = book.grades.filter((gradeId) => gradeId.toString() !== _id); // הסרת הכיתה הישנה
-            book.grades.push(_id); // הוספת הכיתה החדשה
-            await book.save();
-        })
-    );
-}
-
-
-
-
-
-
+    const books = await Book.find({ grades: _id }).exec();
+    if (books.length > 0) {
+        await Promise.all(
+            books.map(async (book) => {
+                // עדכון הספר
+                book.grades = book.grades.filter((gradeId) => gradeId.toString() !== _id); // הסרת הכיתה הישנה
+                book.grades.push(_id); // הוספת הכיתה החדשה
+                await book.save();
+            })
+        );
+    }
     grade.name = name;
     grade.image = image;
 
@@ -100,9 +90,7 @@ if (books.length > 0) {
     res.json(grades);
 };
 
-
 // delete
-
 const deleteGrade = async (req, res) => {
     const { id } = req.params;
     const grade = await Grade.findById(id);
@@ -115,15 +103,15 @@ const deleteGrade = async (req, res) => {
             if (book.grades.length <= 1) {
                 const dummyRes = {
                     status: () => dummyRes,
-                    json: () => {},
+                    json: () => { },
                 };
                 await deleteBook({ params: { id: book._id } }, dummyRes);
             } else {
                 book.grades = book.grades.filter(bookGrade => bookGrade._id.toString() !== grade._id.toString());
-                await book.save(); 
+                await book.save();
             }
         }));
-    }    
+    }
 
     const result = await Grade.deleteOne({ _id: id });
     if (!result.deletedCount) {
@@ -131,9 +119,9 @@ const deleteGrade = async (req, res) => {
     }
     // החזרת הרשימה החדשה של הכיתת
     const grades = await Grade.find().lean();
-    if (!grades?.length<0) {
+    if (!grades?.length < 0) {
         return res.status(204).json({ message: 'No grades found' });
     }
     res.json(grades);
 };
-module.exports = { creatNewGrade, getAllGrade, updateGrade, deleteGrade,getGradeById };//,getGradeById
+module.exports = { creatNewGrade, getAllGrade, updateGrade, deleteGrade, getGradeById };//,getGradeById

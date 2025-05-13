@@ -1,11 +1,7 @@
-// const express = require("express");
-// const router = express.Router();
-// const multer = require("multer");
-// const upload = multer({ dest: "temp/" });
+const express = require("express")
+const router = express.Router()
+const courseController = require("../Controllers/courseController")
 
-// const courseController = require("../controllers/courseController");
+router.post('/register',courseController.registerToCourse)
 
-
-// router.post("/", upload.single("audioFile"), courseController.handleCourseSubmission);
-
-// module.exports = router;
+module.exports = router

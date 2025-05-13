@@ -1,5 +1,3 @@
-
-
 import React, { useRef, useState,useEffect } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -10,7 +8,6 @@ const UpdateGrade = (props) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const items = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade'];
     const [filteredItems, setFilteredItems] = useState(null);
-
     const { updateGrade, visible, setVisible, grade } = props;
     const nameRef = useRef("");
     const imageRef = useRef("");

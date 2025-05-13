@@ -2,7 +2,6 @@ const Title = require("../models/Title")
 const File = require("../models/File")
 const { deleteFileFunction } = require('./fileController');
 
-
 const createNewTitle = async (req, res) => {
     const { name, book } = req.body;
 
@@ -23,24 +22,6 @@ const createNewTitle = async (req, res) => {
     res.status(201).json({ message: 'Title created successfully', title });
 };
 
-//הנוכחי book  להביא את כל הכותרות ל 
-// const getTitlesForBook = async (req, res) => {
-//     const { id } = req.params;
-
-//     if (!id) {
-//         return res.status(400).json({ message: 'Book ID is required' });
-//     }
-
-//     const titles = await Title.find({ book: id }).populate('book').exec();
-//     if (!titles.length) {
-//         return res.status(200).json({ message: 'No titles found' });
-//     }
-
-//     res.status(200).json(titles);
-// };
-// //titlebybook
-
-
 const getTitleById = async (req, res) => {
     const { id } = req.params
     const title = await Title.findById(id).populate('book').lean()
@@ -49,7 +30,6 @@ const getTitleById = async (req, res) => {
     }
     res.status(200).json(title);
 }
-
 
 const getTitlesByBook = async (req, res) => {
     const { id } = req.params;  // ה-ID של הספר שנשלח בכתובת
@@ -68,10 +48,6 @@ const getTitlesByBook = async (req, res) => {
     }
 };
 
-
-
-
-
 const deleteTitle = async (titleId) => {
     const title = await Title.findById(titleId).exec();
     if (!title) throw new Error("Title not found");
@@ -87,37 +63,4 @@ const deleteTitle = async (titleId) => {
     if (result.deletedCount === 0) throw new Error("Failed to delete title");
   };
   
-
-
-
-
-
-// const deleteTitle = async (req, res) => {
-//     const { id } = req.params
-//     const title = await Title.findById(id).exec()
-//     if (!title) {
-//         return res.status(400).json({ message: 'title not found' })
-//     }
-
-//     const files = await File.find({ title: title._id }).exec();
-//     if (files?.length > 0) {
-//         for (let file of files) {
-//              await deleteFile({ params: { id: file._id } }, res);
-
-//         }
-//     }
-//     const result = await Title.deleteOne({ _id: id });  // ***
-//     if (result.deletedCount === 0) {
-//         return res.status(400).json({ message: 'Failed to delete title' });
-//     }
-//     const titles = await Title.find().lean().populate("book")
-//     if (!titles?.length) {
-//         return res.status(400).json({ message: 'No titles found' })
-//     }
-//     res.json(titles)
-// }
-
-
-
-
 module.exports = { createNewTitle, getTitlesByBook, getTitleById, deleteTitle }

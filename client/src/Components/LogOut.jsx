@@ -1,4 +1,3 @@
-
 const LogOut =() =>{  
   localStorage.removeItem('loggedInUser');
       return(
@@ -9,5 +8,3 @@ const LogOut =() =>{
        );}
     
      export default LogOut;
-
-
