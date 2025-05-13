@@ -21,7 +21,7 @@ const Register = () => {
     const createUser = async (name, email, phone, password) => {
         const newUser = {name,email,phone,password};
         try {
-            const res = await axios.post('http://localhost:7000/api/user/register', newUser);
+            const res = await axios.post('${process.env.REACT_APP_API_URL}api/user/register', newUser);
             console.log("server responded:", res?res.data:"no response");
             
             if (res.status === 409){

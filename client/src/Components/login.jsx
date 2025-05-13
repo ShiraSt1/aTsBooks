@@ -29,7 +29,7 @@ const Login = () => {
             return;
         }
         try {
-            const res = await axios.post('http://localhost:7000/api/user/reset-password-with-code', {
+            const res = await axios.post('${process.env.REACT_APP_API_URL}api/user/reset-password-with-code', {
                 email,
                 verificationCode,
                 newPassword
@@ -48,7 +48,7 @@ const Login = () => {
 
     const sendVerificationCode = async () => {
         try {
-            const res = await axios.post('http://localhost:7000/api/user/send-verification-code', { email });
+            const res = await axios.post('${process.env.REACT_APP_API_URL}api/user/send-verification-code', { email });
             if (res && res.status === 200) {
                 alert("A verification code will be sent to your email.")
                 setVerificationStep(true);
@@ -62,7 +62,7 @@ const Login = () => {
     const login = async () => {
         if (email && password) {
             try {
-                const res = await axios.post('http://localhost:7000/api/user/login', { email, password });
+                const res = await axios.post('${process.env.REACT_APP_API_URL}api/user/login', { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
                     navigate('../home'); // ניווט אחרי השינוי

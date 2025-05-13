@@ -35,7 +35,7 @@ export default function BooksDataView() {
 
     const getGradeName = async (Id) => {
         try {
-            const res = await axios.get(`http://localhost:7000/api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
             if (res.status === 200) {
                 setGradeName(res.data.name); // עדכון שם הכיתה ב-state
             }
@@ -47,7 +47,7 @@ export default function BooksDataView() {
 
     const getBooks = async () => {
         try {
-            const res = await axios.get('http://localhost:7000/api/book');
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book`);
             if (res.status === 200) {
                 setBooks(res.data);
             }
@@ -58,7 +58,7 @@ export default function BooksDataView() {
 
     const getBooksByGrade = async (Id) => {
         try {
-            const res = await axios.get(`http://localhost:7000/api/book/grade/${Id}`
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/grade/${Id}`
             );
             if (res.status === 200) {
                 setBooks(res.data);
@@ -75,7 +75,7 @@ export default function BooksDataView() {
     const deleteBook = async (bookId) => {
         setLoading(true)
         try {
-            const res = await axios.delete(`http://localhost:7000/api/book/${bookId}`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFlagGradeId(!flagGradeId)
@@ -96,7 +96,7 @@ export default function BooksDataView() {
             image: image ? image : book.image,
         };
         try {
-            const res = await axios.put('http://localhost:7000/api/book', updatebook, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}api/book`, updatebook, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -122,7 +122,7 @@ export default function BooksDataView() {
         formData.append('grades', JSON.stringify(selectedItem));
         formData.append('image', image); // הוספת הקובץ ל-FormData
         try {
-            const res = await axios.post('http://localhost:7000/api/book', formData, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data' // הגדרת התוכן כ-multipart
@@ -165,7 +165,7 @@ export default function BooksDataView() {
                 <div className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
-                        src={`http://localhost:7000${book.image}`}
+                        src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
                         style={{ objectFit: 'cover', width: '80%', height: '80%' }} // תמונה בגודל קטן יותר
                     />

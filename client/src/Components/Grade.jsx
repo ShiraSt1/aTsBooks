@@ -26,7 +26,7 @@ const Grade = (props) => {
             // image: imageRef.current.value ? imageRef.current.value : props.grade.body,
         };
         try {
-            const res = await axios.put('http://localhost:7000/api/grade', updatedGrade, {
+            const res = await axios.put('${process.env.REACT_APP_API_URL}api/grade', updatedGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 200) {
@@ -53,7 +53,7 @@ const Grade = (props) => {
 
     const deleteGrade = async (id) => {
         try {
-            const res = await axios.delete(`http://localhost:7000/api/grade/${id}`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/grade/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (Array.isArray(res.data)) {

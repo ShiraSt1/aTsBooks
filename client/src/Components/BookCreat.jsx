@@ -22,7 +22,7 @@ const BookCreate = (props) => {
 
     const AvailablGrade = async () => {
         try {
-            const res = await axios.get('http://localhost:7000/api/grade', {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 204) {

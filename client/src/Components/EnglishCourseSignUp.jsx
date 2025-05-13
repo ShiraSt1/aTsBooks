@@ -43,7 +43,7 @@ const EnglishCourseSignUp = () => {
     setLoading(true); // Show loading spinner
 
     try {
-      const res = await axios.post('http://localhost:7000/api/course/register', form);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, form);
       if (res.status === 201) {
         setServerResponse(true);
         alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")

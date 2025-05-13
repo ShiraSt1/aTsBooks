@@ -25,7 +25,7 @@ const Titles = () => {
 
     const fetchBook = async () => {
         try {
-            const res = await axios.get(`http://localhost:7000/api/book/${bookId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setBook(res.data);
@@ -43,13 +43,13 @@ const Titles = () => {
 
     const fetchTitles = async () => {
         try {
-            const res = await axios.get(`http://localhost:7000/api/title/getTitlesByBook/${bookId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const titles = res.data;
             const filesMap = {};
             for (const title of titles) {
-                const filesRes = await axios.get(`http://localhost:7000/api/file/title/${title._id}`, {
+                const filesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -89,7 +89,7 @@ const Titles = () => {
                                 }} />
                                 <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
-                                    window.open(`http://localhost:7000/api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
+                                    window.open(`${process.env.REACT_APP_API_URL}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
                                     );
                                 }} />
                                 {user?.roles === "Admin" && (<>
@@ -115,7 +115,7 @@ const Titles = () => {
 
     const handleDelete = async (fileId, titleId) => {
         try {
-            await axios.delete(`http://localhost:7000/api/file/${fileId}`, {
+            await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFilesByTitle(prev => ({
@@ -138,7 +138,7 @@ const Titles = () => {
         formData.append('customName', newFileName); // שליחת שם מותאם אישית
 
         try {
-            await axios.post('http://localhost:7000/api/file', formData, {
+            await axios.post('${process.env.REACT_APP_API_URL}api/file', formData, {
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
             });
             fetchTitles();

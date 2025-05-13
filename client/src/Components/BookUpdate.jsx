@@ -18,7 +18,7 @@ const BookUpdate = (props) => {
     // הבאת כיתות זמינות
     const AvailablGrade = async () => {
         try {
-            const res = await axios.get('http://localhost:7000/api/grade');
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`);
             if (res.status === 204) {
                 setGrades([]);
             } else {
@@ -48,7 +48,7 @@ const BookUpdate = (props) => {
 
     useEffect(() => {
         if (book?.image) {
-            setPreview(`http://localhost:7000${book.image}`);
+            setPreview(`${process.env.REACT_APP_API_URL}${book.image}`);
         }
     }, [book.image]);
     

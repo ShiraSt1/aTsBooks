@@ -25,7 +25,7 @@ const Users = () => {
 
     const getUsers = async () => {
         try {
-            const res = await axios.get('http://localhost:7000/api/user', {
+            const res = await axios.get('${process.env.REACT_APP_API_URL}api/user', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -47,7 +47,7 @@ const Users = () => {
             password: passwordRef.current.value ? passwordRef.current.value : " "
         };
         try {
-            const res = await axios.post('http://localhost:7000/api/user', newUser, {
+            const res = await axios.post('${process.env.REACT_APP_API_URL}api/user', newUser, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200 || res.status === 201) {
@@ -75,7 +75,7 @@ const Users = () => {
 
     const deleteUser = async (id) => {
         try {
-            const res = await axios.delete(`http://localhost:7000/api/user/${id}`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/user/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -91,7 +91,7 @@ const Users = () => {
     const confirmUser = async (id) => {
         try {
             const _id = id;
-            const res = await axios.put('http://localhost:7000/api/user/confirm', { _id }, {
+            const res = await axios.put('${process.env.REACT_APP_API_URL}api/user/confirm', { _id }, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {

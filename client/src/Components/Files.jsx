@@ -22,9 +22,9 @@ const FilesDataView = ({ titleId }) => {
     useEffect(() => {
         const fetchTitleAndBook = async () => {
             try {
-                const titleRes = await axios.get(`http://localhost:7000/api/title/${titleId}`);
+                const titleRes = await axios.get(`${process.env.REACT_APP_API_URL}api/title/${titleId}`);
                 const title = titleRes.data;
-                const bookRes = await axios.get(`http://localhost:7000/api/book/${title.book}`);
+                const bookRes = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${title.book}`);
                 setBook(bookRes.data);
                 fetchFiles(); // כבר קיים אצלך
             } catch (err) {
@@ -40,7 +40,7 @@ const FilesDataView = ({ titleId }) => {
     const fetchFiles = async () => {
         setFiles([]);
         try {
-            const res = await axios.get(`http://localhost:7000/api/file/title/${titleId}`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${titleId}`);
             setFiles(res.data);
             setLoading(false);
         } catch (err) {
@@ -57,7 +57,7 @@ const FilesDataView = ({ titleId }) => {
         formData.append('title', titleId);
 
         try {
-            const res = await axios.post('http://localhost:7000/api/file', formData, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setFiles(prev => [...prev, res.data]);
@@ -71,7 +71,7 @@ const FilesDataView = ({ titleId }) => {
 
     const handleDelete = async (fileId) => {
         try {
-            await axios.delete(`http://localhost:7000/api/file/${fileId}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`);
             setFiles(prev => prev.filter(file => file._id !== fileId));
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File deleted ', life: 3000 });
         } catch (err) {
@@ -81,11 +81,11 @@ const FilesDataView = ({ titleId }) => {
     };
 
     const handleDownload = (fileId) => {
-        window.open(`http://localhost:7000/api/file/download/${fileId}`, '_blank');
+        window.open(`${process.env.REACT_APP_API_URL}api/file/download/${fileId}`, '_blank');
     };
 
     const handleView = (fileId) => {
-        window.open(`http://localhost:7000/api/file/view/${fileId}`, '_blank');
+        window.open(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, '_blank');
     };
 
     const handleUpdate = async (e) => {
@@ -94,7 +94,7 @@ const FilesDataView = ({ titleId }) => {
         formData.append('newName', newFileName);
 
         try {
-            const res = await axios.put(`http://localhost:7000/api/file/${selectedFile._id}`, formData);
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}api/file/${selectedFile._id}`, formData);
             setFiles(prev => prev.map(file => file._id === res.data._id ? res.data : file));
             setVisibleUpdate(false);
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File updated ', life: 3000 });
@@ -118,7 +118,7 @@ const FilesDataView = ({ titleId }) => {
                 <div className="col-12 md:col-6 flex justify-content-center align-items-center">
                     {book?.image && (
                         <img
-                            src={`http://localhost:7000/uploads/${book.image}`}
+                            src={`${process.env.REACT_APP_API_URL}uploads/${book.image}`}
                             alt={book.name}
                             style={{
                                 width: '100%',
