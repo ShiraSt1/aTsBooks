@@ -34,7 +34,6 @@ const sendEmailFunction = async (to, subject, html) => {
     }
 };
 
-
 //get all user
 const getAllUser = async (req, res) => {
     const users = await User.find().lean()
@@ -107,7 +106,7 @@ const register = async (req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, 'New Registration on Final Project 🎉', emailHtml)
+    sendEmail(process.env.GMAIL_ADMIN, 'New Registration to eTs\books webSite 🎉', emailHtml)
 
     return res.status(201).json({
         message: `New user ${user.email} created`
@@ -121,10 +120,10 @@ const login = async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' })
     const foundUser = await User.findOne({ email }).lean()
     if (!foundUser) {
-        return res.status(401).json({ message: 'Cant connect' })
+        return res.status(401).json({ message: 'Email not found' })
     }
     const Match = await bcrypt.compare(password, foundUser.password)
-    if (!Match) return res.status(401).json({ message: 'Cant connect' })
+    if (!Match) return res.status(401).json({ message: 'Incorrect password' })
 
     if (!foundUser.confirm && foundUser.roles != "Admin") {
         return res.status(403).json({ message: 'You are not confirmed to login yet.' });

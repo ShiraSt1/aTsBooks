@@ -18,7 +18,7 @@ const UpdateUser = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        navigate('/home'); // ניווט אחרי השינוי
+        navigate('/'); // ניווט אחרי השינוי
     }, [user]);
 
     const updateUser = async () => {
@@ -35,7 +35,7 @@ const UpdateUser = (props) => {
             if (res.status === 200) {
                 dispatch(setToken({ token: token, user: res.data }))
                 props.onHide();
-                navigate('/home'); // מעבר לדף הבית
+                navigate('/'); // מעבר לדף הבית
                 alert("Your user information has been updated.")
             }
         } catch (e) {

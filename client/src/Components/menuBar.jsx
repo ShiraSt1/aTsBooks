@@ -36,7 +36,7 @@ const MenuBar = () => {
       command: () => {
         if (token) {
           dispatch(logOut())
-          navigate('/Home');
+          navigate('/');
         } else {
           navigate('./Login');
         }
@@ -71,7 +71,7 @@ const MenuBar = () => {
       label: 'Home',
       icon: 'pi pi-home',
       command: () => {
-        navigate('./Home');
+        navigate('./');
       }
     },
     {
@@ -101,7 +101,7 @@ const MenuBar = () => {
       label: 'Home',
       icon: 'pi pi-home',
       command: () => {
-        navigate('./Home');
+        navigate('./');
       }
     },
     {

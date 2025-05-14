@@ -5,7 +5,6 @@ import { Password } from 'primereact/password';
 import '../Styles/register.css'
 
 const Register = () => {
-    const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
@@ -22,12 +21,11 @@ const Register = () => {
         const newUser = {name,email,phone,password};
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
-            console.log("server responded:", res?res.data:"no response");
             
             if (res.status === 409){
-                console.log("duplicate email");
                 alert("email exits")
             }
+
             else if (res.status === 200 || res.status === 201) {
                 alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
                 navigate('../login')
