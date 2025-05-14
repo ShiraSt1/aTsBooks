@@ -36,7 +36,7 @@ const Login = () => {
             });
             if (res && res.status === 200) {
                 dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
-                navigate('../'); // ניווט אחרי השינוי
+                navigate('/'); // ניווט אחרי השינוי
                 setSuccessMessage('Password has been reset successfully. You can now log in.');
                 setForgotPassword(false);
                 setVerificationStep(false);
@@ -65,7 +65,7 @@ const Login = () => {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`, { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
-                    navigate('../'); // ניווט אחרי השינוי
+                    navigate('/'); // ניווט אחרי השינוי
                 }
             } catch (err) {
                 if (err.response && err.response.status === 401) {

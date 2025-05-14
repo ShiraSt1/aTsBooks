@@ -27,8 +27,10 @@ const Register = () => {
             }
 
             else if (res.status === 200 || res.status === 201) {
-                alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
-                navigate('/login')
+                // alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
+                // navigate('/login')
+                console.log("User created successfully");
+                
             }
         } catch (e) {
             alert("An error occurred while creating the user. Please try again later. Eror:",e);
@@ -140,7 +142,7 @@ const Register = () => {
                         />
                         {errors.phone && <small className="register-error">{errors.phone}</small>}
                     </div>
-
+                    <small>*"Your request to join has been sent to the site administrator. You’ll receive an email once it’s approved."</small>
                     <button
                         onClick={() => createUser(name, email, phone, password)}
                         className="register-button"

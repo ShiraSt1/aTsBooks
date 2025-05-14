@@ -19,7 +19,7 @@ const MenuBar = () => {
       label: 'Register',
       icon: 'pi pi-user-plus',
       command: () => {
-        navigate('./register');
+        navigate('/register');
         setMenuVisible(false);
       }
     } : {
@@ -38,7 +38,7 @@ const MenuBar = () => {
           dispatch(logOut())
           navigate('/');
         } else {
-          navigate('./login');
+          navigate('/login');
         }
       }
     }
@@ -71,7 +71,7 @@ const MenuBar = () => {
       label: 'Home',
       icon: 'pi pi-home',
       command: () => {
-        navigate('./');
+        navigate('/');
       }
     },
     {
@@ -85,14 +85,14 @@ const MenuBar = () => {
         label: 'Books',
         icon: 'pi pi-user',
         command: () => {
-          navigate('./books');
+          navigate('/books');
         }
     },
     {
       label: 'Course',
       icon: 'pi pi-user',
       command: () => {
-        navigate('./course');
+        navigate('/course');
       }},
    ]
 
@@ -101,28 +101,28 @@ const MenuBar = () => {
       label: 'Home',
       icon: 'pi pi-home',
       command: () => {
-        navigate('./');
+        navigate('/');
       }
     },
     {
       label: 'Grades',
       icon: 'pi pi-user',
       command: () => {
-        navigate('./grades');
+        navigate('/grades');
       }
     },
     {
       label: 'Books',
       icon: 'pi pi-user',
       command: () => {
-        navigate('./books');
+        navigate('/books');
       }
     },
     {
       label: 'Users',
       icon: 'pi pi-user',
       command: () => {
-        navigate('./users');
+        navigate('/users');
       }
     }
   ];
