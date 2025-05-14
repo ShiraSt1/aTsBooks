@@ -85,6 +85,7 @@ const register = async (req, res) => {
     if (!user) {
         return res.status(400).json({ message: 'Invalid user received' })
     }
+    
     const projectLink = process.env.PROJECT_PORT
 
     const emailHtml = `
@@ -106,7 +107,7 @@ const register = async (req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, 'New Registration to eTs\books webSite 🎉', emailHtml)
+    sendEmail(process.env.GMAIL_ADMIN, 'New Registration to eTsbooks webSite 🎉', emailHtml)
 
     return res.status(201).json({
         message: `New user ${user.email} created`
