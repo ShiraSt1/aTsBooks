@@ -86,7 +86,7 @@ const register = async (req, res) => {
     if (!user) {
         return res.status(400).json({ message: 'Invalid user received' })
     }
-    const projectLink = 'http://localhost:3000'; // שימי כאן את הקישור לפרויקט
+    const projectLink = 'https://atsbooks-h4jx.onrender.com'; // שימי כאן את הקישור לפרויקט
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -151,7 +151,7 @@ const confirmUser = async (req, res) => {
     user.confirm = !user.confirm
     const updateUser = await user.save()
     const users = await User.find().lean()
-    const projectLink = 'http://localhost:3000//login';
+    const projectLink = 'https://atsbooks-h4jx.onrender.com';
 
     if (user.confirm) {
         try {
