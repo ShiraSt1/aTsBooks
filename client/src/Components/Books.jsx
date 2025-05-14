@@ -239,6 +239,7 @@ export default function BooksDataView() {
                 <DataView value={Array.isArray(books) ? books : []} listTemplate={listTemplate} layout={layout} />
             </div>
             {selectedBook ? <BookUpdate updateBook={updateBook} setVisible={setVisible} visible={visible} book={selectedBook} /> : <></>}
+        
         </div>
     );
 }
