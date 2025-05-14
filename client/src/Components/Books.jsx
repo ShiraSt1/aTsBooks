@@ -151,7 +151,7 @@ export default function BooksDataView() {
             alert('You are not allowed to view the book files.')
         }
         else {
-            navigate(`/Titles/${id}`);
+            navigate(`/titles/${id}`);
             // אם המשתמש אינו מורשה, מפעיל פונקציה להצגת דיאלוג
         }
     };

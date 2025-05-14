@@ -144,7 +144,7 @@ const FilesDataView = ({ titleId }) => {
                                         <div className="flex gap-2 mt-2">
                                             <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
                                                 e.stopPropagation();
-                                                navigate(`/FileView/${file._id}`);
+                                                navigate(`/fileview/${file._id}`);
                                             }} />
                                             <Button icon="pi pi-download" className="p-button-sm p-button-success" onClick={() => handleDownload(file._id)} tooltip="הורד" />
                                             <Button icon="pi pi-pencil" className="p-button-sm p-button-warning" onClick={() => { setSelectedFile(file); setVisibleUpdate(true); }} tooltip="ערוך" />

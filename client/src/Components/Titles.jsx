@@ -85,7 +85,7 @@ const Titles = () => {
                             <span className="flex gap-2">
                                 <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
-                                    navigate(`/FileView/${file._id}`);
+                                    navigate(`/fileview/${file._id}`);
                                 }} />
                                 <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();

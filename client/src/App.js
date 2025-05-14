@@ -32,18 +32,18 @@ function App() {
       <MenuBar>
       </MenuBar>
       <Routes>
-        <Route path='/Login' element={<Suspense fallback="loading..."><LazyLogin /></Suspense>} />
+        <Route path='/login' element={<Suspense fallback="loading..."><LazyLogin /></Suspense>} />
         <Route path='/' element={<Suspense fallback="loading..."><LazyHome /></Suspense>} />
-        <Route path='/Grades' element={<Suspense fallback="loading..."><LazyGrade /></Suspense>} />
-        <Route path='/Users' element={<Suspense fallback="loading..."><LazyUser /></Suspense>} />
-        <Route path='/LogOut' element={<Suspense fallback="loading..."><LazyLogOut /></Suspense>} />
-        <Route path='/Register' element={<Suspense fallback="loading..."><LazyRegister /></Suspense>} />
-        <Route path='/Update' element={<Suspense fallback="loading..."><LazyUpdateUser /></Suspense>} />
-        <Route path='/Books' element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
-        <Route path="/Books/:gradeId" element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
-        <Route path="/Titles/:bookId" element={<Suspense fallback="loading..."><LazyTitles /></Suspense>} />
-        <Route path="/FileView/:fileId" element={<Suspense fallback="loading..."><LazyFileView /></Suspense>} />
-        <Route path="/Course" element={<Suspense fallback="loading..."><LazyEnglishCourseSignUp /></Suspense>} />
+        <Route path='/grades' element={<Suspense fallback="loading..."><LazyGrade /></Suspense>} />
+        <Route path='/users' element={<Suspense fallback="loading..."><LazyUser /></Suspense>} />
+        <Route path='/logout' element={<Suspense fallback="loading..."><LazyLogOut /></Suspense>} />
+        <Route path='/register' element={<Suspense fallback="loading..."><LazyRegister /></Suspense>} />
+        <Route path='/update' element={<Suspense fallback="loading..."><LazyUpdateUser /></Suspense>} />
+        <Route path='/books' element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
+        <Route path="/books/:gradeId" element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
+        <Route path="/titles/:bookId" element={<Suspense fallback="loading..."><LazyTitles /></Suspense>} />
+        <Route path="/fileview/:fileId" element={<Suspense fallback="loading..."><LazyFileView /></Suspense>} />
+        <Route path="/course" element={<Suspense fallback="loading..."><LazyEnglishCourseSignUp /></Suspense>} />
       </Routes>
       </div>
     </div>
