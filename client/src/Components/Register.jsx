@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Password } from 'primereact/password';
 import '../Styles/register.css'
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Register = () => {
     const [email, setEmail] = useState('');
