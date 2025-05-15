@@ -1,13 +1,25 @@
+const File = require("../models/File")
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime-types");
+const { log } = require("console");
+
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const sendEmail = require('../utils/sendEmail');
 
-const registerToCourse = (req, res) => {
+const registerToCourse = async(req, res) => {
     const { firstName, lastName, email ,message} = req.body
 
     if (!firstName || !lastName || !email ||!message) {
         return res.status(400).json({ message: 'All fields are required' })
     }
+    
+    const file = req.file ? [{
+        filename: req.file.originalname,
+        content: req.file.buffer,
+        contentType: req.file.mimetype
+    }] : [];
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -23,7 +35,7 @@ const registerToCourse = (req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email)
+    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email,file?file:[])
 
     return res.status(201).json({
         message: `An email sent to administrator`

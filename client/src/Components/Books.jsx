@@ -223,7 +223,7 @@ export default function BooksDataView() {
         <div>
             {loading && (
                                 <div style={{ margin: "20px" }}>
-                                  <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="5" />
+                                  <ProgressSpinner style={{ width: '30px', height: '30px' }} strokeWidth="5" />
                                   <p>Wait just a moment please...</p>
                                 </div>
                               )}

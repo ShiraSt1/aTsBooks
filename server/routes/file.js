@@ -3,7 +3,7 @@ const router = express.Router();
 const fileController = require("../Controllers/fileController");
 const verifyJWT=require("../middleware/verifyJWT")
 const admirMiddleware=require("../middleware/admirMiddleware")
-const upload = require("../middleware/upload"); // <-- להוסיף את זה!
+const upload = require("../middleware/upload"); 
 
 router.post("/",verifyJWT ,admirMiddleware,upload.single("file"), fileController.uploadFile);
 router.get("/", verifyJWT,fileController.getAllFiles);

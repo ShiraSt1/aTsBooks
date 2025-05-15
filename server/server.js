@@ -31,11 +31,6 @@ app.use("/api/course", require("./routes/course.js"))
 
 app.get('/', (req, res) => { res.send("this is the home page") })
 
-// mongoose.connection.once("open", () => {
-//   console.log("success")
-//   app.listen(PORT, () => { console.log(`server runing on port ${PORT}`) })
-// })
-// mongoose.connection.on("error", (err) => { console.log(err) })
 const startServer = async () => {
   try {
     await connectDB(); // מחכה לחיבור למסד הנתונים

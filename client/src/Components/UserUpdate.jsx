@@ -18,7 +18,7 @@ const UpdateUser = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        navigate('/'); // ניווט אחרי השינוי
+        navigate('/');
     }, [user]);
 
     const updateUser = async () => {

@@ -10,7 +10,8 @@ const EnglishCourseSignUp = () => {
     firstName: "",
     lastName: "",
     email: "",
-    message:""
+    message: "",
+    file: ""
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ const EnglishCourseSignUp = () => {
       return;
     }
 
-    setLoading(true); 
+    setLoading(true);
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, form);
@@ -45,7 +46,7 @@ const EnglishCourseSignUp = () => {
       console.error("Error:", error);
       alert("Error sending message ❗");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -85,7 +86,18 @@ const EnglishCourseSignUp = () => {
             )}
           </div>
         ))}
-
+        <div className="form-field">
+          <label htmlFor="fileUpload" className="cute-label">
+            Upload a file (optional)
+          </label>
+          <input
+            type="file"
+            id="fileUpload"
+            name="file"
+            onChange={handleFileChange} // פונקציה שתעדכני ב-state
+            className="cute-input"
+          />
+        </div>
         <div className="form-field">
           <Button
             label="Be In Touch"
@@ -98,7 +110,7 @@ const EnglishCourseSignUp = () => {
 
       {loading && (
         <div className="loading-container">
-          <ProgressSpinner />
+          <ProgressSpinner style={{ width: '30px', height: '30px' }} />
           <p>Your request is being processed...</p>
         </div>
       )}

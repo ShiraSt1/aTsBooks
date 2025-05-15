@@ -118,8 +118,6 @@ const updateFile = async (req, res) => {
   }
 };
 
-
-
 const viewFileContent = async (req, res) => {
   try {
     const { fileId } = req.params;

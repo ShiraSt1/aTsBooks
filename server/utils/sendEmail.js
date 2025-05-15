@@ -8,13 +8,20 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendEmail = (to, subject, html,replyTo=null) => {
+const sendEmail = (to, subject, html,replyTo=null, attachments = []) => {
   const mailOptions = {
     from: process.env.GMAIL_USER,
     to,
     subject,
     html,
-    replyTo: replyTo || process.env.GMAIL_USER
+    replyTo: replyTo || process.env.GMAIL_USER,
+    attachments
+    // : [
+    //   {
+    //     filename: file.originalname,
+    //     content: file.buffer,
+    //   },
+    // ],
   };
 
   transporter.sendMail(mailOptions, function(error, info) {

@@ -106,7 +106,7 @@ const Login = () => {
         <div className="login-page-container">
             {loading && (
                     <div className="loading-container">
-                      <ProgressSpinner />
+                      <ProgressSpinner style={{ width: '30px', height: '30px' }}/>
                       <p>Your request is being processed...</p>
                     </div>
                   )}
