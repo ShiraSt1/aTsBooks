@@ -18,11 +18,12 @@ const Register = () => {
     });
 
     const createUser = async (name, email, phone, password) => {
-        const newUser = {name,email,phone,password};
+        e.preventDefault();
+        const newUser = { name, email, phone, password };
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
-            
-            if (res.status === 409){
+
+            if (res.status === 409) {
                 alert("email exits")
             }
 
@@ -30,10 +31,10 @@ const Register = () => {
                 // alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
                 // navigate('/login')
                 console.log("User created successfully");
-                
+
             }
         } catch (e) {
-            alert("An error occurred while creating the user. Please try again later. Eror:",e);
+            alert("An error occurred while creating the user. Please try again later. Eror:", e);
             console.error(e);
         }
     };
@@ -142,12 +143,12 @@ const Register = () => {
                         />
                         {errors.phone && <small className="register-error">{errors.phone}</small>}
                     </div>
-                    <small>*"Your request to join has been sent to the site administrator. You’ll receive an email once it’s approved."</small>
+                    <small>*Your request to join will be sent to the site administrator. You’ll receive an email once it’s approved.</small>
                     <button
+                        type="button"
                         onClick={() => createUser(name, email, phone, password)}
                         className="register-button"
-                        disabled={!isFormValid}
-                    >
+                        disabled={!isFormValid}>
                         Register
                     </button>
                 </form>
