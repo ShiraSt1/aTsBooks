@@ -11,11 +11,11 @@ const registerToCourse = (req, res) => {
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="color:rgb(23, 86, 221);">New message from ${firstName} ${lastName}</h2>
         <p>
-        ${firstName} ${lastName} left a message for you.<br /><br />
-        <p>${message}</p>
+        ${firstName} ${lastName} left a message for you:<br />
+        <strong>${message}</strong>
         </p>
+        <br/>
         <p>
             Press reply below to answer her email.
         </p>
@@ -23,7 +23,7 @@ const registerToCourse = (req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, 'A new message from ${firstName} ${lastName}', emailHtml, email)
+    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email)
 
     return res.status(201).json({
         message: `An email sent to administrator`

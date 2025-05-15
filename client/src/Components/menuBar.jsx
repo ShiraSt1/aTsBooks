@@ -89,7 +89,7 @@ const MenuBar = () => {
         }
     },
     {
-      label: 'Course',
+      label: 'Contact Us',
       icon: 'pi pi-user',
       command: () => {
         navigate('/course');

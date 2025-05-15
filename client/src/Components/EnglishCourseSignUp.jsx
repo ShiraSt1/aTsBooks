@@ -55,7 +55,11 @@ const EnglishCourseSignUp = () => {
       <h1 className="signup-title">Contact Us</h1>
       <p className="signup-subtitle">
         Have any questions, comments, or feedback?
+      </p>
+      <p className="signup-subtitle">
         Want to share your work with us?
+      </p>
+      <p className="signup-subtitle">
         Send us a message — we’d love to hear from you!
       </p>
 
