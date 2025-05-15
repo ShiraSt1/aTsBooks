@@ -18,7 +18,7 @@ const Register = () => {
     });
 
     const createUser = async (name, email, phone, password) => {
-        e.preventDefault();
+        
         const newUser = { name, email, phone, password };
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
