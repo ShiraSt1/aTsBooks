@@ -14,7 +14,7 @@ const registerToCourse = async(req, res) => {
     if (!firstName || !lastName || !email ||!message) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-    
+
     const file = req.file ? [{
         filename: req.file.originalname,
         content: req.file.buffer,
@@ -24,7 +24,7 @@ const registerToCourse = async(req, res) => {
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
-        ${firstName} ${lastName} left a message for you:<br />
+        ${firstName} ${lastName} left a message for you:
         <strong>${message}</strong>
         </p>
         <br/>

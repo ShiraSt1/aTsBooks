@@ -18,7 +18,8 @@ const EnglishCourseSignUp = () => {
   const [serverResponse, setServerResponse] = useState(false);
 
   const handleInputChange = (e, field) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    const value = field === "file" ? e.target.files[0] : e.target.value;
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const SentRequestForJoinTheCourse = async () => {
@@ -34,9 +35,20 @@ const EnglishCourseSignUp = () => {
     }
 
     setLoading(true);
-
+    const formData = new FormData();
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
+    formData.append("email", form.email);
+    formData.append("message", form.message);
+    if (form.file) {
+      formData.append("file", form.file);
+    }
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, form);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      });
       if (res.status === 201) {
         setServerResponse(true);
       } else {
