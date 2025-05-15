@@ -20,14 +20,15 @@ const registerToCourse = async(req, res) => {
         content: req.file.buffer,
         contentType: req.file.mimetype
     }] : [];
+    console.log("Uploaded req.file:", req.file);
+    console.log("Uploaded file:", file);
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
         ${firstName} ${lastName} left a message for you:
-        <strong>${message}</strong>
         </p>
-        <br/>
+        <strong>${message}</strong>
         <p>
             Press reply below to answer her email.
         </p>
