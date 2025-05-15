@@ -10,6 +10,8 @@ const Register = () => {
     const [phone, setPhone] = useState('');
     const [name, setName] = useState('');
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     const [errors, setErrors] = useState({
         email: "",
         name: "",
@@ -18,7 +20,7 @@ const Register = () => {
     });
 
     const createUser = async (name, email, phone, password) => {
-        
+        setLoading(true);
         const newUser = { name, email, phone, password };
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
@@ -28,14 +30,13 @@ const Register = () => {
             }
 
             else if (res.status === 200 || res.status === 201) {
-                // alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
                 navigate('/login')
-                console.log("User created successfully");
-
             }
         } catch (e) {
             alert("An error occurred while creating the user. Please try again later. Eror:", e);
             console.error(e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -95,6 +96,12 @@ const Register = () => {
     return (
         <div className="register-page-container">
             <div className="register-form-container">
+                {loading && (
+                    <div className="loading-container">
+                        <ProgressSpinner />
+                        <p>Your request is being processed...</p>
+                    </div>
+                )}
                 <h2 className="register-title">Create an Account</h2>
                 <form className="register-form">
                     <div className="register-input-wrapper">

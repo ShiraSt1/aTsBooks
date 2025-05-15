@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
@@ -10,18 +9,12 @@ const EnglishCourseSignUp = () => {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    schoolName: "",
     email: "",
-    grade: null,
+    message:""
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverResponse, setServerResponse] = useState(false);
-
-  const grades = [3, 4, 5, 6, 7, 8].map((j) => ({
-    label: `${j}th Grade`,
-    value: `${j}th Grade`,
-  }));
 
   const handleInputChange = (e, field) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -32,45 +25,45 @@ const EnglishCourseSignUp = () => {
     if (
       !form.firstName ||
       !form.lastName ||
-      !form.schoolName ||
       !form.email ||
-      !form.grade
+      !form.message
     ) {
       alert("Please fill all required fields.");
       return;
     }
 
-    setLoading(true); // Show loading spinner
+    setLoading(true); 
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, form);
       if (res.status === 201) {
         setServerResponse(true);
-        alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
       } else {
-        alert("There was a problem sending your request. ❌");
+        alert("There was a problem sending your message. ❌");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error sending request ❗");
+      alert("Error sending message ❗");
     } finally {
-      setLoading(false); // Hide loading spinner
+      setLoading(false); 
     }
   };
 
- 
+
   return (
     <div className="signup-form-container">
-      <h1 className="signup-title">💌 Welcome to Take It Easy English Courses</h1>
+      <h1 className="signup-title">Contact Us</h1>
       <p className="signup-subtitle">
-        Let's get to know you better so we can help you shine 💫
+        Have any questions, comments, or feedback?
+        Want to share your work with us?
+        Send us a message — we’d love to hear from you!
       </p>
 
       <div className="signup-form">
-        {[["firstName", "What's your first name? 🌟"],
-        ["lastName", "And your last name? 🌈"],
-        ["schoolName", "Where do you study? 🏫"],
-        ["email", "What's your email? 📧"],
+        {[["firstName", "What's your first name?"],
+        ["lastName", "And your last name?"],
+        ["email", "What's your email? "],
+        ["message", "What would you like to tell us?"]
         ].map(([field, label]) => (
           <div className="form-field" key={field}>
             <label htmlFor={field} className="cute-label">
@@ -88,23 +81,6 @@ const EnglishCourseSignUp = () => {
             )}
           </div>
         ))}
-
-        <div className="form-field">
-          <label htmlFor="grade" className="cute-label">
-            What grade are you in? 🎓
-          </label>
-          <Dropdown
-            id="grade"
-            value={form.grade}
-            options={grades}
-            onChange={(e) => handleInputChange(e, "grade")}
-            placeholder="Select your grade"
-            className={`cute-dropdown ${submitted && !form.grade ? "p-invalid" : ""}`}
-          />
-          {submitted && !form.grade && (
-            <small className="p-error">This field is required</small>
-          )}
-        </div>
 
         <div className="form-field">
           <Button

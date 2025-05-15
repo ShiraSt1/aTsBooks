@@ -21,6 +21,7 @@ const Login = () => {
     const { token } = useSelector((state) => state.token);
     const [verificationStep, setVerificationStep] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
+  const [loading, setLoading] = useState(false);
 
     const handlePasswordReset = async () => {
         validatePassword(newPassword);
@@ -60,6 +61,7 @@ const Login = () => {
     };
 
     const login = async () => {
+        setLoading(true); 
         if (email && password) {
             try {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`, { email, password });
@@ -75,6 +77,8 @@ const Login = () => {
                 } else {
                     setError('An error occurred, please try again.');
                 }
+            }finally{
+                setLoading(false); 
             }
         } else {
             setError('Please fill in both email and password.');
@@ -99,7 +103,13 @@ const Login = () => {
 
     return (
         <div className="login-page-container">
-            <h2 className="login-title">Sign in to ATS-books</h2>
+            {loading && (
+                    <div className="loading-container">
+                      <ProgressSpinner />
+                      <p>Your request is being processed...</p>
+                    </div>
+                  )}
+            <h2 className="login-title">Log in to ATS-books</h2>
             {!forgotPassword ? (
                 <>
                     <div className="login-input-wrapper">
