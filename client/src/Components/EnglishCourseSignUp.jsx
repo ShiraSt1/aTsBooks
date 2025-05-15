@@ -94,7 +94,7 @@ const EnglishCourseSignUp = () => {
             type="file"
             id="fileUpload"
             name="file"
-            onChange={handleFileChange} // פונקציה שתעדכני ב-state
+            onChange={handleInputChange} // פונקציה שתעדכני ב-state
             className="cute-input"
           />
         </div>
