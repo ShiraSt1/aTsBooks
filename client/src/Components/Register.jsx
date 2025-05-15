@@ -29,7 +29,7 @@ const Register = () => {
 
             else if (res.status === 200 || res.status === 201) {
                 // alert("Your request to join has been sent to the site administrator. You will receive an email notification when your request is approved.")
-                // navigate('/login')
+                navigate('/login')
                 console.log("User created successfully");
 
             }
