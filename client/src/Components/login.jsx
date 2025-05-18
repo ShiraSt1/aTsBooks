@@ -23,7 +23,7 @@ const Login = () => {
     const [verificationCode, setVerificationCode] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    
+
     const handlePasswordReset = async () => {
         validatePassword(newPassword);
         if (newPassword !== confirmPassword) {
@@ -68,20 +68,15 @@ const Login = () => {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`, { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
-                    alert("You are logged in successfully.")
-                    alert("res.data: ", res.data)  
                     navigate('/');
                 }
             } catch (err) {
                 if (err.response && err.response.status === 401) {
                     setError('You are not connect- There is a problem with the data you entered.');
-                    alert("You are not connect- There is a problem with the data you entered.")
                 } else if (err.response && err.response.status === 403) {
                     setError('Your account has not been confirmed yet.');
-                    alert("Your account has not been confirmed yet.")
                 } else {
                     setError('An error occurred, please try again.');
-                    alert("An error occurred, please try again.")
                 }
             } finally {
                 setLoading(false);

@@ -116,8 +116,6 @@ const register = async (req, res) => {
 //login
 const login = async (req, res) => {
     const { email, password } = req.body
-    console.log("email", email);
-    console.log("password", password);
     
     if (!email || !password)
         return res.status(400).json({ message: 'All fields are required' })
@@ -141,10 +139,8 @@ const login = async (req, res) => {
         phone: foundUser.phone,
         roles: foundUser.roles
     }
-    console.log("NewUser", NewUser);
     
     const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
-    console.log("accessToken", accessToken);
     
     res.json({ accessToken, user: NewUser })
 }
@@ -187,7 +183,7 @@ const confirmUser = async (req, res) => {
                 user.email,
                 'aTsBooks Registration Confirmation',
                 emailHtml,
-                GMAIL_ADMIN
+                OUTLOOK_ADMIN
             );
         }
         catch (err) {
@@ -221,7 +217,7 @@ const confirmUser = async (req, res) => {
                 user.email,
                 'Access to Final Project Website Blocked 🚫',
                 emailHtml,
-                GMAIL_ADMIN
+                OUTLOOK_ADMIN
             );
         }
         catch (err) {
@@ -264,7 +260,7 @@ const deleteUser = async (req, res) => {
             user.email,
             'Access to Final Project Website Blocked 🚫',
             emailHtml,
-            GMAIL_ADMIN
+            OUTLOOK_ADMIN
         );
     }
     catch (err) {
