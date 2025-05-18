@@ -22,7 +22,8 @@ const Login = () => {
     const [verificationStep, setVerificationStep] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const navigate = useNavigate();
+    
     const handlePasswordReset = async () => {
         validatePassword(newPassword);
         if (newPassword !== confirmPassword) {
