@@ -12,17 +12,16 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [forgotPassword, setForgotPassword] = useState(false); // Toggle for "Forgot Password"
+    const [forgotPassword, setForgotPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [validationError, setValidationError] = useState(''); // For password validation errors
-    const navigate = useNavigate();
+    const [validationError, setValidationError] = useState('');
     const dispatch = useDispatch();
     const { token } = useSelector((state) => state.token);
     const [verificationStep, setVerificationStep] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handlePasswordReset = async () => {
         validatePassword(newPassword);
@@ -62,24 +61,29 @@ const Login = () => {
     };
 
     const login = async () => {
-        setLoading(true); 
+        setLoading(true);
         if (email && password) {
             try {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`, { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
-                    navigate('/'); // ניווט אחרי השינוי
+                    alert("You are logged in successfully.")
+                    alert("res.data: ", res.data)  
+                    navigate('/');
                 }
             } catch (err) {
                 if (err.response && err.response.status === 401) {
                     setError('You are not connect- There is a problem with the data you entered.');
+                    alert("You are not connect- There is a problem with the data you entered.")
                 } else if (err.response && err.response.status === 403) {
                     setError('Your account has not been confirmed yet.');
+                    alert("Your account has not been confirmed yet.")
                 } else {
                     setError('An error occurred, please try again.');
+                    alert("An error occurred, please try again.")
                 }
-            }finally{
-                setLoading(false); 
+            } finally {
+                setLoading(false);
             }
         } else {
             setError('Please fill in both email and password.');
@@ -98,18 +102,18 @@ const Login = () => {
         } else if (!/[0-9]/.test(value)) {
             setValidationError('Password must contain at least one digit.');
         } else {
-            setValidationError(''); // Clear validation error
+            setValidationError('');
         }
     };
 
     return (
         <div className="login-page-container">
             {loading && (
-                    <div className="loading-container">
-                      <ProgressSpinner style={{ width: '30px', height: '30px' }}/>
-                      <p>Your request is being processed...</p>
-                    </div>
-                  )}
+                <div className="loading-container">
+                    <ProgressSpinner style={{ width: '30px', height: '30px' }} />
+                    <p>Your request is being processed...</p>
+                </div>
+            )}
             <h2 className="login-title">Log in to ATS-books</h2>
             {!forgotPassword ? (
                 <>
