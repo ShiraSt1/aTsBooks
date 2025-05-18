@@ -145,7 +145,9 @@ const confirmUser = async (req, res) => {
 
     const user = await User.findById(_id).exec()
     if (!user)
+    {
         return res.status(400).json({ message: 'No user found' })
+    }
 
     user.confirm = !user.confirm
     const updateUser = await user.save()
@@ -156,16 +158,16 @@ const confirmUser = async (req, res) => {
         try {
             const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="color: #1756DD;">hi! "${user.name}" Welcome to the aTsBooks</h2>
+        <h2 style="color: #1756DD;">hi ${user.name}</h2>
         <p>
-            Your registration has been successfully completed! You can now log in and start exploring the project.
+            Your registration has been successfully completed! You can now log in and enjoy what we have to offer you.
         </p>
         <p>
-            Click the button below to access the project:
+            Click the button below to enter the site:
         </p>
         <p>
             <a href="${projectLink}" style="display: inline-block; text-decoration: none; background-color: #1756DD; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
-                Go to the Project
+                aTsBooks
             </a>
         </p>
         <hr style="border: none; border-top: 1px solid #ddd;" />
@@ -187,18 +189,18 @@ const confirmUser = async (req, res) => {
         try {
             const emailHtml = `
             <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                <h2 style="color: #D9534F;">Access to Final Project Website Blocked 🚫</h2>
+                <h2 style="color: #D9534F;">Access to aTsBooks Website Blocked 🚫</h2>
                 <p>
                     Hello,"${user.name}"
                 </p>
                 <p>
-                    We regret to inform you that your access to taTsBooks has been blocked.
+                    We are sorry to inform you that your access to aTsBooks has been blocked.
                 </p>
                 <p>
                     If you believe this is a mistake or you would like to appeal, please contact our support team for further assistance.
                 </p>
                 <p>
-                    <a href="mailto:support@finalproject.com" style="display: inline-block; text-decoration: none; background-color: #D9534F; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
+                    <a href="mailto:${process.env.GMAIL_ADMIN}" style="display: inline-block; text-decoration: none; background-color: #D9534F; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
                         Contact Support
                     </a>
                 </p>
@@ -226,6 +228,40 @@ const deleteUser = async (req, res) => {
     if (!user)
         return res.status(400).json({ message: 'No user found' })
     const result = await user.deleteOne()
+
+    try {
+        const emailHtml = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h2 style="color: #D9534F;">Access to Final Project Website Blocked 🚫</h2>
+            <p>
+                Hello,"${user.name}"
+            </p>
+            <p>
+                We are sorry to inform you that your access to aTsBooks has been blocked.
+            </p>
+            <p>
+                If you believe this is a mistake or you would like to appeal, please contact our support team for further assistance.
+            </p>
+            <p>
+                <a href="mailto:${process.env.GMAIL_ADMIN}" style="display: inline-block; text-decoration: none; background-color: #D9534F; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
+                    Contact Support
+                </a>
+            </p>
+            <hr style="border: none; border-top: 1px solid #ddd;" />
+            <p style="font-size: 0.9em; color: #888;">This is an automated email. Please do not reply to this email.</p>
+        </div>
+    `;
+        await sendEmail(
+            user.email,
+            'Access to Final Project Website Blocked 🚫',
+            emailHtml,
+            GMAIL_ADMIN
+        );
+    }
+    catch (err) {
+        console.error('Failed to send email:', err);
+    }
+
     res.json(user)
 }
 
