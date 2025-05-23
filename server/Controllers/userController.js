@@ -115,37 +115,42 @@ const register = async (req, res) => {
 
 //login
 const login = async (req, res) => {
-    const { email, password } = req.body
-    console.log("in function login in server");
-    
-    if (!email || !password)
-        return res.status(400).json({ message: 'All fields are required' })
-    const foundUser = await User.findOne({ email }).lean()
-    console.log(foundUser?"foundUser "+foundUser:"not found");
-    
-    if (!foundUser) {
-        return res.status(401).json({ message: 'Email not found' })
-    }
-    const Match = await bcrypt.compare(password, foundUser.password)
-    if (!Match) return res.status(401).json({ message: 'Incorrect password' })
-console.log("after match");
+    try{
 
-    if (!foundUser.confirm && foundUser.roles != "Admin") {
-        return res.status(403).json({ message: 'You are not confirmed to login yet.' });
+        const { email, password } = req.body
+        console.log("in function login in server");
+        
+        if (!email || !password)
+            return res.status(400).json({ message: 'All fields are required' })
+        const foundUser = await User.findOne({ email }).lean()
+        console.log(foundUser?"foundUser "+foundUser:"not found");
+        
+        if (!foundUser) {
+            return res.status(401).json({ message: 'Email not found' })
+        }
+        const Match = await bcrypt.compare(password, foundUser.password)
+        if (!Match) return res.status(401).json({ message: 'Incorrect password' })
+            console.log("after match");
+        
+        if (!foundUser.confirm && foundUser.roles != "Admin") {
+            return res.status(403).json({ message: 'You are not confirmed to login yet.' });
+        }
+        
+        const NewUser = {
+            _id: foundUser._id,
+            name: foundUser.name,
+            email: foundUser.email,
+            phone: foundUser.phone,
+            roles: foundUser.roles
+        }
+        
+        const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
+        console.log("after jwt sign");
+        
+        res.json({ accessToken, user: NewUser })
+    }catch{
+        res.status(500).json({ message: 'An error occurred during login.' });
     }
-
-    const NewUser = {
-        _id: foundUser._id,
-        name: foundUser.name,
-        email: foundUser.email,
-        phone: foundUser.phone,
-        roles: foundUser.roles
-    }
-    
-    const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
-    console.log("after jwt sign");
-    
-    res.json({ accessToken, user: NewUser })
 }
 
 const confirmUser = async (req, res) => {

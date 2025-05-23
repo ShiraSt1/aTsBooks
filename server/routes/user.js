@@ -4,6 +4,8 @@ const userController=require("../Controllers/userController")
 const verifyJWT=require("../middleware/verifyJWT")
 const admirMiddleware=require("../middleware/admirMiddleware")
 
+
+console.log("📥 /login route loaded");
 router.post('/register',userController.register)
 router.post('/login',userController.login)
 router.get('/',verifyJWT,admirMiddleware,userController.getAllUser)

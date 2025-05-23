@@ -14,9 +14,9 @@ const PORT = process.env.PORT || 4000
 const upload = multer({ storage });
 const path = require('path');
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+console.log("🟡 server.js started running");
 
-connectDB()
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(cors(corsOptions))
 app.use(express.json())
