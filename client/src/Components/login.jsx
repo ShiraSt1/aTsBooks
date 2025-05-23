@@ -65,12 +65,15 @@ const Login = () => {
         setLoading(true);
         if (email && password) {
             try {
+                console.log("in function login client");
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`, { email, password });
                 if (res && res.status === 200) {
+                    console.log("login res", res);
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
                     navigate('/');
                 }
             } catch (err) {
+                console.log("login error", err);
                 if (err.response && err.response.status === 401) {
                     setError('You are not connect- There is a problem with the data you entered.');
                 } else if (err.response && err.response.status === 403) {
@@ -79,6 +82,7 @@ const Login = () => {
                     setError('An error occurred, please try again.');
                 }
             } finally {
+                console.log("finally");
                 setLoading(false);
             }
         } else {
