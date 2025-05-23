@@ -114,7 +114,11 @@ const register = async (req, res) => {
 };
 
 //login
+console.log("bbbbbb");
+
 const login = async (req, res) => {
+    console.log("aaaaaa");
+    
     try{
 
         const { email, password } = req.body
