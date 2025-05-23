@@ -47,4 +47,5 @@ const click=(req, res) => {
     console.log("clicked in server");
     res.status(200).json({ message: 'Clicked!' });
 }
+
 module.exports = { registerToCourse, click}

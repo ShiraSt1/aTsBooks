@@ -62,13 +62,17 @@ const EnglishCourseSignUp = () => {
     }
   };
 
-  const click = () => {
+  const click =async () => {
     console.log("aa");
     try{
-      const res = axios.get(`${process.env.REACT_APP_API_URL}api/course/click`);
+      console.log("dd");
+      const res =await axios.get(`${process.env.REACT_APP_API_URL}api/course/click`);
       if (res.status === 200) {
         console.log("bb");
         alert("clicked in client");
+      }
+      else{
+        console.log("ee");
       }
     }catch(err){
       console.log("cc");
