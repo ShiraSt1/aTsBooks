@@ -62,9 +62,23 @@ const EnglishCourseSignUp = () => {
     }
   };
 
+  const click = () => {
+    console.log("aa");
+    try{
+      const res = axios.get(`${process.env.REACT_APP_API_URL}api/course/click`);
+      if (res.status === 200) {
+        console.log("bb");
+        alert("clicked in client");
+      }
+    }catch(err){
+      console.log("cc");
+      console.log("error in client", err);
+    }
+  }
 
   return (
     <div className="signup-form-container">
+      <button onClick={()=>click()}>click me</button>
       <h1 className="signup-title">Contact Us</h1>
       <p className="signup-subtitle">
         Have any questions, comments, or feedback?

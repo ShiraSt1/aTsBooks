@@ -3,8 +3,6 @@ const router = express.Router()
 const courseController = require("../Controllers/courseController")
 const upload = require("../middleware/upload"); 
 
-router.post('/register',upload.single("file"),courseController.registerToCourse)
-
 router.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         res.status(400).send({ message: "Error uploading file", error: err.message });
@@ -14,5 +12,8 @@ router.use((err, req, res, next) => {
         next();
     }
 });
+
+router.post('/register',upload.single("file"),courseController.registerToCourse)
+router.get('/click',courseController.click)
 
 module.exports = router

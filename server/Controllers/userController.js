@@ -114,13 +114,9 @@ const register = async (req, res) => {
 };
 
 //login
-console.log("bbbbbb");
-
 const login = async (req, res) => {
     console.log("aaaaaa");
-    
     try{
-
         const { email, password } = req.body
         console.log("in function login in server");
         
@@ -152,7 +148,8 @@ const login = async (req, res) => {
         console.log("after jwt sign");
         
         res.json({ accessToken, user: NewUser })
-    }catch{
+    }catch(err){
+        console.error(err)
         res.status(500).json({ message: 'An error occurred during login.' });
     }
 }
