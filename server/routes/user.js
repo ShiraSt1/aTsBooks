@@ -6,7 +6,11 @@ const admirMiddleware=require("../middleware/admirMiddleware")
 
 
 router.post('/register',userController.register)
-router.post('/login',userController.login)
+// router.post('/login',userController.login)
+router.post('/login', (req, res) => {
+    console.log("🧪 test login route hit");
+    res.send("login hit");
+  });
 router.get('/',verifyJWT,admirMiddleware,userController.getAllUser)
 router.put('/',verifyJWT,userController.updateUser)
 router.delete('/:id',verifyJWT,admirMiddleware,userController.deleteUser)
