@@ -112,24 +112,24 @@ const EnglishCourseSignUp = () => {
           </label>
 
           <div style={{ position: 'relative', display: 'inline-block' }}>
-          <label
-  htmlFor="fileUpload"
-  style={{
-    color: 'green',
-    padding: '10px 18px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: 500,
-    display: 'inline-block',
-    transition: 'background-color 0.3s ease',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px', // רווח בין האייקון לטקסט
-  }}
->
-  <i className="pi pi-upload" style={{ fontSize: '1.2em' }}></i>
-  Choose Files
-</label>
+            <label
+              htmlFor="fileUpload"
+              style={{
+                color: 'green',
+                padding: '10px 18px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 500,
+                display: 'inline-block',
+                transition: 'background-color 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px', // רווח בין האייקון לטקסט
+              }}
+            >
+              <i className="pi pi-upload" style={{ fontSize: '1.2em' }}></i>
+              Choose Files
+            </label>
 
             <input
               type="file"
