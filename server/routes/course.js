@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const courseController = require("../Controllers/courseController")
 const upload = require("../middleware/upload"); 
+const multer = require("multer");
 
 router.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
@@ -13,7 +14,6 @@ router.use((err, req, res, next) => {
     }
 });
 
-router.post('/register',upload.single("file"),courseController.registerToCourse)
-router.get('/click',courseController.click)
+router.post('/register',upload.array("files"),courseController.registerToCourse)
 
 module.exports = router

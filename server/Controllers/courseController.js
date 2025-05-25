@@ -14,14 +14,13 @@ const registerToCourse = async(req, res) => {
     if (!firstName || !lastName || !email ||!message) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-
-    const file = req.file ? [{
-        filename: req.file.originalname,
-        content: req.file.buffer,
-        contentType: req.file.mimetype
-    }] : [];
-    console.log("Uploaded req.file:", req.file);
-    console.log("Uploaded file:", file);
+    const files = req.files
+    ? req.files.map(file => ({
+        filename: file.originalname,
+        content: file.buffer,
+        contentType: file.mimetype
+      }))
+    : [];
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -36,16 +35,11 @@ const registerToCourse = async(req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email,file?file:[])
+    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email,files?files:[])
 
     return res.status(201).json({
         message: `An email sent to administrator`
     })
 }
 
-const click=(req, res) => {
-    console.log("clicked in server");
-    res.status(200).json({ message: 'Clicked!' });
-}
-
-module.exports = { registerToCourse, click}
+module.exports = { registerToCourse}

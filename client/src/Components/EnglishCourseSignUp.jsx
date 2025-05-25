@@ -11,22 +11,21 @@ const EnglishCourseSignUp = () => {
     lastName: "",
     email: "",
     message: "",
-    file: ""
+    files: []
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverResponse, setServerResponse] = useState(false);
-  const [selectedFileName, setSelectedFileName] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState([]);
 
   const handleInputChange = (e, field) => {
-    if(field==='file'){
-      setSelectedFileName(e.target.files[0].name);
-      setForm((prev) => ({ ...prev, [field]: e.target.files[0] }));
-    }else{
-      setForm((prev) => ({ ...prev, [field]: value }));
+    if (field === 'files') {
+      const filesArray = Array.from(e.target.files);
+      setSelectedFileName(filesArray.map(file => file.name));
+      setForm(prev => ({ ...prev, files: filesArray }));
+    } else {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
     }
-    const value = field === "file" ? e.target.files[0] : e.target.value;
-    
   };
 
   const SentRequestForJoinTheCourse = async () => {
@@ -47,8 +46,10 @@ const EnglishCourseSignUp = () => {
     formData.append("lastName", form.lastName);
     formData.append("email", form.email);
     formData.append("message", form.message);
-    if (form.file) {
-      formData.append("file", form.file);
+    if (form.files) {
+      form.files.forEach(file => {
+        formData.append("files", file);
+      });
     }
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
@@ -69,27 +70,8 @@ const EnglishCourseSignUp = () => {
     }
   };
 
-  const click =async () => {
-    console.log("aa");
-    try{
-      console.log("dd");
-      const res =await axios.get(`${process.env.REACT_APP_API_URL}api/course/click`);
-      if (res.status === 200) {
-        console.log("bb");
-        alert("clicked in client");
-      }
-      else{
-        console.log("ee");
-      }
-    }catch(err){
-      console.log("cc");
-      console.log("error in client", err);
-    }
-  }
-
   return (
     <div className="signup-form-container">
-      <button onClick={()=>click()}>click me</button>
       <h1 className="signup-title">Contact Us</h1>
       <p className="signup-subtitle">
         Have any questions, comments, or feedback?
@@ -123,47 +105,86 @@ const EnglishCourseSignUp = () => {
             )}
           </div>
         ))}
-        
+
         <div className="form-field">
-  <label htmlFor="fileUpload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-    Upload a file (optional)
-  </label>
+          <label htmlFor="fileUpload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Atach files (optional)
+          </label>
 
-  <div style={{ position: 'relative', display: 'inline-block' }}>
-    <label
-      htmlFor="fileUpload"
-      style={{
-        backgroundColor: '#1756dd',
-        color: 'white',
-        padding: '10px 18px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontWeight: 500,
-        display: 'inline-block',
-        transition: 'background-color 0.3s ease',
-      }}
-    >
-      Choose File
-    </label>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <label
+  htmlFor="fileUpload"
+  style={{
+    color: 'green',
+    padding: '10px 18px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 500,
+    display: 'inline-block',
+    transition: 'background-color 0.3s ease',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px', // רווח בין האייקון לטקסט
+  }}
+>
+  <i className="pi pi-upload" style={{ fontSize: '1.2em' }}></i>
+  Choose Files
+</label>
 
-    <input
-      type="file"
-      id="fileUpload"
-      name="file"
-      onChange={(e)=>{handleInputChange(e,'file')}}
-      style={{
-        display: 'none',
-      }}
-    />
-  </div>
+            <input
+              type="file"
+              id="fileUpload"
+              name="file"
+              multiple
+              onChange={(e) => { handleInputChange(e, 'files') }}
+              style={{
+                display: 'none',
+              }}
+            />
+          </div>
 
-  {/* הצגת שם הקובץ שנבחר */}
-  {selectedFileName && (
-    <p style={{ marginTop: '8px', fontStyle: 'italic', color: '#333' }}>
-      Selected file: <strong>{selectedFileName}</strong>
-    </p>
-  )}
-</div>
+          {/* <div style={{ position: 'relative', display: 'inline-block' }}>
+            <label htmlFor="fileUpload" style={{ cursor: 'pointer' }}>
+              <Button
+                icon="pi pi-upload"
+                // text // זה הופך את הכפתור לשקוף
+                // aria-label="Upload"
+                style={{
+                  background: 'none', // שקוף
+                  boxShadow: 'none',
+                  color: '#1756dd', // צבע האייקון
+                  fontSize: '5rem',
+                  padding: 0, // ללא רווחים מיותרים
+                  width: '44px',
+                  height: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              />
+            </label>
+            <input
+              type="file"
+              id="fileUpload"
+              name="files"
+              multiple
+              onChange={e => handleInputChange(e, 'files')}
+              style={{ display: 'none' }}
+            />
+          </div> */}
+
+          {/* הצגת שם הקובץ שנבחר */}
+          {selectedFileName.length > 0 && (
+            <div style={{ marginTop: '8px', fontStyle: 'italic', color: '#333' }}>
+              Selected files:
+              <ul>
+                {selectedFileName.map((name, idx) => (
+                  <li key={idx}><strong>{name}</strong></li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
 
 
         <div className="form-field">
