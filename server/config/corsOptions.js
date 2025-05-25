@@ -3,6 +3,7 @@ const allowedOrigins = [
     'http://localhost:5500',
     'http://localhost:8000',
     'http://localhost:3001',
+    'http://localhost:7000',
     'https://atsbooks-h4jx.onrender.com'
 
 ]

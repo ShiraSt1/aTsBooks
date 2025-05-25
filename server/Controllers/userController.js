@@ -188,11 +188,10 @@ const confirmUser = async (req, res) => {
         <p style="font-size: 0.9em; color: #888;">If you have any questions, feel free to contact us.</p>
     </div>
 `;
-            await sendEmail(
+            sendEmail(
                 user.email,
                 'aTsBooks Registration Confirmation',
-                emailHtml,
-                OUTLOOK_ADMIN
+                emailHtml
             );
         }
         catch (err) {
@@ -222,11 +221,10 @@ const confirmUser = async (req, res) => {
                 <p style="font-size: 0.9em; color: #888;">This is an automated email. Please do not reply to this email.</p>
             </div>
         `;
-            await sendEmail(
+            sendEmail(
                 user.email,
                 'Access to Final Project Website Blocked 🚫',
-                emailHtml,
-                OUTLOOK_ADMIN
+                emailHtml
             );
         }
         catch (err) {
@@ -268,8 +266,7 @@ const deleteUser = async (req, res) => {
         await sendEmail(
             user.email,
             'Access to Final Project Website Blocked 🚫',
-            emailHtml,
-            OUTLOOK_ADMIN
+            emailHtml
         );
     }
     catch (err) {
@@ -308,7 +305,7 @@ const sendVerificationCode = async (req, res) => {
             <p>If you did not request this, please ignore this email.</p>
         `;
 
-        await sendEmail(email, 'Password Reset Verification Code', emailHtml);
+        sendEmail(email, 'Password Reset Verification Code', emailHtml);
         res.status(200).json({ message: 'Verification code sent to email.' });
     } catch (err) {
         res.status(500).json({ message: 'Error sending verification code.', error: err.message });

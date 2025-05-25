@@ -16,19 +16,13 @@ const sendEmail = (to, subject, html,replyTo=null, attachments = []) => {
     html,
     replyTo: replyTo || process.env.GMAIL_USER,
     attachments
-    // : [
-    //   {
-    //     filename: file.originalname,
-    //     content: file.buffer,
-    //   },
-    // ],
   };
 
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
       console.error('Error in sending email:', error);
     } else {
-      console.log('Email sent:', info.response);
+      // console.log('Email sent:', info.response);
     }
   });
 };

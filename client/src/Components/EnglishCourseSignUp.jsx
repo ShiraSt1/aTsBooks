@@ -16,10 +16,17 @@ const EnglishCourseSignUp = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverResponse, setServerResponse] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   const handleInputChange = (e, field) => {
+    if(field==='file'){
+      setSelectedFileName(e.target.files[0].name);
+      setForm((prev) => ({ ...prev, [field]: e.target.files[0] }));
+    }else{
+      setForm((prev) => ({ ...prev, [field]: value }));
+    }
     const value = field === "file" ? e.target.files[0] : e.target.value;
-    setForm((prev) => ({ ...prev, [field]: value }));
+    
   };
 
   const SentRequestForJoinTheCourse = async () => {
@@ -49,7 +56,7 @@ const EnglishCourseSignUp = () => {
           "Content-Type": "multipart/form-data",
         }
       });
-      if (res.status === 201) {
+      if (res.status === 201 || res.status === 200) {
         setServerResponse(true);
       } else {
         alert("There was a problem sending your message. ❌");
@@ -116,18 +123,49 @@ const EnglishCourseSignUp = () => {
             )}
           </div>
         ))}
+        
         <div className="form-field">
-          <label htmlFor="fileUpload" className="cute-label">
-            Upload a file (optional)
-          </label>
-          <input
-            type="file"
-            id="fileUpload"
-            name="file"
-            onChange={handleInputChange} // פונקציה שתעדכני ב-state
-            className="cute-input"
-          />
-        </div>
+  <label htmlFor="fileUpload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+    Upload a file (optional)
+  </label>
+
+  <div style={{ position: 'relative', display: 'inline-block' }}>
+    <label
+      htmlFor="fileUpload"
+      style={{
+        backgroundColor: '#1756dd',
+        color: 'white',
+        padding: '10px 18px',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        fontWeight: 500,
+        display: 'inline-block',
+        transition: 'background-color 0.3s ease',
+      }}
+    >
+      Choose File
+    </label>
+
+    <input
+      type="file"
+      id="fileUpload"
+      name="file"
+      onChange={(e)=>{handleInputChange(e,'file')}}
+      style={{
+        display: 'none',
+      }}
+    />
+  </div>
+
+  {/* הצגת שם הקובץ שנבחר */}
+  {selectedFileName && (
+    <p style={{ marginTop: '8px', fontStyle: 'italic', color: '#333' }}>
+      Selected file: <strong>{selectedFileName}</strong>
+    </p>
+  )}
+</div>
+
+
         <div className="form-field">
           <Button
             label="Be In Touch"

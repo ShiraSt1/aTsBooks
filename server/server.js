@@ -14,11 +14,6 @@ const PORT = process.env.PORT || 4000
 const upload = multer({ storage });
 const path = require('path');
 
-app.use((req, res, next) => {
-  console.log("🔥 Incoming request:", req.method, req.url);
-  next();
-});
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(cors(corsOptions))
