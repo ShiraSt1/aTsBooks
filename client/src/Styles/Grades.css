@@ -44,7 +44,7 @@
 /* Image styling */
 .grade-card img {
     width: 100%;
-    height: 300px; /* Fixed height for images */
+    height: 100px; /* Fixed height for images */
     object-fit: cover; /* Maintain aspect ratio and fill the area */
     border-bottom: 1px solid #e0e0e0; /* Optional: subtle separator line */
     
@@ -91,6 +91,6 @@
 
 .course-image {
     width: 100%;
-    height: 600px;
+    height: 300px;
     object-fit: fill;
 }

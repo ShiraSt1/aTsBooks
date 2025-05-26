@@ -120,7 +120,9 @@ export default function BooksDataView() {
         const formData = new FormData();
         formData.append('name', name);
         formData.append('grades', JSON.stringify(selectedItem));
-        formData.append('image', image); // הוספת הקובץ ל-FormData
+        formData.append('image', image);
+        console.log('img: ',image);
+        
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
                 headers: {

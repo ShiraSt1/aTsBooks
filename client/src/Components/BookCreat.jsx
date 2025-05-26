@@ -16,7 +16,7 @@ const BookCreate = (props) => {
     const [grades, setGrades] = useState([]);
     const [nameError, setNameError] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const [selectedimage, setselectedImage] = useState(null);
+    const [selectedimage, setSelectedImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const { gradeId } = useParams();
 
@@ -52,6 +52,7 @@ const BookCreate = (props) => {
     }, [gradeId]);
 
     const handleCreateClick = () => {
+        console.log("Selected image:", selectedimage);
         createBook(name, selectedGrades, selectedimage);
         setVisibleCreatBook(false);
     };
@@ -106,14 +107,14 @@ const BookCreate = (props) => {
                         uploadHandler={(e) => {
                             const file = e.files[0];
                             if (file) {
-                                setselectedImage(file);
+                                setSelectedImage(file);
                                 setPreview(URL.createObjectURL(file));
                             }
                         }}
-                        emptyTemplate={<p>Drag an image file or click to select.</p>}
+                        // emptyTemplate={<p>Drag an image file or click to select.</p>}
                         chooseLabel="Choose"
-                        uploadLabel="Confirm"
-                        cancelLabel="Cancel"
+                        // uploadLabel="Confirm"
+                        // cancelLabel="Cancel"
                     />
                     {preview && <img src={preview} alt="Preview" style={{ width: 150, marginTop: 10 }} />}
                 </div>
@@ -123,7 +124,7 @@ const BookCreate = (props) => {
                         label="Create"
                         onClick={() => {
                             handleCreateClick(); // קריאה לפונקציה הקיימת
-                            setselectedImage(null); 
+                            setSelectedImage(null); 
                             setPreview(null); // איפוס preview
                             setName(null);
                         }}
@@ -133,7 +134,7 @@ const BookCreate = (props) => {
                         label="Cancel"
                         onClick={() => {
                             setVisibleCreatBook(false);
-                            setselectedImage(null);
+                            setSelectedImage(null);
                             setPreview(null);
                             setName(null);
                         }}

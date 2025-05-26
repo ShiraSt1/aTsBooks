@@ -54,7 +54,8 @@ const BookUpdate = (props) => {
     
     // העלאת תמונה חדשה
     const handleImageUpload = (e) => {
-        const file = e.files[0];
+        const file = e.target.files[0];
+        // const file = e.files[0];
         if (file) {
             setSelectedImage(file);
             setPreview(URL.createObjectURL(file)); // עדכון תצוגה מקדימה
@@ -110,7 +111,7 @@ const BookUpdate = (props) => {
                         accept="image/*"
                         maxFileSize={5 * 1024 * 1024}
                         uploadHandler={handleImageUpload}
-                        emptyTemplate={<p>Drag an image file or click to select.</p>}
+                        // emptyTemplate={<p>Drag an image file or click to select.</p>}
                     />
                     {preview && <img src={preview} alt="Preview" style={{ width: 150, marginTop: 10 }} />}
                 </div>

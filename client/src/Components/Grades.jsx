@@ -77,7 +77,7 @@ const Grades = () => {
     };
 
     const listTemplate = (gradesData) => {
-        return <div className="grid grid-nogutter">{gradesData.map((grade, index) => itemTemplate(grade, index))}</div>;
+        return <div className="grid grid-nogutter" >{gradesData.map((grade, index) => itemTemplate(grade, index))}</div>;
     };
 
     return (<>
