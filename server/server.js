@@ -7,11 +7,19 @@ const connectDB = require("./config/dbConn.js")
 const mongoose  = require("mongoose")
 
 const multer = require("multer");
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // או כל תיקיה אחרת
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
 
 const app = express()
 const PORT = process.env.PORT || 3001
-const upload = multer({ storage });
 const path = require('path');
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

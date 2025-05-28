@@ -6,6 +6,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { logOut } from '../redux/tokenSlice';
 
 const FilesDataView = ({ titleId }) => {
     const [files, setFiles] = useState([]);
@@ -55,7 +56,6 @@ const FilesDataView = ({ titleId }) => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('title', titleId);
-
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }

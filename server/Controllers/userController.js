@@ -115,22 +115,18 @@ const register = async (req, res) => {
 
 //login
 const login = async (req, res) => {
-    console.log("aaaaaa");
     try{
         const { email, password } = req.body
-        console.log("in function login in server");
         
         if (!email || !password)
             return res.status(400).json({ message: 'All fields are required' })
         const foundUser = await User.findOne({ email }).lean()
-        console.log(foundUser?"foundUser "+foundUser:"not found");
         
         if (!foundUser) {
             return res.status(401).json({ message: 'Email not found' })
         }
         const Match = await bcrypt.compare(password, foundUser.password)
         if (!Match) return res.status(401).json({ message: 'Incorrect password' })
-            console.log("after match");
         
         if (!foundUser.confirm && foundUser.roles != "Admin") {
             return res.status(403).json({ message: 'You are not confirmed to login yet.' });
@@ -145,7 +141,6 @@ const login = async (req, res) => {
         }
         
         const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
-        console.log("after jwt sign");
         
         res.json({ accessToken, user: NewUser })
     }catch(err){

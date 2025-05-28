@@ -11,12 +11,17 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).send({ message: "No file has been uploaded" });
     }
+    
     const newFile = await File.create({
       name: req.file.originalname,
       path: req.file.path,
       size: Number((req.file.size / 1024).toFixed(2)),
       title: title,
     });
+    if(!newFile) {
+      return res.status(500).send({ message: "Error creating file record in database" });
+    }
+    
     res.status(201).send(newFile);
   } catch (err) {
     res.status(500).send({ message: "Error uploading File", error: err.message });

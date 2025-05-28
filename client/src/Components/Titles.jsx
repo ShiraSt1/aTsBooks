@@ -131,6 +131,7 @@ const Titles = () => {
     };
 
     const handleUpload = async ({ files }) => {
+        
         const file = files[0];
         const formData = new FormData();
         formData.append('file', file);
