@@ -1,9 +1,10 @@
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { AutoComplete } from "primereact/autocomplete";
-
+import { Toast } from "primereact/toast";
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 const UpdateGrade = (props) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const items = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade'];
@@ -11,6 +12,7 @@ const UpdateGrade = (props) => {
     const { updateGrade, visible, setVisible, grade } = props;
     const nameRef = useRef("");
     const imageRef = useRef("");
+    const toast = useRef(null);
 
     useEffect(() => {
         if (grade) {
@@ -31,6 +33,8 @@ const UpdateGrade = (props) => {
             onHide={() => setVisible(false)}
             onClick={(e) => e.stopPropagation()} // מונע את הפיכת הדיאלוג לקישור
         >
+            <Toast ref={toast} />
+            <ConfirmPopup />
             <div className="flex flex-column gap-4" style={{ padding: '1rem' }}>
                 <div className="flex flex-column gap-2">
                     <label htmlFor="name" className="font-medium">Name</label>
@@ -49,17 +53,18 @@ const UpdateGrade = (props) => {
                     <Button
                         label="Update"
                         onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
                             updateGrade(selectedItem);
                             setVisible(false);
-                        }}
+                          }}
                         className="p-button p-button-primary"
                     />
                     <Button
                         label="Cancel"
-                        onClick={(e) => 
-                            {e.stopPropagation()
-                            setVisible(false)}}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setVisible(false)
+                        }}
                         className="p-button p-button-secondary"
                     />
                 </div>

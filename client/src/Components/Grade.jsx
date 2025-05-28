@@ -10,10 +10,12 @@ import 'primeicons/primeicons.css';
 import axios from 'axios'
 import '../Grade.css';
 import { useSelector } from "react-redux";
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 
 const Grade = (props) => {
     const [visible, setVisible] = useState(false);
     const toast = useRef(null);
+    const toastDelete = useRef(null);
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const navigate = useNavigate();
@@ -79,28 +81,29 @@ const Grade = (props) => {
     const [iDdeleteBook, setIDdeleteBook] = useState(null);
     const [deletflage, setDeletflage] = useState(false);
 
-    const confirmDeleteGrade = (id) => {
-        confirmDialog({
-            message: 'Are you sure you want to delete this grade and all the files in it?',
-            header: 'Delete Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Yes',
-            rejectLabel: 'No',
-            accept: () => deleteGrade(id),
-            reject: () => {
-                toast.current.show({ severity: 'info', summary: 'Cancelled', detail: 'Deletion canceled', life: 3000 });
-            }
-        });
-    };
-
     const footer = (
         <div className="card flex flex-wrap gap-2 justify-content-center">
             {user?.roles === "Admin" && (
                 <>
-                    <Button icon="pi pi-times" label="Delete" onClick={(e) => {
-                        e.stopPropagation()
-                        deleteGrade(props.grade._id)
-                    }} />
+                    <Button icon="pi pi-times" label="Delete"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            confirmPopup({
+                                target: e.currentTarget,
+                                message: 'Are you sure you want to delete the grade and all the files in it?',
+                                icon: 'pi pi-exclamation-triangle',
+                                defaultFocus: 'accept',
+                                accept: () => {
+                                    e.stopPropagation()
+                                    deleteGrade(props.grade._id)
+                                    setVisible(false);
+                                },
+                                reject: () => {
+                                    e.stopPropagation()
+                                    setVisible(false);
+                                }
+                            });
+                        }} />
 
                     <Button label="Update" icon="pi pi-pencil" onClick={(e) => {
                         e.stopPropagation()
@@ -114,21 +117,22 @@ const Grade = (props) => {
         <>
             <Toast ref={toast} />
             <ConfirmDialog />
+            <Toast ref={toastDelete} />
+            <ConfirmPopup />
             <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={props.grade._id}>
-
                 <div
                     className="p-4 border-1 surface-border surface-card border-round"
-                    onClick={() => navigate(`/books/${props.grade._id}`)}
+                    onClick={(e) => { e.stopPropagation(); navigate(`/books/${props.grade._id}`) }}
                     style={{ cursor: 'pointer' }}>
 
                     <div className="flex flex-column align-items-center gap-3 py-5">
-                        <img className="course-image" src={`/pictures/${props.grade.name}.png `} alt={props.grade.name} footer={footer} />
-                        <div className="text-2xl font-bold">{props.grade.name} {footer}</div>
+                        <img className="course-image" src={`/pictures/${props.grade.name}.png`} alt={props.grade.name} />
+                        <div className="text-2xl font-bold">{props.grade.name}</div>
                     </div>
+                    {footer}
                 </div>
             </div>
         </>
     )
 }
-
 export default Grade
