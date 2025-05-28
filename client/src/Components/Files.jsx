@@ -105,6 +105,7 @@ const FilesDataView = ({ titleId }) => {
     };
 
     if (loading) return <div>Loading Files...</div>;
+    
     return (
         <div className="p-4">
             {/* כותרת ראשית עם שם הספר */}

@@ -20,7 +20,7 @@ export default function BooksDataView() {
     const [gradeName, setGradeName] = useState('');
     const [visibleCreatBook, setVisibleCreatBook] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { gradeId } = useParams(); 
+    const { gradeId } = useParams();
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const [loading, setLoading] = useState(false);
@@ -160,17 +160,20 @@ export default function BooksDataView() {
     };
 
     const gridItem = (book) => (
-        <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={book._id}>
+        <div className="col-12 sm:col-6 lg:col-4 xl:col-4 p-2" key={book._id}>
             <div
+                // className="p-4 border-1 surface-border surface-card border-round flex flex-column justify-content-between"
                 className="p-4 border-1 surface-border surface-card border-round"
                 onClick={() => handleNavigation(book._id)}
-                style={{ cursor: 'pointer' }}>
-                <div className="flex flex-column align-items-center gap-3 py-5">
+                style={{ cursor: 'pointer', height: "700px" }}>
+                <div
+                    style={{ height: "550px" }}
+                    className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
                         src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
-                        style={{ objectFit: 'cover', width: '80%', height: '80%' }} // תמונה בגודל קטן יותר
+                        style={{ objectFit: 'cover' }}
                     />
                     <div className="text-2xl font-bold">{book.name}</div>
                     {book.grades && book.grades.length > 0 && (
@@ -184,7 +187,9 @@ export default function BooksDataView() {
                         </>
                     )}
                 </div>
-                <div className="card flex flex-wrap gap-2 justify-content-center">
+                <div
+                    style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column',paddingBottom:'0px',marginBottom:'0px' }}
+                    className="card flex flex-wrap gap-2 justify-content-center">
                     {user?.roles === "Admin" && (
                         <>
                             <Button
@@ -200,7 +205,6 @@ export default function BooksDataView() {
                                 icon="pi pi-trash"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    // deleteBook(book._id);
                                     confirmPopup({
                                         target: e.currentTarget,
                                         message: 'Are you sure you want to delete this book and all the files in it?',

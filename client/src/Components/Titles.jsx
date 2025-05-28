@@ -246,7 +246,6 @@ const Titles = () => {
                     </div>
                 </div>
             </Dialog>
-
             <Toast ref={toast} />
         </div>
     );

@@ -65,7 +65,7 @@ const createNewBook = async (req, res) => {
         return res.status(400).send("invalid book")
     }
     try {
-        const titles = ['Book', 'Exams', 'Exercises', 'Disk'];
+        const titles = ['Book', 'Exams', 'Exercises', 'Disk','Videos','Other'];
 
         const titleDocs = await Promise.all(
             titles.map(name => Title.create({ name, book: book._id }))
