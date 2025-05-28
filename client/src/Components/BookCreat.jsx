@@ -52,7 +52,6 @@ const BookCreate = (props) => {
     }, [gradeId]);
 
     const handleCreateClick = () => {
-        console.log("Selected image:", selectedimage);
         createBook(name, selectedGrades, selectedimage);
         setVisibleCreatBook(false);
     };

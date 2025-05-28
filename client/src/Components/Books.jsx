@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import axios from 'axios';
@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Grades.css';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Toast } from 'primereact/toast';
+import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -18,10 +20,12 @@ export default function BooksDataView() {
     const [gradeName, setGradeName] = useState('');
     const [visibleCreatBook, setVisibleCreatBook] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { gradeId } = useParams(); // Get gradeId from URL
+    const { gradeId } = useParams(); 
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const toastDelete = useRef(null);
 
     useEffect(() => {
         if (gradeId) {
@@ -70,8 +74,6 @@ export default function BooksDataView() {
         }
     };
 
-    const [loading, setLoading] = useState(false);
-
     const deleteBook = async (bookId) => {
         setLoading(true)
         try {
@@ -81,9 +83,9 @@ export default function BooksDataView() {
             setFlagGradeId(!flagGradeId)
         } catch (err) {
             console.error('Error deleting book:', err);
-        }finally {
+        } finally {
             setLoading(false);
-          }
+        }
     };
 
     const updateBook = async (name, selectedItem, image, book) => {
@@ -108,9 +110,9 @@ export default function BooksDataView() {
         } catch (e) {
 
             console.error(e);
-        }finally {
+        } finally {
             setLoading(false);
-          }
+        }
     };
 
     const createBook = async (name, selectedItem, image) => {
@@ -121,8 +123,7 @@ export default function BooksDataView() {
         formData.append('name', name);
         formData.append('grades', JSON.stringify(selectedItem));
         formData.append('image', image);
-        console.log('img: ',image);
-        
+
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
                 headers: {
@@ -143,9 +144,9 @@ export default function BooksDataView() {
                 console.error("Error creating book:", e);
             if (e.status === 402)
                 alert("this book name alrady exits")
-        }finally {
+        } finally {
             setLoading(false);
-          }
+        }
     };
 
     const handleNavigation = (id) => {
@@ -199,7 +200,22 @@ export default function BooksDataView() {
                                 icon="pi pi-trash"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    deleteBook(book._id);
+                                    // deleteBook(book._id);
+                                    confirmPopup({
+                                        target: e.currentTarget,
+                                        message: 'Are you sure you want to delete this book and all the files in it?',
+                                        icon: 'pi pi-exclamation-triangle',
+                                        defaultFocus: 'accept',
+                                        accept: () => {
+                                            e.stopPropagation()
+                                            deleteBook(book._id);
+                                            setVisible(false);
+                                        },
+                                        reject: () => {
+                                            e.stopPropagation()
+                                            setVisible(false);
+                                        }
+                                    });
                                 }}
                                 tooltip="Delete"
                             />
@@ -223,12 +239,14 @@ export default function BooksDataView() {
 
     return (
         <div>
+            <Toast ref={toastDelete} />
+            <ConfirmPopup />
             {loading && (
-                                <div style={{ margin: "20px" }}>
-                                  <ProgressSpinner style={{ width: '30px', height: '30px' }} strokeWidth="5" />
-                                  <p>Wait just a moment please...</p>
-                                </div>
-                              )}
+                <div style={{ margin: "20px" }}>
+                    <ProgressSpinner style={{ width: '30px', height: '30px' }} strokeWidth="5" />
+                    <p>Wait just a moment please...</p>
+                </div>
+            )}
             <div>
                 {gradeName && (
                     <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
@@ -241,7 +259,7 @@ export default function BooksDataView() {
                 <DataView value={Array.isArray(books) ? books : []} listTemplate={listTemplate} layout={layout} />
             </div>
             {selectedBook ? <BookUpdate updateBook={updateBook} setVisible={setVisible} visible={visible} book={selectedBook} /> : <></>}
-        
+
         </div>
     );
 }
