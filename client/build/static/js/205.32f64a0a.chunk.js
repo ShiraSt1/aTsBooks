@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[205],{7205:(e,t,l)=>{l.r(t),l.d(t,{default:()=>r});var n=l(579);const r=()=>(localStorage.removeItem("loggedInUser"),(0,n.jsx)("div",{style:{textAlign:"center",marginTop:"2rem"},children:(0,n.jsx)("h3",{children:"Logging out..."})}))}}]);
-//# sourceMappingURL=205.32f64a0a.chunk.js.map
