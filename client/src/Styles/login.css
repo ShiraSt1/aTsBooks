@@ -30,12 +30,13 @@
 
 .login-input {
     width: 100%;
-    padding: 0.8rem;
+    /* padding: 0.8rem; */
     font-size: 1rem;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 8px;
     outline: none;
     transition: border 0.2s ease;
+    justify-content: center; 
 }
 
 .login-input:focus {

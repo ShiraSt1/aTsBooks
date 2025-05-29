@@ -136,6 +136,8 @@ const Register = () => {
                             inputClassName="register-input"
                             onChange={(e) => validatePassword(e.target.value)}
                             placeholder="Enter your password"
+                            toggleMask
+                            feedback={false}
                         />
                         {errors.password && <small className="register-error">{errors.password}</small>}
                     </div>

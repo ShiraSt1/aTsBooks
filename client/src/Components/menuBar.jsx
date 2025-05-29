@@ -135,7 +135,6 @@ const MenuBar = () => {
       <UpdateUser
           visible={showUpdateDialog}
           onHide={() => setShowUpdateDialog(false)}
-
           user={user}
         /> :<></>}{
           user?.roles=="Admin" ?

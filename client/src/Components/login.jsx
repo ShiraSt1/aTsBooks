@@ -54,7 +54,7 @@ const Login = () => {
             if (res && res.status === 200) {
                 alert("A verification code will be sent to your email.")
                 setVerificationStep(true);
-                setSuccessMessage('Verification code sent to your email.');
+                setSuccessMessage('Verification code has been sent to your email.');
             }
         } catch (err) {
             setError('Failed to send verification code. Please try again.');
@@ -163,6 +163,7 @@ const Login = () => {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             toggleMask
+                            feedback={false}
                             className="login-input"
                         />
                     </div>
@@ -173,6 +174,7 @@ const Login = () => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             toggleMask
+                            feedback={false}
                             className="login-input"
                         />
                     </div>
