@@ -3,8 +3,10 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
+import { getConfig } from './config';
 
 const EnglishCourseSignUp = () => {
+  const apiUrl = getConfig().API_URL;
 
   const [form, setForm] = useState({
     firstName: "",
@@ -52,7 +54,8 @@ const EnglishCourseSignUp = () => {
       });
     }
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
+      const res = await axios.post(`${apiUrl}api/course/register`, formData, {
+        // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         }

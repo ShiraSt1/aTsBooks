@@ -11,6 +11,7 @@ import '../Styles/Grades.css';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Toast } from 'primereact/toast';
 import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
+import { getConfig } from './config';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -26,6 +27,7 @@ export default function BooksDataView() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toastDelete = useRef(null);
+    const apiUrl = getConfig().API_URL;
 
     useEffect(() => {
         if (gradeId) {
@@ -39,7 +41,8 @@ export default function BooksDataView() {
 
     const getGradeName = async (Id) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
+            const res = await axios.get(`${apiUrl}api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
+            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
             if (res.status === 200) {
                 setGradeName(res.data.name); // עדכון שם הכיתה ב-state
             }
@@ -51,7 +54,8 @@ export default function BooksDataView() {
 
     const getBooks = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book`);
+            const res = await axios.get(`${apiUrl}api/book`);
+            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book`);
             if (res.status === 200) {
                 setBooks(res.data);
             }
@@ -62,7 +66,8 @@ export default function BooksDataView() {
 
     const getBooksByGrade = async (Id) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/grade/${Id}`
+            const res = await axios.get(`${apiUrl}api/book/grade/${Id}`
+                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/grade/${Id}`
             );
             if (res.status === 200) {
                 setBooks(res.data);
@@ -77,7 +82,8 @@ export default function BooksDataView() {
     const deleteBook = async (bookId) => {
         setLoading(true)
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
+            const res = await axios.delete(`${apiUrl}api/book/${bookId}`, {
+                // const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFlagGradeId(!flagGradeId)
@@ -98,7 +104,8 @@ export default function BooksDataView() {
             image: image ? image : book.image,
         };
         try {
-            const res = await axios.put(`${process.env.REACT_APP_API_URL}api/book`, updatebook, {
+            const res = await axios.put(`${apiUrl}api/book`, updatebook, {
+                // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/book`, updatebook, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -125,7 +132,8 @@ export default function BooksDataView() {
         formData.append('image', image);
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
+            const res = await axios.post(`${apiUrl}api/book`, formData, {
+                // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data' // הגדרת התוכן כ-multipart
@@ -171,7 +179,8 @@ export default function BooksDataView() {
                     className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
-                        src={`${process.env.REACT_APP_API_URL}${book.image}`}
+                        src={`${apiUrl}${book.image}`}
+                        // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
                         style={{ objectFit: 'cover' }}
                     />

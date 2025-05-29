@@ -8,6 +8,7 @@ import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { getConfig } from './config';
 
 const Titles = () => {
     const [items, setItems] = useState([]);
@@ -22,10 +23,12 @@ const Titles = () => {
     const toast = useRef(null);
     const { bookId } = useParams();
     const navigate = useNavigate();
+    const apiUrl = getConfig().API_URL;
 
     const fetchBook = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
+            const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
+                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setBook(res.data);
@@ -43,13 +46,15 @@ const Titles = () => {
 
     const fetchTitles = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/title/getTitlesByBook/${bookId}`, {
+            const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
+                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const titles = res.data;
             const filesMap = {};
             for (const title of titles) {
-                const filesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${title._id}`, {
+                const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
+                    // const filesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -89,14 +94,11 @@ const Titles = () => {
                                 }} />
                                 <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
-                                    window.open(`${process.env.REACT_APP_API_URL}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
+                                    window.open(`${apiUrl}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
+                                        // window.open(`${process.env.REACT_APP_API_URL}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
                                     );
                                 }} />
                                 {user?.roles === "Admin" && (<>
-                                    {/* <Button icon="pi pi-pencil" rounded text size="small" onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEdit({ id: file._id, name: file.customName || file.name, titleId: title._id });
-                                    }} /> */}
                                     <Button icon="pi pi-trash" rounded text size="small" severity="danger" onClick={(e) => {
                                         e.stopPropagation();
                                         handleDelete(file._id, title._id);
@@ -115,7 +117,8 @@ const Titles = () => {
 
     const handleDelete = async (fileId, titleId) => {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`, {
+            await axios.delete(`${apiUrl}api/file/${fileId}`, {
+                // await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFilesByTitle(prev => ({
@@ -139,7 +142,8 @@ const Titles = () => {
         formData.append('customName', newFileName); // שליחת שם מותאם אישית
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
+            await axios.post(`${apiUrl}api/file`, formData, {
+                // await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
             });
             fetchTitles();
@@ -165,7 +169,8 @@ const Titles = () => {
                 {book?.image && (
                     <div className="flex justify-content-center md:w-4">
                         <img
-                            src={`${process.env.REACT_APP_API_URL}${book.image}`}
+                            src={`${apiUrl}${book.image}`}
+                            // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                             alt="Book"
                             className="border-round shadow-2"
                             style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}

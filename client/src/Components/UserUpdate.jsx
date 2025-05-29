@@ -7,6 +7,7 @@ import 'primeicons/primeicons.css';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, logOut } from '../redux/tokenSlice'
+import { getConfig } from './config';
 
 const UpdateUser = (props) => {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ const UpdateUser = (props) => {
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const dispatch = useDispatch();
+    const apiUrl = getConfig().API_URL;
 
     useEffect(() => {
         navigate('/');
@@ -29,7 +31,8 @@ const UpdateUser = (props) => {
             phone: phoneRef.current.value ? phoneRef.current.value : props.user.phone
         };
         try {
-            const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user`, updatedUser, {
+            const res = await axios.put(`${apiUrl}api/user`, updatedUser, {
+                // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user`, updatedUser, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {

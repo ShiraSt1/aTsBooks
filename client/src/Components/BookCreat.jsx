@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { FileUpload } from 'primereact/fileupload';
 import { useSelector } from "react-redux";
+import { getConfig } from './config';
 
 const BookCreate = (props) => {
     const { createBook, visibleCreatBook, setVisibleCreatBook } = props;
@@ -19,10 +20,12 @@ const BookCreate = (props) => {
     const [selectedimage, setSelectedImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const { gradeId } = useParams();
+    const apiUrl = getConfig().API_URL;
 
     const AvailablGrade = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`, {
+            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`, {
+                const res = await axios.get(`${apiUrl}api/grade`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 204) {

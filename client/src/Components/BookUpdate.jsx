@@ -5,20 +5,24 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import axios from 'axios';
 import { FileUpload } from "primereact/fileupload";
+import { getConfig } from './config';
 
 const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book
     const [selectedImage, setSelectedImage] = useState(null); // תמונה שנבחרה
-    const [preview, setPreview] = useState(book?.image ? `${process.env.REACT_APP_API_URL}${book.image}` : "");
+    const [preview, setPreview] = useState(book?.image ? `${apiUrl}${book.image}` : "");
+    // const [preview, setPreview] = useState(book?.image ? `${process.env.REACT_APP_API_URL}${book.image}` : "");
     const [grades, setGrades] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]);
     const nameRef = useRef("");
     const [name, setName] = useState(book?.name || "");
+    const apiUrl = getConfig().API_URL;
 
     // הבאת כיתות זמינות
     const AvailablGrade = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`);
+            const res = await axios.get(`${apiUrl}api/grade`);
+            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`);
             if (res.status === 204) {
                 setGrades([]);
             } else {
@@ -48,7 +52,8 @@ const BookUpdate = (props) => {
 
     useEffect(() => {
         if (book?.image) {
-            setPreview(`${process.env.REACT_APP_API_URL}${book.image}`);
+            setPreview(`${apiUrl}${book.image}`);
+            // setPreview(`${process.env.REACT_APP_API_URL}${book.image}`);
         }
     }, [book.image]);
     
@@ -111,7 +116,6 @@ const BookUpdate = (props) => {
                         accept="image/*"
                         maxFileSize={5 * 1024 * 1024}
                         uploadHandler={handleImageUpload}
-                        // emptyTemplate={<p>Drag an image file or click to select.</p>}
                     />
                     {preview && <img src={preview} alt="Preview" style={{ width: 150, marginTop: 10 }} />}
                 </div>

@@ -9,7 +9,9 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import React, { Suspense} from 'react';
 import { Route, Routes } from 'react-router-dom';
 import logo from './Styles/logo.jpg';
-
+/* */
+import { loadConfig, getConfig } from './config';
+/**/
 import MenuBar from './Components/menuBar';
 const LazyGrade = React.lazy(() => import('./Components/Grades'));
 const LazyHome = React.lazy(() => import('./Components/Home'));
@@ -24,6 +26,21 @@ const LazyFileView = React.lazy(() => import('./Components/FileView'));
 const LazyEnglishCourseSignUp = React.lazy(() => import('./Components/EnglishCourseSignUp'));
 
 function App() {
+  // config.js
+const [configLoaded, setConfigLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      await loadConfig();
+      setConfigLoaded(true);
+    };
+    fetchConfig();
+  }, []);
+
+  if (!configLoaded) {
+    return <div>Loading config...</div>;
+  }
+//config
   return (
     <div className="App">
        <div className="content">

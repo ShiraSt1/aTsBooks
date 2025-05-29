@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Password } from 'primereact/password';
 import '../Styles/register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { getConfig } from './config';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const Register = () => {
     const [name, setName] = useState('');
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-
+    const apiUrl = getConfig().API_URL;
     const [errors, setErrors] = useState({
         email: "",
         name: "",
@@ -24,7 +25,8 @@ const Register = () => {
         setLoading(true);
         const newUser = { name, email, phone, password };
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
+            const res = await axios.post(`${apiUrl}api/user/register`, newUser);
+            // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
 
             if (res.status === 409) {
                 alert("email exits")

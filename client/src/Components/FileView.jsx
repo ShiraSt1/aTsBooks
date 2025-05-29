@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { getConfig } from './config';
 
 const FileView = () => {
   const { fileId } = useParams();
@@ -10,6 +11,7 @@ const FileView = () => {
   const [loading, setLoading] = useState(true);
   const { token } = useSelector((state) => state.token);
   const { user } = useSelector((state) => state.token);
+  const apiUrl = getConfig().API_URL;
 
   useEffect(() => {
     if (fileId)
@@ -19,7 +21,8 @@ const FileView = () => {
   const fetchFile = async () => {
     try {
       // קריאת שרת עם headers
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, {
+      const response = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+        // const response = await axios.get(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, {
         headers: { 'Authorization': `Bearer ${token}` }, // הוספת הטוקן ב-Headers
         responseType: 'blob', // טיפוס blob עבור קבצים
       });
