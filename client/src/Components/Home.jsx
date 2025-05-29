@@ -1,13 +1,7 @@
 import { useEffect } from 'react';
 import home from '../Styles/home.jpg';
-import { getConfig } from '../config';
 
 const Home = () => {
-  const apiUrl = getConfig().API_URL;
-
-  useEffect(() => {
-    console.log("API URL:", apiUrl);
-  }, [])
 
   return (
     <div className="home-container">

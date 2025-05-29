@@ -2,25 +2,43 @@ const File = require("../models/File")
 const fs = require("fs");
 const path = require("path");
 const mime = require("mime-types");
-const { log } = require("console");
 
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const sendEmail = require('../utils/sendEmail');
 
-const registerToCourse = async(req, res) => {
-    const { firstName, lastName, email ,message} = req.body
+const registerToCourse = async (req, res) => {
+    const { firstName, lastName, email, message } = req.body
 
-    if (!firstName || !lastName || !email ||!message) {
+    if (!firstName || !lastName || !email || !message) {
         return res.status(400).json({ message: 'All fields are required' })
     }
+    // const files = req.files
+    // ? req.files.map(file => ({
+    //     filename: file.originalname,
+    //     content: file.buffer,
+    //     contentType: file.mimetype
+    //   }))
+    // : [];
+
+    // const files = req.files
+    // ? req.files.map(file => ({
+    //     filename: file.originalname,
+    //     content: fs.readFileSync(file.path),
+    //     contentType: file.mimetype
+    //   }))
+    // : [];
+
+
     const files = req.files
     ? req.files.map(file => ({
         filename: file.originalname,
-        content: file.buffer,
+        path: file.path,
         contentType: file.mimetype
       }))
     : [];
+    
+  // אחרי שליחת המייל
 
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -35,11 +53,11 @@ const registerToCourse = async(req, res) => {
     </div>
 `;
 
-    sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email,files?files:[])
-
+    await sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email, files ? files : [])
+    // req.files?.forEach(file => fs.unlinkSync(file.path));
     return res.status(201).json({
         message: `An email sent to administrator`
     })
 }
 
-module.exports = { registerToCourse}
+module.exports = { registerToCourse }

@@ -53,7 +53,7 @@ const EnglishCourseSignUp = () => {
         formData.append("files", file);
       });
     }
-    try {
+    try {      
       const res = await axios.post(`${apiUrl}api/course/register`, formData, {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
         headers: {
@@ -127,7 +127,7 @@ const EnglishCourseSignUp = () => {
                 transition: 'background-color 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px', // רווח בין האייקון לטקסט
+                gap: '8px', 
               }}
             >
               <i className="pi pi-upload" style={{ fontSize: '1.2em' }}></i>
@@ -146,7 +146,6 @@ const EnglishCourseSignUp = () => {
             />
           </div>
 
-          {/* הצגת שם הקובץ שנבחר */}
           {selectedFileName.length > 0 && (
             <div style={{ marginTop: '8px', fontStyle: 'italic', color: '#333' }}>
               Selected files:
