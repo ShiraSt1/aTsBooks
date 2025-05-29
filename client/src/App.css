@@ -232,22 +232,65 @@ var(--surface-card);
   z-index: 999; /* כדי שיהיה מעל כל דבר */
 }
 
-.center-image-container {
+/*.center-image-container {
   display: flex;
   justify-content: center; /* מרכז אופקית */
-  align-items: center; /* מרכז אנכית */
-  height: 100vh; /* הגדר את גובה המיכל לגובה כל המסך */
-  width: 100%; /* הגדר את הרוחב לרוחב מלא */
-  background-color: #f7f7f7; /* אופציונלי: רקע ניטרלי */
+  /*align-items: center; /* מרכז אנכית */
+  /*height: 85vh; /* הגדר את גובה המיכל לגובה כל המסך */
+  /*width: 100%; /* הגדר את הרוחב לרוחב מלא */
+  /*background-color: #f7f7f7; /* אופציונלי: רקע ניטרלי */
+/*}*/
+
+/*.center-image-container img {
+ /* max-width: 90%; /* ודא שהתמונה לא תחרוג מרוחב המסך */
+/*  max-height: 90%; /* ודא שהתמונה לא תחרוג מגובה המסך */
+ /* object-fit: contain; /* שמור על יחס הגובה-רוחב של התמונה */
+/*  border-radius: 8px; /* אופציונלי: פינות מעוגלות */
+/*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* אופציונלי: הוספת צל */
+/*}*/
+
+.home-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 85vh;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 20px;
+  box-sizing: border-box;
+  direction: rtl; /* אם אתה רוצה שיזרום מימין לשמאל */
 }
 
-.center-image-container img {
-  max-width: 100%; /* ודא שהתמונה לא תחרוג מרוחב המסך */
-  max-height: 100%; /* ודא שהתמונה לא תחרוג מגובה המסך */
-  object-fit: contain; /* שמור על יחס הגובה-רוחב של התמונה */
-  border-radius: 8px; /* אופציונלי: פינות מעוגלות */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* אופציונלי: הוספת צל */
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.image-section img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-section {
+  flex: 1;
+  padding: 20px;
+}
+
+.manager-info {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+/**/
 
 @media (max-width: 600px) {
   .app-logo {

@@ -143,36 +143,6 @@ const EnglishCourseSignUp = () => {
             />
           </div>
 
-          {/* <div style={{ position: 'relative', display: 'inline-block' }}>
-            <label htmlFor="fileUpload" style={{ cursor: 'pointer' }}>
-              <Button
-                icon="pi pi-upload"
-                // text // זה הופך את הכפתור לשקוף
-                // aria-label="Upload"
-                style={{
-                  background: 'none', // שקוף
-                  boxShadow: 'none',
-                  color: '#1756dd', // צבע האייקון
-                  fontSize: '5rem',
-                  padding: 0, // ללא רווחים מיותרים
-                  width: '44px',
-                  height: '44px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              />
-            </label>
-            <input
-              type="file"
-              id="fileUpload"
-              name="files"
-              multiple
-              onChange={e => handleInputChange(e, 'files')}
-              style={{ display: 'none' }}
-            />
-          </div> */}
-
           {/* הצגת שם הקובץ שנבחר */}
           {selectedFileName.length > 0 && (
             <div style={{ marginTop: '8px', fontStyle: 'italic', color: '#333' }}>
