@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[180],{619:(e,c,a)=>{a.r(c),a.d(c,{default:()=>n});const s=a.p+"static/media/home.1765c2a0ed42e784db6c.jpg";var t=a(579);const n=()=>(0,t.jsx)("div",{className:"center-image-container",children:(0,t.jsx)("img",{src:s,alt:"Centered Image"})})}}]);
-//# sourceMappingURL=180.0c2b818d.chunk.js.map
