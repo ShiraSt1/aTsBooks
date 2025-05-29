@@ -179,7 +179,7 @@ const confirmUser = async (req, res) => {
             </a>
         </p>
         <hr style="border: none; border-top: 1px solid #ddd;" />
-        <p style="font-size: 0.9em; color: #888;">If you have any questions, feel free to contact us.</p>
+        <p style="font-size: 16px; color: #888;">If you have any questions, feel free to contact us.</p>
         <p style="font-size: 16px;">
             <a href="mailto:${process.env.GMAIL_ADMIN}" style="color: #007BFF; text-decoration: underline;">
                 Contact Support
@@ -203,7 +203,7 @@ const confirmUser = async (req, res) => {
             <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <h2 style="color: #D9534F;">Access to aTsBooks Website Blocked 🚫</h2>
                 <p>
-                    Hello,"${user.name}"
+                    Hello,${user.name}
                 </p>
                 <p>
                     We are sorry to inform you that your access to aTsBooks has been blocked.

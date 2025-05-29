@@ -7,3 +7,4 @@ export const loadConfig = async () => {
 
 export const getConfig = () => config;
 // "API_URL": "http://localhost:3001/"
+// "API_URL": "https://atsbooks.onrender.com/"

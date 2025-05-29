@@ -123,16 +123,16 @@ const Users = () => {
             <div className="flex flex-wrap p-2 align-items-center gap-3">
                 <UserProfile name={item.name}></UserProfile>
                 <span className="font-semibold">{item.email}</span>
-                <div className="flex-1 flex flex-column gap-2">
+                <span className="font-semibold">{item.phone}</span>
+                {/* <div className="flex-1 flex flex-column gap-2">
                     <div className="flex align-items-center gap-2">
                         <div className="flex align-items-center gap-2">
-                            {/* הצגת תאריך יצירת המשתמש */}
                             <br />
                             <i className="pi pi-calendar text-sm"></i>
                             <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <FaTrashAlt size={20} className="delete-icon" onClick={() => confirmDeleteUser(item._id)} />
             </div>
         );
