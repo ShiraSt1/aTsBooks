@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import home from '../Styles/home.jpg';
 
 const Home = () => {
-  useEffect(()=>{
-console.log("API URL:", process.env.REACT_APP_API_URL);
-  },[])
+  useEffect(() => {
+    console.log("API URL:", process.env.REACT_APP_API_URL);
+  }, [])
+
   return (
     <div className="home-container">
       <div className="image-section">
