@@ -73,7 +73,7 @@ const register = async (req, res) => {
     if (!name || !password || !email) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-    
+
     const duplicate = await User.findOne({ email: email }).lean()
     if (duplicate) {
         return res.status(409).json({ message: "Duplicate email" })
@@ -115,23 +115,23 @@ const register = async (req, res) => {
 
 //login
 const login = async (req, res) => {
-    try{
+    try {
         const { email, password } = req.body
-        
+
         if (!email || !password)
             return res.status(400).json({ message: 'All fields are required' })
         const foundUser = await User.findOne({ email }).lean()
-        
+
         if (!foundUser) {
             return res.status(401).json({ message: 'Email not found' })
         }
         const Match = await bcrypt.compare(password, foundUser.password)
         if (!Match) return res.status(401).json({ message: 'Incorrect password' })
-        
+
         if (!foundUser.confirm && foundUser.roles != "Admin") {
             return res.status(403).json({ message: 'You are not confirmed to login yet.' });
         }
-        
+
         const NewUser = {
             _id: foundUser._id,
             name: foundUser.name,
@@ -139,11 +139,11 @@ const login = async (req, res) => {
             phone: foundUser.phone,
             roles: foundUser.roles
         }
-        
+
         const accessToken = jwt.sign(NewUser, process.env.ACCESS_TOKEN_SECRET)
-        
+
         res.json({ accessToken, user: NewUser })
-    }catch(err){
+    } catch (err) {
         console.error(err)
         res.status(500).json({ message: 'An error occurred during login.' });
     }
@@ -153,8 +153,7 @@ const confirmUser = async (req, res) => {
     const { _id } = req.body
 
     const user = await User.findById(_id).exec()
-    if (!user)
-    {
+    if (!user) {
         return res.status(400).json({ message: 'No user found' })
     }
 
@@ -181,6 +180,11 @@ const confirmUser = async (req, res) => {
         </p>
         <hr style="border: none; border-top: 1px solid #ddd;" />
         <p style="font-size: 0.9em; color: #888;">If you have any questions, feel free to contact us.</p>
+        <p style="font-size: 16px;">
+            <a href="mailto:${process.env.GMAIL_ADMIN}" style="color: #007BFF; text-decoration: underline;">
+                Contact Support
+            </a>
+        </p>
     </div>
 `;
             sendEmail(
