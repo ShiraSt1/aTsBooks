@@ -7,7 +7,7 @@ import { Password } from 'primereact/password'; // Correct import for Password
 import { setToken, logOut } from '../redux/tokenSlice'
 import '../Styles/login.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Login = () => {
     const [email, setEmail] = useState('');

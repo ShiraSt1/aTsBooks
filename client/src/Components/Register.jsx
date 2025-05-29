@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Password } from 'primereact/password';
 import '../Styles/register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Register = () => {
     const [email, setEmail] = useState('');

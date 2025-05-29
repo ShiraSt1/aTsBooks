@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const EnglishCourseSignUp = () => {
   const apiUrl = getConfig().API_URL;

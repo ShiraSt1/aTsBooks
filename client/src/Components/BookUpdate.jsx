@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import axios from 'axios';
 import { FileUpload } from "primereact/fileupload";
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book

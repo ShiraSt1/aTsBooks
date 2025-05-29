@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const FileView = () => {
   const { fileId } = useParams();

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import home from '../Styles/home.jpg';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Home = () => {
   const apiUrl = getConfig().API_URL;

@@ -11,7 +11,7 @@ import axios from 'axios'
 import '../Grade.css';
 import { useSelector } from "react-redux";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Grade = (props) => {
     const [visible, setVisible] = useState(false);

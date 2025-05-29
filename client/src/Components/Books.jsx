@@ -11,7 +11,7 @@ import '../Styles/Grades.css';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Toast } from 'primereact/toast';
 import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);

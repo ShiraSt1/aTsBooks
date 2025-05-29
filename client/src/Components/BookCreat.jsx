@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { FileUpload } from 'primereact/fileupload';
 import { useSelector } from "react-redux";
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const BookCreate = (props) => {
     const { createBook, visibleCreatBook, setVisibleCreatBook } = props;

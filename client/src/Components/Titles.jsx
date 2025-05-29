@@ -8,7 +8,7 @@ import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Titles = () => {
     const [items, setItems] = useState([]);

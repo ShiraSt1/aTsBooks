@@ -7,7 +7,7 @@ import 'primeicons/primeicons.css';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, logOut } from '../redux/tokenSlice'
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const UpdateUser = (props) => {
     const navigate = useNavigate();

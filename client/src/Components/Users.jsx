@@ -12,7 +12,7 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const Users = () => {
     const navigate = useNavigate();

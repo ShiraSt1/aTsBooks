@@ -7,7 +7,7 @@ import { Toast } from 'primereact/toast';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { logOut } from '../redux/tokenSlice';
-import { getConfig } from './config';
+import { getConfig } from '../config';
 
 const FilesDataView = ({ titleId }) => {
     const [files, setFiles] = useState([]);
