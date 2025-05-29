@@ -62,7 +62,6 @@ const Login = () => {
     };
 
     const login = async () => {
-        console.log(process.env.REACT_APP_API_URL)
         setLoading(true);
         if (email && password) {
             try {
