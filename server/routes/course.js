@@ -15,5 +15,6 @@ router.use((err, req, res, next) => {
 });
 
 router.post('/register',upload.array("files"),courseController.registerToCourse)
+router.post('/newsLetter',upload.array("files"),courseController.newsLetter)
 
 module.exports = router

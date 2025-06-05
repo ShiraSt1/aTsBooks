@@ -365,6 +365,9 @@
   color: #28a745;
   font-weight: bold;
   padding: 1rem 0;
+  text-align: center;
+  width: fit-content; /* ← שזה לא יתפוס את כל השורה */
+  margin: 0 auto; /* ← מרכוז */
 }
 
 /* --- רספונסיביות למוביילים --- */

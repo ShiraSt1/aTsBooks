@@ -29,7 +29,7 @@ const getAllGrade = async (req, res) => {
         }
 
         // מיון לפי סדר ה-enum
-        const enumOrder = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade'];
+        const enumOrder = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade','ninth grade','tenth grade','eleventh grade','twelfth grade'];
         grades.sort((a, b) => {
             return enumOrder.indexOf(a.name) - enumOrder.indexOf(b.name);
         });

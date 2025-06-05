@@ -44,34 +44,25 @@ const registerToCourse = async (req, res) => {
 const newsLetter = async (req, res) => {
     const { name, email  } = req.body
 
-    if (!firstName || !lastName || !email || !message) {
+    if (!name ||  !email ) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-    const files = req.files
-    ? req.files.map(file => ({
-        filename: file.originalname,
-        path: file.path,
-        contentType: file.mimetype
-      }))
-    : [];
     
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
-        ${firstName} ${lastName} left a message for you:
+ (:תשמח שתוסיפי אותה לקבלת מיילים על הספרים ${name}
         </p>
-        <strong>${message}</strong>
         <p>
-            Press reply below to answer her email.
+           ${email} :המייל שלה הוא 
         </p>
         <hr style="border: none; border-top: 1px solid #ddd;" />
     </div>
 `;
 
-    await sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email, files ? files : [])
-    // req.files?.forEach(file => fs.unlinkSync(file.path));
+    await sendEmail(process.env.GMAIL_ADMIN, `בקשת הצטרפות לקבלת מיילים`, emailHtml, email)
     return res.status(201).json({
         message: `An email sent to administrator`
     })
 }
-module.exports = { registerToCourse }
+module.exports = { registerToCourse ,newsLetter}

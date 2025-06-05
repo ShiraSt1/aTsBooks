@@ -1,13 +1,35 @@
 import { useEffect, useState } from 'react';
 import home from '../Styles/home.jpg';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import axios from 'axios';
+import { getConfig } from '../config';
 
 const Home = () => {
+    const apiUrl = getConfig().API_URL;
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    setSubscribed(true);
-
+    setLoading(true);
+    try {      
+      const res = await axios.post(`${apiUrl}api/course/newsLetter`, e.target, {
+        // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      });
+      if (res.status === 201 || res.status === 200) {
+        setSubscribed(true);
+      } else {
+        alert("There was a problem sending your message. ❌");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error sending message ❗");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="home-container">
@@ -32,14 +54,20 @@ const Home = () => {
 
         <div className="newsletter-section">
           <h2>Join our Newsletter</h2>
+          {loading && (
+                  <div className="loading-container">
+                    <ProgressSpinner style={{ width: '30px', height: '30px' }} />
+                    <p>Your request is being processed...</p>
+                  </div>
+                )}
           <p>Subscribe to get the latest updates and news</p>
-          <form className="newsletter-form" onSubmit={handleSubmit}>
+          <form className="newsletter-form" onSubmit={e=>handleSubmit(e)}>
             {subscribed ? (
               <div className="thank-you-message">Thank you for subscribing</div>
             ) : (
               <>
-                <input type="email" placeholder="Enter your email" required />
-                <input type="text" placeholder="Enter your name" required />
+                <input name="email" type="email" placeholder="Enter your email" required />
+                <input name="name" type="text" placeholder="Enter your name" required />
                 <button type="submit">Subscribe</button>
               </>
             )}

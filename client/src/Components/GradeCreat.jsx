@@ -5,7 +5,7 @@ import { AutoComplete } from "primereact/autocomplete";
 
 const CreateGrade = (props) => {
     const [selectedItem, setSelectedItem] = useState(null);
-    const items = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade'];
+    const items = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade','ninth grade','tenth grade','eleventh grade','twelfth grade'];
     const [filteredItems, setFilteredItems] = useState(null);
     const { createGrade, visibleCreatGrade } = props;
     const searchItems = (event) => {
