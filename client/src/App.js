@@ -8,7 +8,7 @@ import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import React, { Suspense, useEffect, useState} from 'react';
 import { Route, Routes } from 'react-router-dom';
-import logo from './Styles/logo.jpg';
+import logo from './Styles/logo2.jpg'
 /* */
 import { loadConfig, getConfig } from './config';
 /**/
