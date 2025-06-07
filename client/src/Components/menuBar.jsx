@@ -76,21 +76,21 @@ const MenuBar = () => {
     },
     {
       label: 'Grades',
-      icon: 'pi pi-user',
+      // icon: 'pi pi-user',
       command: () => {
         navigate('./grades');
       }
     },
       {
         label: 'Books',
-        icon: 'pi pi-user',
+        icon: 'pi pi-book',
         command: () => {
           navigate('/books');
         }
     },
     {
       label: 'Contact Us',
-      icon: 'pi pi-user',
+      icon: 'pi pi-phone',
       command: () => {
         navigate('/course');
       }},
@@ -106,21 +106,21 @@ const MenuBar = () => {
     },
     {
       label: 'Grades',
-      icon: 'pi pi-user',
+      // icon: 'pi pi-user',
       command: () => {
         navigate('/grades');
       }
     },
     {
       label: 'Books',
-      icon: 'pi pi-user',
+      icon: 'pi pi-book',
       command: () => {
         navigate('/books');
       }
     },
     {
       label: 'Users',
-      icon: 'pi pi-user',
+      icon: 'pi pi-users',
       command: () => {
         navigate('/users');
       }

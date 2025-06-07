@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { setToken, logOut } from '../redux/tokenSlice'
 import '../Styles/login.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getConfig } from '../config';
+import { Toast } from 'primereact/toast';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -25,6 +26,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const apiUrl = getConfig().API_URL;
+    const toast = useRef(null);
 
     const handlePasswordReset = async () => {
         validatePassword(newPassword);
@@ -56,7 +58,7 @@ const Login = () => {
             const res = await axios.post(`${apiUrl}api/user/send-verification-code`, { email });
             // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-code`, { email });
             if (res && res.status === 200) {
-                alert("A verification code will be sent to your email.")
+                toast.current.show({ severity: 'info', detail: 'A verification code will be sent to your email.', life: 3000 });
                 setVerificationStep(true);
                 setSuccessMessage('Verification code has been sent to your email.');
             }
@@ -77,8 +79,10 @@ const Login = () => {
                 }
             } catch (err) {
                 if (err.response && err.response.status === 401) {
-                    setError('You are not connected- There is a problem with the data you entered.');
-                } else if (err.response && err.response.status === 403) {
+                    setError('Email does not have an acount.');
+                } else if (err.response && err.response.status === 402) {
+                    setError('Your password is not correct.');
+                }else if (err.response && err.response.status === 403) {
                     setError('Your account has not been confirmed yet.');
                 } else {
                     setError('An error occurred, please try again.');
@@ -109,6 +113,7 @@ const Login = () => {
 
     return (
         <div className="login-page-container">
+            <Toast ref={toast} />
             {loading && (
                 <div className="loading-container">
                     <ProgressSpinner style={{ width: '30px', height: '30px' }} />

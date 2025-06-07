@@ -47,7 +47,7 @@ const updateUser = async (req, res) => {
     const { _id, name, phone, email } = req.body
     const user = await User.findById(_id)
     if (!email || !name) {
-        return res.status(409).json({ message: 'email and name is required' })
+        return res.status(409).json({ message: 'email and name are required' })
     }
     if (!user)
         return res.status(400).json({ message: 'No user found' })
@@ -126,7 +126,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Email not found' })
         }
         const Match = await bcrypt.compare(password, foundUser.password)
-        if (!Match) return res.status(401).json({ message: 'Incorrect password' })
+        if (!Match) return res.status(402).json({ message: 'Incorrect password' })
 
         if (!foundUser.confirm && foundUser.roles != "Admin") {
             return res.status(403).json({ message: 'You are not confirmed to login yet.' });
@@ -222,7 +222,7 @@ const confirmUser = async (req, res) => {
         `;
             sendEmail(
                 user.email,
-                'Access to Final Project Website Blocked 🚫',
+                'Access to aTsBooks Website Blocked 🚫',
                 emailHtml
             );
         }
@@ -243,7 +243,7 @@ const deleteUser = async (req, res) => {
     try {
         const emailHtml = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2 style="color: #D9534F;">Access to Final Project Website Blocked 🚫</h2>
+            <h2 style="color: #D9534F;">Access to aTsBooks Website Blocked 🚫</h2>
             <p>
                 Hello,"${user.name}"
             </p>
@@ -264,7 +264,7 @@ const deleteUser = async (req, res) => {
     `;
         await sendEmail(
             user.email,
-            'Access to Final Project Website Blocked 🚫',
+            'Access to aTsBooks Website Blocked 🚫',
             emailHtml
         );
     }

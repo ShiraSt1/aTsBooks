@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, logOut } from '../redux/tokenSlice'
 import { getConfig } from '../config';
+import { Toast } from "primereact/toast";
 
 const UpdateUser = (props) => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const UpdateUser = (props) => {
     const { user } = useSelector((state) => state.token);
     const dispatch = useDispatch();
     const apiUrl = getConfig().API_URL;
+    const toast = useRef(null);
 
     useEffect(() => {
         navigate('/');
@@ -39,13 +41,15 @@ const UpdateUser = (props) => {
                 dispatch(setToken({ token: token, user: res.data }))
                 props.onHide();
                 navigate('/'); // מעבר לדף הבית
-                alert("Your user information has been updated.")
+                toast.current.show({ severity: 'sucess', detail: 'Your details were updated.', life: 3000 });
             }
         } catch (e) {
-            if (e.status === 401)
-                alert("This email address is in use")
-            if (e.status === 409)
-                alert("The email and name are required")
+            if (e.status === 401){
+                toast.current.show({ severity: 'sucess', detail: 'This email has already an acount.', life: 3000 });
+            }
+            if (e.status === 409){
+                toast.current.show({ severity: 'error', detail: 'feilds of email and name are required.', life: 3000 });
+            }
             console.error("Error updating user:", e);
         }
 
@@ -58,6 +62,7 @@ const UpdateUser = (props) => {
             onHide={props.onHide}
             header="Update User"
         >
+            <Toast ref={toast} />
             <div className="flex flex-column gap-3">
                 <label>Name</label>
                 <InputText ref={nameRef} defaultValue={props.user.name} />

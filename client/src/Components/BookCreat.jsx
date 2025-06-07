@@ -56,7 +56,7 @@ const BookCreate = (props) => {
 
     const handleCreateClick = () => {
         createBook(name, selectedGrades, selectedimage);
-        setVisibleCreatBook(false);
+        // setVisibleCreatBook(false);
     };
 
     return (

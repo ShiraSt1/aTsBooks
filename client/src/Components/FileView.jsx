@@ -1,8 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { getConfig } from '../config';
+import { Toast } from 'primereact/toast';
 
 const FileView = () => {
   const { fileId } = useParams();
@@ -12,6 +13,7 @@ const FileView = () => {
   const { token } = useSelector((state) => state.token);
   const { user } = useSelector((state) => state.token);
   const apiUrl = getConfig().API_URL;
+  const toast = useRef(null);
 
   useEffect(() => {
     if (fileId)
@@ -40,7 +42,7 @@ const FileView = () => {
     }
     catch (err) {
       console.error("Error in loading file", err);
-      alert("Error in loading file");
+      toast.current.show({ severity: 'error', detail: 'Error in loading file.', life: 3000 });
       setLoading(false);
     }
   }
@@ -67,14 +69,14 @@ const FileView = () => {
         return (
           <iframe
             src={fileUrl}
-            title= "PDF view"
+            title="PDF view"
             width="100%"
             height="100%"
             style={{ border: 'none' }}
             onLoad={() => setLoading(false)}
             onError={() => {
               setLoading(false);
-              alert("Error in loading file");
+              toast.current.show({ severity: 'error', detail: 'Error in loading file.', life: 3000 });
             }}
           />
         );
@@ -99,7 +101,7 @@ const FileView = () => {
             onLoad={() => setLoading(false)}
             onError={() => {
               setLoading(false);
-              alert("Error in loading file");
+              toast.current.show({ severity: 'error', detail: 'Error in loading file.', life: 3000 });
             }}
           />
         );
@@ -108,6 +110,8 @@ const FileView = () => {
 
   return (
     <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+      <Toast ref={toast} />
+
       <div
         style={{
           border: '1px solid #ccc',

@@ -12,6 +12,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Toast } from 'primereact/toast';
 import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
 import { getConfig } from '../config';
+import { Messages } from 'primereact/messages';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -28,6 +29,8 @@ export default function BooksDataView() {
     const navigate = useNavigate();
     const toastDelete = useRef(null);
     const apiUrl = getConfig().API_URL;
+    const msgs = useRef(null);
+    const toast = useRef(null);
 
     useEffect(() => {
         if (gradeId) {
@@ -72,9 +75,21 @@ export default function BooksDataView() {
             if (res.status === 200) {
                 setBooks(res.data);
             }
+            if (res.status === 204) {
+                if (msgs.current) {
+                    msgs.current.clear();
+                    msgs.current.show([
+                        { sticky: true, severity: 'warn', detail: 'There are no books yet to this grade.', closable: false },
+                    ]);
+                }
+            }
         } catch (e) {
-            if (e.status === 400) {
-                alert("there are no book for this grade")
+            console.error("error: ", e)
+            if (msgs.current) {
+                msgs.current.clear();
+                msgs.current.show([
+                    { sticky: true, severity: 'error', detail: 'there was a problem, try again later.', closable: false },
+                ]);
             }
         }
     };
@@ -124,13 +139,13 @@ export default function BooksDataView() {
 
     const createBook = async (name, selectedItem, image) => {
         setLoading(true)
-        if (!image)
-            alert("confirm the image")
+        if (!image){
+            toast.current.show({ severity: 'warn', detail: 'You must press uploal to confirm the image', life: 3000 });
+        }
         const formData = new FormData();
         formData.append('name', name);
         formData.append('grades', JSON.stringify(selectedItem));
         formData.append('image', image);
-
         try {
             const res = await axios.post(`${apiUrl}api/book`, formData, {
                 // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/book`, formData, {
@@ -140,6 +155,7 @@ export default function BooksDataView() {
                 },
             });
             if (res.status === 200 || res.status === 201) {
+                setVisibleCreatBook(false);
                 if (gradeId) {
                     getBooksByGrade(gradeId);
                 } else {
@@ -147,11 +163,15 @@ export default function BooksDataView() {
                 }
             }
         } catch (e) {
-            alert(e.res.data.mes)
-            if (e.status === 400)
+            setVisibleCreatBook(false);
+            if (e.status === 400){
                 console.error("Error creating book:", e);
-            if (e.status === 402)
-                alert("this book name alrady exits")
+                toast.current.show({ severity: 'error', detail: 'Error creating book', life: 3000 });
+            }
+            if (e.status === 402){
+                toast.current.show({ severity: 'error', detail: 'This book name already exists', life: 3000 });
+            }
+
         } finally {
             setLoading(false);
         }
@@ -159,7 +179,7 @@ export default function BooksDataView() {
 
     const handleNavigation = (id) => {
         if (!token) {
-            alert('You are not allowed to view the book files.')
+            toast.current.show({ severity: 'error', detail: 'You are not allowed to view the book files.', life: 3000 });
         }
         else {
             navigate(`/titles/${id}`);
@@ -197,7 +217,7 @@ export default function BooksDataView() {
                     )}
                 </div>
                 <div
-                    style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column',paddingBottom:'0px',marginBottom:'0px' }}
+                    style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '0px', marginBottom: '0px' }}
                     className="card flex flex-wrap gap-2 justify-content-center">
                     {user?.roles === "Admin" && (
                         <>
@@ -252,6 +272,8 @@ export default function BooksDataView() {
 
     return (
         <div>
+            <Toast ref={toast} />
+            <Messages ref={msgs} />
             <Toast ref={toastDelete} />
             <ConfirmPopup />
             {loading && (

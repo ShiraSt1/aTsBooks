@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Password } from 'primereact/password';
 import '../Styles/register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getConfig } from '../config';
+import { Toast } from 'primereact/toast';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ const Register = () => {
         password: "",
         phone: "",
     });
+    const toast = useRef(null);
 
     const createUser = async (name, email, phone, password) => {
         setLoading(true);
@@ -29,14 +31,14 @@ const Register = () => {
             // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
 
             if (res.status === 409) {
-                alert("email exits")
+                toast.current.show({ severity: 'error', detail: 'This email already has an acount.', life: 3000 });
             }
 
             else if (res.status === 200 || res.status === 201) {
                 navigate('/login')
             }
         } catch (e) {
-            alert("An error occurred while creating the user. Please try again later. Eror:", e);
+            toast.current.show({ severity: 'error', detail: 'An error acured while sighning up. Please try again later.', life: 3000 });
             console.error(e);
         } finally {
             setLoading(false);
@@ -98,10 +100,11 @@ const Register = () => {
 
     return (
         <div className="register-page-container">
+            <Toast ref={toast} />
             <div className="register-form-container">
                 {loading && (
                     <div className="loading-container">
-                        <ProgressSpinner style={{ width: '30px', height: '30px' }}/>
+                        <ProgressSpinner style={{ width: '30px', height: '30px' }} />
                         <p>Your request is being processed...</p>
                     </div>
                 )}

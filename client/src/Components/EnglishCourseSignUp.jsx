@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
 import { getConfig } from '../config';
+import { Toast } from "primereact/toast";
 
 const EnglishCourseSignUp = () => {
   const apiUrl = getConfig().API_URL;
-
+  const toast = useRef(null);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -38,11 +39,12 @@ const EnglishCourseSignUp = () => {
       !form.email ||
       !form.message
     ) {
-      alert("Please fill all required fields.");
+      toast.current.show({ severity: 'error', detail: 'Please fill up all the fields', life: 3000 });
       return;
     }
 
     setLoading(true);
+    serverResponse(false)
     const formData = new FormData();
     formData.append("firstName", form.firstName);
     formData.append("lastName", form.lastName);
@@ -53,7 +55,7 @@ const EnglishCourseSignUp = () => {
         formData.append("files", file);
       });
     }
-    try {      
+    try {
       const res = await axios.post(`${apiUrl}api/course/register`, formData, {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
         headers: {
@@ -63,11 +65,11 @@ const EnglishCourseSignUp = () => {
       if (res.status === 201 || res.status === 200) {
         setServerResponse(true);
       } else {
-        alert("There was a problem sending your message. ❌");
+        toast.current.show({ severity: 'error', detail: 'There was a problem sending your message.', life: 3000 });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error sending message ❗");
+      toast.current.show({ severity: 'error', detail: 'There was a problem sending your message.', life: 3000 });
     } finally {
       setLoading(false);
     }
@@ -75,6 +77,7 @@ const EnglishCourseSignUp = () => {
 
   return (
     <div className="signup-form-container">
+      <Toast ref={toast} />
       <h1 className="signup-title">Contact Us</h1>
       <p className="signup-subtitle">
         Have any questions, comments, or feedback?
@@ -127,7 +130,7 @@ const EnglishCourseSignUp = () => {
                 transition: 'background-color 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px', 
+                gap: '8px',
               }}
             >
               <i className="pi pi-upload" style={{ fontSize: '1.2em' }}></i>
