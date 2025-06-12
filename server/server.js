@@ -35,6 +35,7 @@ app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
 
+app.use(express.static(path.join(__dirname, "client/build")));
 // כל בקשה אחרת – נשלח ל-React
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
