@@ -35,6 +35,11 @@ app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
 
+// כל בקשה אחרת – נשלח ל-React
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
+
 app.get('/', (req, res) => { res.send("this is the home page") })
 
 const startServer = async () => {
