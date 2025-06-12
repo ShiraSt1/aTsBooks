@@ -41,7 +41,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
-app.get('/', (req, res) => { res.send("this is the home page") })
+// app.get('/', (req, res) => { res.send("this is the home page") })
 
 const startServer = async () => {
   try {
