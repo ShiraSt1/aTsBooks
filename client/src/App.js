@@ -38,7 +38,7 @@ const [configLoaded, setConfigLoaded] = useState(false);
   }, []);
 
   if (!configLoaded) {
-    return <div>Loading config...</div>;
+    return <div>Loading sight...</div>;
   }
 //config
   return (
