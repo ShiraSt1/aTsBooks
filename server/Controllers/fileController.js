@@ -5,18 +5,39 @@ const path = require("path");
 const mime = require("mime-types");
 const { log } = require("console");
 
+/*5*/
+const s3 = require('../utils/s3Client');
+const BUCKET = process.env.S3_BUCKET_NAME;
+/*5*/
+
 const uploadFile = async (req, res) => {
   try {
     const { title } = req.body;
     if (!req.file) {
       return res.status(400).send({ message: "No file has been uploaded" });
     }
-    
+    /*5*/
+    const s3Params = {
+      Bucket: BUCKET,
+      Key: Date.now() + "_" + req.file.originalname,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+      ACL: 'public-read',
+    };
+
+    await s3.putObject(s3Params).promise();
+
+    const fileUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Params.Key}`;
+
+    /*5*/
+
     const newFile = await File.create({
       name: req.file.originalname,
-      path: req.file.path,
+      url: fileUrl,
+      s3Key: s3Params.Key,
+      // path: req.file.path,
       size: Number((req.file.size / 1024).toFixed(2)),
-      title: title,
+      title,
     });
     if(!newFile) {
       return res.status(500).send({ message: "Error creating file record in database" });
@@ -62,7 +83,8 @@ const downloadFile = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "No file found" });
     }
-    res.download(file.path, file.name);
+    // res.download(file.path, file.name);
+    return res.redirect(file.url);
   } catch (err) {
     res.status(500).send({
       message: "Error downloading file",
@@ -75,9 +97,14 @@ const deleteFileFunction = async (fileId) => {
   const file = await File.findById(fileId);
   if (!file) throw new Error("File not found");
   try {
-    await fs.promises.unlink(path.resolve(file.path));
+    // await fs.promises.unlink(path.resolve(file.path));
+    await s3.deleteObject({
+      Bucket: BUCKET,
+      Key: file.s3Key,
+    }).promise();
   } catch (err) {
-    if (err.code !== "ENOENT") throw err; // מסמך שלא נמצא - ממשיכים למחוק מה-DB
+    // if (err.code !== "ENOENT") throw err; // מסמך שלא נמצא - ממשיכים למחוק מה-DB
+    console.error("S3 delete error:", err.message);
   }
   await File.deleteOne({ _id: fileId });
 };
@@ -107,16 +134,32 @@ const updateFile = async (req, res) => {
       return res.status(400).send({ message: "No file has been chosen for update" });
     }
     // מחיקת הקובץ הישן מהדיסק
-    const oldFilePath = path.join(__dirname, "..", existingFile.path);
-    if (fs.existsSync(oldFilePath)) {
-      fs.unlinkSync(oldFilePath);
-    }
+    // const oldFilePath = path.join(__dirname, "..", existingFile.path);
+    // if (fs.existsSync(oldFilePath)) {
+    //   fs.unlinkSync(oldFilePath);
+    // }
+
     // עדכון במסד הנתונים עם המידע החדש
+    // existingFile.name = req.file.originalname;
+    // existingFile.path = req.file.path;
+    // existingFile.size = Number((req.file.size / 1024).toFixed(2));
+    // await existingFile.save();
+    // res.status(200).send(existingFile);
+    await s3.deleteObject({
+      Bucket: BUCKET,
+      Key: existingFile.s3Key,
+    }).promise();
+    const newUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${newKey}`;
+
+    // עדכון במסד
     existingFile.name = req.file.originalname;
-    existingFile.path = req.file.path;
+    existingFile.s3Key = newKey;
+    existingFile.url = newUrl;
     existingFile.size = Number((req.file.size / 1024).toFixed(2));
     await existingFile.save();
+
     res.status(200).send(existingFile);
+
   } catch (err) {
     console.error("Error in update file:", err);
     res.status(500).send({ message: "Error in update file", error: err.message });
@@ -130,21 +173,22 @@ const viewFileContent = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "File not found" });
     }
-    const absolutePath = path.resolve(file.path);
-    const contentType = mime.lookup(file.name) || "application/octet-stream";
+    // const absolutePath = path.resolve(file.path);
+    // const contentType = mime.lookup(file.name) || "application/octet-stream";
 
-    res.setHeader("Content-Type", contentType);
-    res.setHeader("Content-Disposition", "inline");
+    // res.setHeader("Content-Type", contentType);
+    // res.setHeader("Content-Disposition", "inline");
 
-    const stream = fs.createReadStream(absolutePath);
-    stream.pipe(res);
+    // const stream = fs.createReadStream(absolutePath);
+    // stream.pipe(res);
 
-    stream.on("error", (err) => {
-      res.status(500).send({
-        message: "Error reading file content",
-        error: err.message,
-      });
-    });
+    // stream.on("error", (err) => {
+    //   res.status(500).send({
+    //     message: "Error reading file content",
+    //     error: err.message,
+    //   });
+    // });
+    return res.redirect(file.url);
   } catch (err) {
     res.status(500).send({
       message: "Error viewing file content",

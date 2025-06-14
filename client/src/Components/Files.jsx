@@ -129,8 +129,9 @@ const FilesDataView = ({ titleId }) => {
                 <div className="col-12 md:col-6 flex justify-content-center align-items-center">
                     {book?.image && (
                         <img
-                            src={`${apiUrl}uploads/${book.image}`}
+                            // src={`${apiUrl}uploads/${book.image}`}
                             // src={`${process.env.REACT_APP_API_URL}uploads/${book.image}`}
+                            src={book.image}
                             alt={book.name}
                             style={{
                                 width: '100%',
@@ -152,7 +153,7 @@ const FilesDataView = ({ titleId }) => {
                                 <div key={file._id} className="col-12">
                                     <div className="p-3 border-1 surface-border surface-card border-round flex flex-column gap-2">
                                         <div className="text-xl">{file.name}</div>
-                                        <div className="text-sm text-color-secondary">{file.size}</div>
+                                        <div className="text-sm text-color-secondary">{(file.size).toFixed(2)} KB</div>
                                         <div className="flex gap-2 mt-2">
                                             <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
                                                 e.stopPropagation();

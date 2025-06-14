@@ -6,11 +6,15 @@ const fileSchema = new mongoose.Schema({
         lowercase: true,
         required: true
     },
-    path: {
+    url: {
         type: String,
         lowercase: true,
         required: true
      },
+    s3Key: {
+        type: String,
+        required: true
+    },
     size: {
         type: Number,  // שדה גודל כמספר (בייטים)
         required: true
