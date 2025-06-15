@@ -103,7 +103,13 @@ const FilesDataView = ({ titleId }) => {
             const res = await axios.get(`${apiUrl}api/file/download/${fileId}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
-            window.open(res.data.url, "_blank");
+            // window.open(res.data.url, "_blank");
+            const a = document.createElement('a');
+            a.href = res.data.url;
+            a.download = ''; // לא חובה שם, S3 כבר מחזיק את השם בקובץ
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
           } catch (err) {
             console.error("Error getting download URL", err);
             toast.current?.show({ severity: 'error', detail: 'Error downloading file', life: 3000 });
