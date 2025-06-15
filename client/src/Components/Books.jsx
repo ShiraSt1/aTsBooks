@@ -112,14 +112,22 @@ export default function BooksDataView() {
     const updateBook = async (name, selectedItem, image, book) => {
         setLoading(true)
 
-        const updatebook = {
-            ...book,
-            name: name ? name : book.name,
-            grades: selectedItem,
-            image: image ? image : book.image,
-        };
+        // const updatebook = {
+        //     ...book,
+        //     name: name ? name : book.name,
+        //     grades: selectedItem,
+        //     image: image ? image : book.image,
+        // };
+        const formData = new FormData();
+        formData.append('_id', book._id);
+        formData.append('name', name || book.name);
+        formData.append('grades', JSON.stringify(selectedItem));
+
+        if (image instanceof File || image instanceof Blob) {
+            formData.append('image', image);
+        }
         try {
-            const res = await axios.put(`${apiUrl}api/book`, updatebook, {
+            const res = await axios.put(`${apiUrl}api/book`, formData, {
                 // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/book`, updatebook, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -139,7 +147,7 @@ export default function BooksDataView() {
 
     const createBook = async (name, selectedItem, image) => {
         setLoading(true)
-        if (!image){
+        if (!image) {
             toast.current.show({ severity: 'warn', detail: 'You must press uploal to confirm the image', life: 3000 });
         }
         const formData = new FormData();
@@ -164,11 +172,11 @@ export default function BooksDataView() {
             }
         } catch (e) {
             setVisibleCreatBook(false);
-            if (e.status === 400){
+            if (e.status === 400) {
                 console.error("Error creating book:", e);
                 toast.current.show({ severity: 'error', detail: 'Error creating book', life: 3000 });
             }
-            if (e.status === 402){
+            if (e.status === 402) {
                 toast.current.show({ severity: 'error', detail: 'This book name already exists', life: 3000 });
             }
 
@@ -199,7 +207,8 @@ export default function BooksDataView() {
                     className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
-                        src={`${apiUrl}${book.image}`}
+                        // src={`${apiUrl}${book.image}`}
+                        src={book.image}
                         // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
                         style={{ objectFit: 'cover' }}
