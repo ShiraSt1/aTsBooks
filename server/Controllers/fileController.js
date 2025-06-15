@@ -92,7 +92,8 @@ const downloadFile = async (req, res) => {
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET,
       Key: file.s3Key,
-      Expires: 60
+      Expires: 60,
+      ResponseContentDisposition: `attachment; filename="${file.name}"`,
     });
 
     res.redirect(url);
