@@ -5,31 +5,33 @@ const path = require("path");
 const mime = require("mime-types");
 const { log } = require("console");
 
-/*5*/
 const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
-/*5*/
 
 const uploadFile = async (req, res) => {
+  console.log("1");
   try {
     const { title } = req.body;
     if (!req.file) {
       return res.status(400).send({ message: "No file has been uploaded" });
     }
-    /*5*/
+    console.log("2");
+
     const s3Params = {
       Bucket: BUCKET,
       Key: Date.now() + "_" + req.file.originalname,
       Body: req.file.buffer,
       ContentType: req.file.mimetype,
-      ACL: 'public-read',
     };
-
+    console.log("3");
+    
     await s3.putObject(s3Params).promise();
+    console.log("4");
 
     const fileUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Params.Key}`;
-
-    /*5*/
+    console.log("5");
+    console.log("fileUrl:", fileUrl);
+    console.log("s3Params:", s3Params);
 
     const newFile = await File.create({
       name: req.file.originalname,
@@ -39,10 +41,12 @@ const uploadFile = async (req, res) => {
       size: Number((req.file.size / 1024).toFixed(2)),
       title,
     });
-    if(!newFile) {
+    if (!newFile) {
       return res.status(500).send({ message: "Error creating file record in database" });
     }
-    
+    console.log("6");
+    console.log("newFile:", newFile);
+
     res.status(201).send(newFile);
   } catch (err) {
     res.status(500).send({ message: "Error uploading File", error: err.message });
@@ -84,7 +88,14 @@ const downloadFile = async (req, res) => {
       return res.status(404).send({ message: "No file found" });
     }
     // res.download(file.path, file.name);
-    return res.redirect(file.url);
+    // return res.redirect(file.url);
+    const url = s3.getSignedUrl('getObject', {
+      Bucket: BUCKET,
+      Key: file.s3Key,
+      Expires: 60
+    });
+
+    res.redirect(url);
   } catch (err) {
     res.status(500).send({
       message: "Error downloading file",
@@ -188,7 +199,14 @@ const viewFileContent = async (req, res) => {
     //     error: err.message,
     //   });
     // });
-    return res.redirect(file.url);
+    // return res.redirect(file.url);
+    const url = s3.getSignedUrl('getObject', {
+      Bucket: BUCKET,
+      Key: file.s3Key,
+      Expires: 60
+    });
+
+    res.redirect(url);
   } catch (err) {
     res.status(500).send({
       message: "Error viewing file content",

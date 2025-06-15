@@ -6,6 +6,7 @@ import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 
 const Home = () => {
+  
   const apiUrl = getConfig().API_URL;
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);

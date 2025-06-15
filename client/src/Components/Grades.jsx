@@ -11,6 +11,7 @@ import '../Styles/Grades.css';
 import { getConfig } from '../config';
 
 const Grades = () => {
+
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const [gradesData, setGradesData] = useState([])

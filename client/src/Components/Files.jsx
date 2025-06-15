@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { logOut } from '../redux/tokenSlice';
 import { getConfig } from '../config';
+import { useSelector } from "react-redux";
 
 const FilesDataView = ({ titleId }) => {
     const [files, setFiles] = useState([]);
@@ -18,7 +19,7 @@ const FilesDataView = ({ titleId }) => {
     const [newFileName, setNewFileName] = useState('');
     const [book, setBook] = useState(null);
     const apiUrl = getConfig().API_URL;
-
+    const { token } = useSelector((state) => state.token);
     const toast = useRef(null);
     const navigate = useNavigate();
 
@@ -42,6 +43,11 @@ const FilesDataView = ({ titleId }) => {
         }
     }, [titleId]);
 
+    useEffect(() => {
+        console.log("in component files");
+        
+    },[]);
+
     const fetchFiles = async () => {
         setFiles([]);
         try {
@@ -57,15 +63,20 @@ const FilesDataView = ({ titleId }) => {
     };
 
     const handleUpload = async ({ files: uploadedFiles }) => {
+        console.log("in function upload");
+        
         const file = uploadedFiles[0];
         const formData = new FormData();
         formData.append('file', file);
         formData.append('title', titleId);
+
         try {
             const res = await axios.post(`${apiUrl}api/file`, formData, {
                 // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
+        console.log("after try")
+
             setFiles(prev => [...prev, res.data]);
             setVisibleCreate(false);
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File uploaded ', life: 3000 });
@@ -87,13 +98,31 @@ const FilesDataView = ({ titleId }) => {
         }
     };
 
-    const handleDownload = (fileId) => {
-        window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
+    const handleDownload = async (fileId) => {
+        try {
+            const res = await axios.get(`${apiUrl}api/file/download/${fileId}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            window.open(res.data.url, "_blank");
+          } catch (err) {
+            console.error("Error getting download URL", err);
+            toast.current?.show({ severity: 'error', detail: 'Error downloading file', life: 3000 });
+          }
+        // window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
         // window.open(`${process.env.REACT_APP_API_URL}api/file/download/${fileId}`, '_blank');
     };
 
-    const handleView = (fileId) => {
-        window.open(`${apiUrl}api/file/view/${fileId}`, '_blank');
+    const handleView = async(fileId) => {
+        try {
+            const res = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            window.open(res.data.url, "_blank");
+          } catch (err) {
+            console.error("Error getting view URL", err);
+            toast.current?.show({ severity: 'error', detail: 'Error viewing file', life: 3000 });
+          }
+        // window.open(`${apiUrl}api/file/view/${fileId}`, '_blank');
         // window.open(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, '_blank');
     };
 
@@ -172,8 +201,14 @@ const FilesDataView = ({ titleId }) => {
             </div>
 
             {/* דיאלוגים וטוסטים */}
-            <Dialog header="Upload new file" visible={visibleCreate} style={{ width: '30vw' }} onHide={() => setVisibleCreate(false)}>
-                <FileUpload mode="basic" auto customUpload uploadHandler={handleUpload} chooseLabel="Choose File" />
+            <Dialog header="Upload new file!!!!" visible={visibleCreate} style={{ width: '30vw' }} onHide={() => setVisibleCreate(false)}>
+                <FileUpload 
+                name="file"
+                mode="basic" 
+                auto 
+                customUpload 
+                uploadHandler={handleUpload} 
+                chooseLabel="Choose File" />
             </Dialog>
 
             <Dialog header="Edit file" visible={visibleUpdate} style={{ width: '30vw' }} onHide={() => setVisibleUpdate(false)}>

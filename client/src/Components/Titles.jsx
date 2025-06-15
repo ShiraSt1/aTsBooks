@@ -134,6 +134,7 @@ const Titles = () => {
     };
 
     const handleUpload = async ({ files }) => {
+console.log("in component titles");
         
         const file = files[0];
         const formData = new FormData();
