@@ -208,7 +208,8 @@ export default function BooksDataView() {
                     <img
                         className="object-cover w-full h-full"
                         // src={`${apiUrl}${book.image}`}
-                        src={book.image}
+                        src=""
+                        // {book.image}
                         // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
                         // style={{ objectFit: 'cover' }}
