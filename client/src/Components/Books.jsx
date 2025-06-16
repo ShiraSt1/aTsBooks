@@ -212,7 +212,7 @@ export default function BooksDataView() {
                         // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
                         // style={{ objectFit: 'cover' }}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: '300px'  }}
                     />
                     <div className="text-2xl font-bold">{book.name}</div>
                     {book.grades && book.grades.length > 0 && (
