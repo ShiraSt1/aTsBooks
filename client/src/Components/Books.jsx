@@ -57,10 +57,12 @@ export default function BooksDataView() {
 
     const getBooks = async () => {
         try {
+            console.log("in function get books");
             const res = await axios.get(`${apiUrl}api/book`);
             // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book`);
             if (res.status === 200) {
                 setBooks(res.data);
+                console.log("Books fetched successfully:", res.data);
             }
         } catch (e) {
             console.error(e);
@@ -202,9 +204,7 @@ export default function BooksDataView() {
                 className="p-4 border-1 surface-border surface-card border-round"
                 onClick={() => handleNavigation(book._id)}
                 style={{ cursor: 'pointer', height: "700px" }}>
-                <div
-                    style={{ height: "550px" }}
-                    className="flex flex-column align-items-center gap-3 py-5">
+                <div style={{ height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
                         // src={`${apiUrl}${book.image}`}

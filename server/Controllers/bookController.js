@@ -164,7 +164,9 @@ const createNewBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
     try {
+        console.log("in function get books");
         const books = await Book.find().lean().populate("grades")
+        console.log(books);
         res.json(books)
     }
     catch {
