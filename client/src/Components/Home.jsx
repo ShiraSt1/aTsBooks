@@ -6,28 +6,27 @@ import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 
 const Home = () => {
-  
+
   const apiUrl = getConfig().API_URL;
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
 
   const handleSubmit = async (e) => {
-    
+
     e.preventDefault();
     setLoading(true);
     const name = e.target.elements.name.value;
-  const email = e.target.elements.email.value;
-
-  console.log("Name:", name);
-  console.log("Email:", email);
-  const data={name, email};
+    const email = e.target.elements.email.value;
+    console.log("Name:", name);
+    console.log("Email:", email);
+    const data = { name, email };
     setSubscribed(false);
     try {
       const res = await axios.post(`${apiUrl}api/course/newsLetter`, data, {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         }
       });
       if (res.status === 201 || res.status === 200) {
