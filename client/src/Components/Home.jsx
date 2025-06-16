@@ -11,13 +11,20 @@ const Home = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
+console.log("in home comp");
 
   const handleSubmit = async (e) => {
+    console.log("in function");
+    
+    console.log("handleSubmit called with event:", e);
+    
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append('email', e.target.elements.email.value); 
-    formData.append('name', e.target.elements.name.value); 
+    const formData = new FormData(e.target);
+    console.log("after formData creation");
+    console.log("Form Data:", formData); // Log the FormData object
+    
+    
     console.log(Array.from(formData.entries()));
     setSubscribed(false);
     try {
