@@ -57,12 +57,10 @@ export default function BooksDataView() {
 
     const getBooks = async () => {
         try {
-            console.log("in function get books");
             const res = await axios.get(`${apiUrl}api/book`);
             // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book`);
             if (res.status === 200) {
                 setBooks(res.data);
-                console.log("Books fetched successfully:", res.data);
             }
         } catch (e) {
             console.error(e);

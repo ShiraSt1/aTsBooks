@@ -32,6 +32,7 @@ const FilesDataView = ({ titleId }) => {
                 const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
                 // const bookRes = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${title.book}`);
                 setBook(bookRes.data);
+                console.log("bookRes.data", bookRes.data);
                 fetchFiles(); // כבר קיים אצלך
             } catch (err) {
                 console.error("Error fetching title or book:", err);
@@ -42,11 +43,6 @@ const FilesDataView = ({ titleId }) => {
             fetchTitleAndBook();
         }
     }, [titleId]);
-
-    useEffect(() => {
-        console.log("in component files");
-        
-    },[]);
 
     const fetchFiles = async () => {
         setFiles([]);
@@ -63,8 +59,6 @@ const FilesDataView = ({ titleId }) => {
     };
 
     const handleUpload = async ({ files: uploadedFiles }) => {
-        console.log("in function upload");
-        
         const file = uploadedFiles[0];
         const formData = new FormData();
         formData.append('file', file);
@@ -75,7 +69,6 @@ const FilesDataView = ({ titleId }) => {
                 // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-        console.log("after try")
 
             setFiles(prev => [...prev, res.data]);
             setVisibleCreate(false);
@@ -173,7 +166,9 @@ const FilesDataView = ({ titleId }) => {
                                 maxWidth: '400px',
                                 borderRadius: '16px',
                                 objectFit: 'cover',
-                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', 
+                                // height: "100%",
+                                // minHeight: '100px'
                             }}
                         />
                     )}

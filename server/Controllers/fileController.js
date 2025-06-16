@@ -9,13 +9,11 @@ const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 
 const uploadFile = async (req, res) => {
-  console.log("1");
   try {
     const { title } = req.body;
     if (!req.file) {
       return res.status(400).send({ message: "No file has been uploaded" });
     }
-    console.log("2");
 
     const s3Params = {
       Bucket: BUCKET,
@@ -23,15 +21,10 @@ const uploadFile = async (req, res) => {
       Body: req.file.buffer,
       ContentType: req.file.mimetype,
     };
-    console.log("3");
     
     await s3.putObject(s3Params).promise();
-    console.log("4");
 
     const fileUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Params.Key}`;
-    console.log("5");
-    console.log("fileUrl:", fileUrl);
-    console.log("s3Params:", s3Params);
 
     const newFile = await File.create({
       name: req.file.originalname,
@@ -44,8 +37,6 @@ const uploadFile = async (req, res) => {
     if (!newFile) {
       return res.status(500).send({ message: "Error creating file record in database" });
     }
-    console.log("6");
-    console.log("newFile:", newFile);
 
     res.status(201).send(newFile);
   } catch (err) {
