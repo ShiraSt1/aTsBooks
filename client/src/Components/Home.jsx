@@ -15,7 +15,11 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.target);
+    const formData = new FormData();
+    formData.append('email', e.target.elements.email.value); 
+    formData.append('name', e.target.elements.name.value); 
+    console.log(Array.from(formData.entries()));
+    setSubscribed(false);
     try {
       const res = await axios.post(`${apiUrl}api/course/newsLetter`, formData, {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {
