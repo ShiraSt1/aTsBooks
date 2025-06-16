@@ -15,6 +15,7 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(e.target);
     try {
       const res = await axios.post(`${apiUrl}api/course/newsLetter`, e.target, {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {

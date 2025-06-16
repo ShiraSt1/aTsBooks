@@ -44,7 +44,7 @@ const EnglishCourseSignUp = () => {
     }
 
     setLoading(true);
-    serverResponse(false)
+    setServerResponse(false)
     const formData = new FormData();
     formData.append("firstName", form.firstName);
     formData.append("lastName", form.lastName);

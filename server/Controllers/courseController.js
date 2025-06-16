@@ -43,6 +43,8 @@ const registerToCourse = async (req, res) => {
 
 const newsLetter = async (req, res) => {
     const { name, email  } = req.body
+console.log(name);
+console.log(email);
 
     if (!name ||  !email ) {
         return res.status(400).json({ message: 'All fields are required' })
