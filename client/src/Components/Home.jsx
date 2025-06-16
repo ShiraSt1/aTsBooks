@@ -11,21 +11,16 @@ const Home = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
-console.log("in home comp");
 
   const handleSubmit = async (e) => {
-    console.log("in function");
-    
-    console.log("handleSubmit called with event:", e);
     
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.target);
-    console.log("after formData creation");
-    console.log("Form Data:", formData); // Log the FormData object
-    
-    
-    console.log(Array.from(formData.entries()));
+    const name = e.target.elements.name.value;
+  const email = e.target.elements.email.value;
+
+  console.log("Name:", name);
+  console.log("Email:", email);
     setSubscribed(false);
     try {
       const res = await axios.post(`${apiUrl}api/course/newsLetter`, formData, {
