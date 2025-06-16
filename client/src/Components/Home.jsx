@@ -23,7 +23,7 @@ const Home = () => {
   console.log("Email:", email);
     setSubscribed(false);
     try {
-      const res = await axios.post(`${apiUrl}api/course/newsLetter`, formData, {
+      const res = await axios.post(`${apiUrl}api/course/newsLetter`, (name,email), {
         // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {
         headers: {
           "Content-Type": "multipart/form-data",
