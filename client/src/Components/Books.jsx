@@ -201,50 +201,7 @@ export default function BooksDataView() {
                 className="p-4 border-1 surface-border surface-card border-round"
                 onClick={() => handleNavigation(book._id)}
                 style={{ cursor: 'pointer', height: "700px" }}>
-                <div style={{ cursor: 'pointer', height: "700px", position: "relative" }} className="flex flex-column align-items-center gap-3 py-5">
-
-                    {user?.roles === "Admin" && (
-                        <div style={{
-                            position: 'absolute',
-                            top: '10px',
-                            right: '10px',
-                            display: 'flex',
-                            gap: '8px'
-                        }}>
-                            <Button
-                                icon="pi pi-pencil"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setVisible(true);
-                                    setSelectedBook(book);
-                                }}
-                                tooltip="Edit"
-                            />
-                            <Button
-                                icon="pi pi-trash"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    confirmPopup({
-                                        target: e.currentTarget,
-                                        message: 'Are you sure you want to delete this book and all the files in it?',
-                                        icon: 'pi pi-exclamation-triangle',
-                                        defaultFocus: 'accept',
-                                        accept: () => {
-                                            e.stopPropagation()
-                                            deleteBook(book._id);
-                                            setVisible(false);
-                                        },
-                                        reject: () => {
-                                            e.stopPropagation()
-                                            setVisible(false);
-                                        }
-                                    });
-                                }}
-                                tooltip="Delete"
-                            />
-                        </div>
-                    )}
-
+                <div style={{ height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
                         src={book.image}
@@ -263,7 +220,7 @@ export default function BooksDataView() {
                         </>
                     )}
                 </div>
-                {/* <div
+                <div
                     style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '0px', marginBottom: '0px' }}
                     className="card flex flex-wrap gap-2 justify-content-center">
                     {user?.roles === "Admin" && (
@@ -301,7 +258,7 @@ export default function BooksDataView() {
                             />
                         </>
                     )}
-                </div> */}
+                </div>
             </div>
         </div>
     );
