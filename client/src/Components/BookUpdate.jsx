@@ -10,7 +10,7 @@ import { getConfig } from '../config';
 const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book
     const [selectedImage, setSelectedImage] = useState(null); // תמונה שנבחרה
-    const [preview, setPreview] = useState(book?.image ? `${apiUrl}${book.image}` : "");
+    const [preview, setPreview] = useState(book?.image ? `${book.image}`: "");
     // const [preview, setPreview] = useState(book?.image ? `${process.env.REACT_APP_API_URL}${book.image}` : "");
     const [grades, setGrades] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]);
