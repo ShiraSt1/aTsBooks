@@ -164,7 +164,7 @@ const Titles = () => {
     return (
         <div className="p-4">
             {book && (
-                <h2 className="text-center mb-4">{book.name}-{book.image}</h2>
+                <h2 className="text-center mb-4">{book.name}</h2>
             )}
             <div className="flex flex-column md:flex-row gap-4">
                 {/* תמונת הספר בצד שמאל */}
