@@ -201,7 +201,7 @@ export default function BooksDataView() {
                 className="p-4 border-1 surface-border surface-card border-round"
                 onClick={() => handleNavigation(book._id)}
                 style={{ cursor: 'pointer', height: "700px" }}>
-                <div style={{ height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
+                <div style={{ cursor: 'pointer', height: "700px", position: "relative" }} className="flex flex-column align-items-center gap-3 py-5">
 
                     {user?.roles === "Admin" && (
                         <div style={{
