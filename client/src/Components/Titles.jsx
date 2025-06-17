@@ -169,7 +169,7 @@ const Titles = () => {
                 {book?.image && (
                     <div className="flex justify-content-center md:w-4">
                         <img
-                            src={`${apiUrl}${book.image}`}
+                            src={book.image}
                             // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                             alt="Book"
                             className="border-round shadow-2"

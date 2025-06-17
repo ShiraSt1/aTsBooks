@@ -22,24 +22,17 @@ const FilesDataView = ({ titleId }) => {
     const { token } = useSelector((state) => state.token);
     const toast = useRef(null);
     const navigate = useNavigate();
-    console.log("in comp");
 
     useEffect(() => {
         const fetchTitleAndBook = async () => {
-            console.log("in func-fetchTitleAndBook");
-
             try {
                 const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
                 // const titleRes = await axios.get(`${process.env.REACT_APP_API_URL}api/title/${titleId}`);
                 const title = titleRes.data;
-                console.log("after fetching title");
 
                 const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
                 // const bookRes = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${title.book}`);
-                console.log("after fetching book");
-
                 setBook(bookRes.data);
-                console.log("bookRes.data", bookRes.data);
                 fetchFiles(); // כבר קיים אצלך
             } catch (err) {
                 console.error("Error fetching title or book:", err);
