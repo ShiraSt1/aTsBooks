@@ -200,16 +200,19 @@ const getBooksForGrade = async (req, res) => {
 const updateBook = async (req, res) => {
     try {
         const { _id, name, grades } = req.body;
-        const newImage = req.file ? '/uploads/bookImages/' + req.file.filename : null;
+        const newImage = req.file || null;
         const book = await Book.findById(_id).populate("grades").exec();
         if (!book) {
             return res.status(400).json({ message: 'Book not found' });
         }
         // Update grades
-        let gradesArray = grades;
-        if (typeof gradesArray === "object" && !Array.isArray(gradesArray)) {
-            gradesArray = Object.values(gradesArray);
+        let gradesArray = [];
+        console.log("Grades input:", grades);
+        
+        if (grades && typeof grades === "object") {
+            gradesArray = Array.isArray(grades) ? grades : Object.values(grades);
         }
+
         // Ensure gradesArray is an array
         if (!Array.isArray(gradesArray)) {
             return res.status(400).send("Grades must be an array or an object convertible to an array");
@@ -223,23 +226,15 @@ const updateBook = async (req, res) => {
 
         // מחיקת התמונה הקודמת אם יש תמונה חדשה
         if (newImage && book.image) {
-            // const oldImagePath = path.join(__dirname, '../', book.image);
-            // fs.unlink(oldImagePath, (err) => {
-            //     if (err) {
-            //         console.error(`Failed to delete old image: ${oldImagePath}`, err);
-            //     } 
-            // });
             await s3.deleteObject({
                 Bucket: BUCKET,
-                Key: book.image.split('/').pop(), // או תשמרי s3Key במסד
+                Key: book.image.split('/').pop(),
             }).promise();
         }
 
-        // עדכון הספר
         book.name = name;
         book.grades = gradeIds;
         if (newImage) {
-            // book.image = newImage;
             const newKey = Date.now() + "-" + newImage.originalname;
             await s3.putObject({
                 Bucket: BUCKET,
