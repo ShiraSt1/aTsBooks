@@ -14,13 +14,13 @@ const registerToCourse = async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' })
     }
     const files = req.files
-    ? req.files.map(file => ({
-        filename: file.originalname,
-        path: file.path,
-        contentType: file.mimetype
-      }))
-    : [];
-    
+        ? req.files.map(file => ({
+            filename: file.originalname,
+            path: file.path,
+            contentType: file.mimetype
+        }))
+        : [];
+
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
@@ -42,13 +42,12 @@ const registerToCourse = async (req, res) => {
 }
 
 const newsLetter = async (req, res) => {
-    const { name, email  } = req.body
-console.log(req.body);
+    const { name, email } = req.body
 
-    if (!name ||  !email ) {
+    if (!name || !email) {
         return res.status(400).json({ message: 'All fields are required' })
     }
-    
+
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
@@ -66,4 +65,4 @@ console.log(req.body);
         message: `An email sent to administrator`
     })
 }
-module.exports = { registerToCourse ,newsLetter}
+module.exports = { registerToCourse, newsLetter }

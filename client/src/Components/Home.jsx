@@ -18,8 +18,6 @@ const Home = () => {
     setLoading(true);
     const name = e.target.elements.name.value;
     const email = e.target.elements.email.value;
-    console.log("Name:", name);
-    console.log("Email:", email);
     const data = { name, email };
     setSubscribed(false);
     try {

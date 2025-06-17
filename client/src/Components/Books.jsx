@@ -198,18 +198,14 @@ export default function BooksDataView() {
     const gridItem = (book) => (
         <div className="col-12 sm:col-6 lg:col-4 xl:col-4 p-2" key={book._id}>
             <div
-                // className="p-4 border-1 surface-border surface-card border-round flex flex-column justify-content-between"
                 className="p-4 border-1 surface-border surface-card border-round"
                 onClick={() => handleNavigation(book._id)}
                 style={{ cursor: 'pointer', height: "700px" }}>
                 <div style={{ height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
-                        // src={`${apiUrl}${book.image}`}
                         src={book.image}
-                        // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                         alt={book.name}
-                        // style={{ objectFit: 'cover' }}
                         style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: '100px' }}
                     />
                     <div className="text-2xl font-bold">{book.name}</div>

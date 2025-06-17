@@ -22,15 +22,22 @@ const FilesDataView = ({ titleId }) => {
     const { token } = useSelector((state) => state.token);
     const toast = useRef(null);
     const navigate = useNavigate();
+    console.log("in comp");
 
     useEffect(() => {
         const fetchTitleAndBook = async () => {
+            console.log("in func-fetchTitleAndBook");
+
             try {
                 const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
                 // const titleRes = await axios.get(`${process.env.REACT_APP_API_URL}api/title/${titleId}`);
                 const title = titleRes.data;
+                console.log("after fetching title");
+
                 const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
                 // const bookRes = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${title.book}`);
+                console.log("after fetching book");
+
                 setBook(bookRes.data);
                 console.log("bookRes.data", bookRes.data);
                 fetchFiles(); // כבר קיים אצלך
@@ -94,7 +101,7 @@ const FilesDataView = ({ titleId }) => {
     const handleDownload = async (fileId) => {
         try {
             const res = await axios.get(`${apiUrl}api/file/download/${fileId}`, {
-              headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` }
             });
             // window.open(res.data.url, "_blank");
             const a = document.createElement('a');
@@ -103,24 +110,24 @@ const FilesDataView = ({ titleId }) => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          } catch (err) {
+        } catch (err) {
             console.error("Error getting download URL", err);
             toast.current?.show({ severity: 'error', detail: 'Error downloading file', life: 3000 });
-          }
+        }
         // window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
         // window.open(`${process.env.REACT_APP_API_URL}api/file/download/${fileId}`, '_blank');
     };
 
-    const handleView = async(fileId) => {
+    const handleView = async (fileId) => {
         try {
             const res = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
-              headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` }
             });
             window.open(res.data.url, "_blank");
-          } catch (err) {
+        } catch (err) {
             console.error("Error getting view URL", err);
             toast.current?.show({ severity: 'error', detail: 'Error viewing file', life: 3000 });
-          }
+        }
         // window.open(`${apiUrl}api/file/view/${fileId}`, '_blank');
         // window.open(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, '_blank');
     };
@@ -143,7 +150,7 @@ const FilesDataView = ({ titleId }) => {
     };
 
     if (loading) return <div>Loading Files...</div>;
-    
+
     return (
         <div className="p-4">
             {/* כותרת ראשית עם שם הספר */}
@@ -166,7 +173,7 @@ const FilesDataView = ({ titleId }) => {
                                 maxWidth: '400px',
                                 borderRadius: '16px',
                                 objectFit: 'cover',
-                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', 
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
                                 // height: "100%",
                                 // minHeight: '100px'
                             }}
@@ -203,13 +210,13 @@ const FilesDataView = ({ titleId }) => {
 
             {/* דיאלוגים וטוסטים */}
             <Dialog header="Upload new file!!!!" visible={visibleCreate} style={{ width: '30vw' }} onHide={() => setVisibleCreate(false)}>
-                <FileUpload 
-                name="file"
-                mode="basic" 
-                auto 
-                customUpload 
-                uploadHandler={handleUpload} 
-                chooseLabel="Choose File" />
+                <FileUpload
+                    name="file"
+                    mode="basic"
+                    auto
+                    customUpload
+                    uploadHandler={handleUpload}
+                    chooseLabel="Choose File" />
             </Dialog>
 
             <Dialog header="Edit file" visible={visibleUpdate} style={{ width: '30vw' }} onHide={() => setVisibleUpdate(false)}>

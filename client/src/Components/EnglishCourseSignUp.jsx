@@ -114,7 +114,7 @@ const EnglishCourseSignUp = () => {
 
         <div className="form-field">
           <label htmlFor="fileUpload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            Atach files (optional)
+            Attach files (optional)
           </label>
 
           <div style={{ position: 'relative', display: 'inline-block' }}>
