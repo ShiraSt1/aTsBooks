@@ -207,7 +207,6 @@ const updateBook = async (req, res) => {
         }
         // Update grades
         let gradesArray = [];
-        console.log("Grades input:", grades);
         
         if (grades && typeof grades === "object") {
             gradesArray = Array.isArray(grades) ? grades : Object.values(grades);
