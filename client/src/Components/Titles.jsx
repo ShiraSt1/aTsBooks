@@ -32,6 +32,8 @@ const Titles = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setBook(res.data);
+            console.log("Book data:", res.data);
+            
         } catch (err) {
             if (err.status === 400)
                 toast?.current.show({ severity: 'error', summary: 'Error', detail: 'No book found', life: 3000 });
@@ -162,7 +164,7 @@ const Titles = () => {
     return (
         <div className="p-4">
             {book && (
-                <h2 className="text-center mb-4">{book.name}</h2>
+                <h2 className="text-center mb-4">{book.name}-{book.image}</h2>
             )}
             <div className="flex flex-column md:flex-row gap-4">
                 {/* תמונת הספר בצד שמאל */}
