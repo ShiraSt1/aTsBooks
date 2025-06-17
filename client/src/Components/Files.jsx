@@ -155,7 +155,7 @@ const FilesDataView = ({ titleId }) => {
         <div className="p-4">
             {/* כותרת ראשית עם שם הספר */}
             {book && (
-                <h2 className="text-center mb-4">{book.name}</h2>
+                <h2 className="text-center mb-4">{book.name}-{book.image}</h2>
             )}
 
             {/* אזור התוכן - שתי עמודות */}
@@ -167,7 +167,7 @@ const FilesDataView = ({ titleId }) => {
                             // src={`${apiUrl}uploads/${book.image}`}
                             // src={`${process.env.REACT_APP_API_URL}uploads/${book.image}`}
                             src={book.image}
-                            alt={book.name}
+                            alt={book.image}
                             style={{
                                 width: '100%',
                                 maxWidth: '400px',
