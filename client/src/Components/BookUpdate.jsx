@@ -52,7 +52,7 @@ const BookUpdate = (props) => {
 
     useEffect(() => {
         if (book?.image) {
-            setPreview(`${apiUrl}${book.image}`);
+            setPreview(`${book.image}`);
             // setPreview(`${process.env.REACT_APP_API_URL}${book.image}`);
         }
     }, [book.image]);
@@ -75,7 +75,7 @@ const BookUpdate = (props) => {
             style={{ width: '400px', borderRadius: '8px' }}
             onHide={() => {
                 setSelectedImage(null);
-                setPreview(book.image || "");
+                setPreview(book.image);
                 setVisible(false);
             }}
         >
