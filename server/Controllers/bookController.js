@@ -264,12 +264,6 @@ const deleteBook = async (req, res) => {
         }
 
         if (book.image) {
-            // const imagePath = path.join(__dirname, '../', book.image);
-            // fs.unlink(imagePath, (err) => {
-            //     if (err) {
-            //         console.error(`Failed to delete image file: ${imagePath}`, err);
-            //     }
-            // });
             if (book.image) {
                 const key = book.image.split('/').pop();
                 await s3.deleteObject({

@@ -5,7 +5,8 @@ const titleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        enum: ['Book', 'Exams', 'Exercises', 'Disk','Videos', 'Other'], 
+        // enum: ['Book', 'Exams', 'Exercises', 'Disk','Videos', 'Other'], 
+        enum: ['Books', 'Exams', 'Flash Cards', 'CD','Videos','Ready Lessons', 'Other'], 
     },
     book: {
         type: mongoose.Schema.Types.ObjectId,
@@ -16,6 +17,6 @@ const titleSchema = new mongoose.Schema({
     timestamps: true
 });
 
-titleSchema.index({ name: 1, book: 1 }, { unique: true }); // מניעת כפילויות על בסיס שם וספר
+titleSchema.index({ name: 1, book: 1 }, { unique: true }); 
 
 module.exports = mongoose.model("Title", titleSchema);
