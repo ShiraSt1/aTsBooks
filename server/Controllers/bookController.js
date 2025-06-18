@@ -151,7 +151,7 @@ const createNewBook = async (req, res) => {
     }
 
     try {
-        const titles = ['Book', 'Exams', 'Exercises', 'Disk', 'Videos', 'Other'];
+        const titles = ['Books', 'Exams', 'Flash Cards', 'CD','Videos', 'Others']
         await Promise.all(
             titles.map(title => Title.create({ name: title, book: book._id }))
         );
