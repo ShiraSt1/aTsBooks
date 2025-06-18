@@ -419,3 +419,38 @@
     width: 50px;
   }
 }
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* ריווח עדין */
+}
+
+.auth-buttons .p-button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.auth-buttons .user-name {
+  margin-right: 0.4rem;
+  font-weight: 500;
+}
+
+.custom-button {
+/* background-color: white;       רקע */
+color: #616161;                /* צבע טקסט ואייקון */
+/* border: 1px solid #1e2831;     צבע מסגרת */
+padding: 0.4rem 0.8rem;
+font-size: 0.85rem;
+border-radius: 4px;
+transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+background-color: #e4e4e4;     /* רקע בהובר */
+/* color: white;                  טקסט ואייקון בהובר */
+}
+
+.custom-button .pi {
+color: inherit !important;     /* האייקון מקבל את צבע הטקסט */
+}

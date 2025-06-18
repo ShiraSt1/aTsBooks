@@ -60,7 +60,7 @@ const UpdateUser = (props) => {
             visible={props.visible}
             modal
             onHide={props.onHide}
-            header="Update User"
+            header="Update Details"
         >
             <Toast ref={toast} />
             <div className="flex flex-column gap-3">
