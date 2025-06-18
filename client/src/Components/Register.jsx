@@ -158,7 +158,7 @@ const Register = () => {
                         />
                         {errors.phone && <small className="register-error">{errors.phone}</small>}
                     </div>
-                    <small>*Your request to join will be sent to the site administrator. You’ll receive an email once it’s approved.</small>
+                    <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
                     <button
                         type="button"
                         onClick={() => createUser(name, email, phone, password)}

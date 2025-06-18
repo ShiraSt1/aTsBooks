@@ -187,7 +187,7 @@ export default function BooksDataView() {
 
     const handleNavigation = (id) => {
         if (!token) {
-            toast.current.show({ severity: 'error', detail: 'You are not allowed to view the book files.', life: 3000 });
+            toast.current.show({ severity: 'error', detail: 'You must log-in to view the book files.', life: 3000 });
         }
         else {
             navigate(`/titles/${id}`);

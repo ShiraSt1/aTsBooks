@@ -182,7 +182,7 @@ const MenuBar = () => {
             onClick={() => setShowUpdateDialog(true)}
           />
           <Button
-            label="Logout"
+            label="Log-Out"
             icon="pi pi-sign-out"
             className="p-button-text slim-button custom-button"
             onClick={handleLogout}
@@ -197,7 +197,7 @@ const MenuBar = () => {
             onClick={() => navigate('/register')}
           />
           <Button
-            label="Login"
+            label="Log-In"
             icon="pi pi-sign-in"
             className="p-button-text slim-button custom-button"
             onClick={() => navigate('/login')}
