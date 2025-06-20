@@ -256,11 +256,6 @@ const Titles = () => {
                         customUpload
                         chooseLabel="Choose file"
                         uploadHandler={({ files }) => {
-                            const file = files[0];
-                            if (file && file.size > 10 * 1024 * 1024) {
-                                setErrorMessage("File size must be 10MB or less.");
-                                return;
-                            }
                             setSelectedFile(files[0]); // שמירת הקובץ הנבחר ב-state זמני
                             setFilePreview(files[0]?.name || ''); // הצגת שם הקובץ הנבחר
                         }}
