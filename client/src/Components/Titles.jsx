@@ -24,6 +24,7 @@ const Titles = () => {
     const { bookId } = useParams();
     const navigate = useNavigate();
     const apiUrl = getConfig().API_URL;
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchBook = async () => {
         try {
@@ -165,12 +166,13 @@ const Titles = () => {
 
     const handleUpload = async () => {
         if (!selectedFile || !uploadTitleId) return;
-    
+
+        setIsLoading(true)
         const s3Key = await uploadFileToS3(selectedFile);
         if (!s3Key) return;
-    
+
         const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${s3Key}`;
-    
+
         try {
             await axios.post(`${apiUrl}api/file/save-metadata`, {
                 title: uploadTitleId,
@@ -182,7 +184,7 @@ const Titles = () => {
             }, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-    
+
             fetchTitles();
             setVisibleUpload(false);
             setNewFileName('');
@@ -192,9 +194,11 @@ const Titles = () => {
         } catch (err) {
             console.error("Error saving metadata:", err);
             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Saving file failed', life: 3000 });
+        } finally {
+            setIsLoading(false)
         }
     };
-    
+
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
@@ -233,6 +237,12 @@ const Titles = () => {
                 style={{ width: '30rem', borderRadius: '8px', textAlign: 'center' }}
                 className="custom-upload-dialog"
             >
+                {isLoading && (
+                    <>
+                    <i className="pi pi-spinner pi-spin" style={{ fontSize: '2rem', color: '#2196F3' }}></i>
+                    <p style={{ fontSize: '2rem', color: '#2196F3' }}>Uploading File</p>
+                    </>
+                )}
                 <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
                     <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
                         File name
