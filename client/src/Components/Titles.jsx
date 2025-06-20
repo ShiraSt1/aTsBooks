@@ -238,10 +238,18 @@ const Titles = () => {
                 className="custom-upload-dialog"
             >
                 {isLoading && (
-                    <>
-                    <i className="pi pi-spinner pi-spin" style={{ fontSize: '2rem', color: '#2196F3' }}></i>
-                    <p style={{ fontSize: '2rem', color: '#2196F3' }}>Uploading File</p>
-                    </>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <i className="pi pi-spinner pi-spin" style={{ fontSize: '1.2rem', color: '#2196F3' }}></i>
+                        <span style={{ fontSize: '1.2rem', color: '#2196F3' }}>Uploading file...</span>
+                    </div>
                 )}
                 <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
                     <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
