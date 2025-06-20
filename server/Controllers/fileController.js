@@ -175,7 +175,7 @@ const viewFileContent = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "File not found" });
     }
-    
+
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET,
       Key: file.s3Key,
@@ -194,41 +194,50 @@ const viewFileContent = async (req, res) => {
 /* */
 
 const getPresignedUrl = async (req, res) => {
-    try {
-        const { fileName, fileType } = req.body;
-        const key = `${Date.now()}-${fileName}`;
-
-        const command = new PutObjectCommand({
-            Bucket: BUCKET,
-            Key: key,
-            ContentType: fileType
-        });
-
-        const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 דקות
-
-        res.status(200).json({ url, key });
-    } catch (err) {
-        res.status(500).json({ message: "Error generating presigned URL", error: err.message });
+  try {
+    const { fileName, fileType } = req.body;
+    if (!fileName || !fileType) {
+      return res.status(400).json({ message: "File name and type are required" });
     }
+    const key = `${Date.now()}-${fileName}`;
+
+    const command = new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      ContentType: fileType
+    });
+    if (!command) {
+      return res.status(500).json({ message: "Error creating S3 command" });
+    }
+    const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 דקות
+    if (!url) {
+      return res.status(500).json({ message: "Error generating presigned URL" });
+    }
+    res.status(200).json({ url, key });
+  } catch (err) {
+    res.status(500).json({ message: "Error generating presigned URL", error: err.message });
+  }
 };
 
 const saveFileMetadata = async (req, res) => {
-    try {
-        const { name, customName, s3Key, url, title, size } = req.body;
-
-        const file = await File.create({
-            name,
-            customName: customName || null,
-            s3Key,
-            url,
-            title,
-            size,
-        });
-
-        res.status(201).json(file);
-    } catch (err) {
-        res.status(500).json({ message: "Error saving file metadata", error: err.message });
+  try {
+    const { name, customName, s3Key, url, title, size } = req.body;
+    if (!name || !s3Key || !url || !title || size === undefined) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+    const file = await File.create({
+      name,
+      customName: customName || null,
+      s3Key,
+      url,
+      title,
+      size,
+    });
+
+    res.status(201).json(file);
+  } catch (err) {
+    res.status(500).json({ message: "Error saving file metadata", error: err.message });
+  }
 };
 
 module.exports = {
