@@ -40,6 +40,34 @@ const Titles = () => {
         }
     };
 
+    const uploadFileToS3 = async (file) => {
+        try {
+            // שלב 1: בקשת URL זמני מהשרת
+            const res = await axios.post(`${apiUrl}api/file/presign`, {
+                fileName: file.name,
+                fileType: file.type
+            }, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const { url, key } = res.data;
+
+            // שלב 2: העלאה ישירה ל־S3
+            await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                }
+            });
+
+            return key;
+        } catch (err) {
+            console.error("Error uploading to S3:", err);
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Upload to S3 failed', life: 3000 });
+            return null;
+        }
+    };
+
+
     useEffect(() => {
         fetchBook();
         fetchTitles();
@@ -68,6 +96,7 @@ const Titles = () => {
                         <span>{title.name}</span>
                         {user?.roles === "Admin" && (<>
                             <Button icon="pi pi-plus" rounded text size="small" onClick={(e) => {
+                                setErrorMessage("");
                                 e.stopPropagation();
                                 setUploadTitleId(title._id);
                                 setVisibleUpload(true);
@@ -134,29 +163,38 @@ const Titles = () => {
         }
     };
 
-    const handleUpload = async ({ files }) => {
-
-        const file = files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('title', uploadTitleId);
-        formData.append('customName', newFileName); // שליחת שם מותאם אישית
-
+    const handleUpload = async () => {
+        if (!selectedFile || !uploadTitleId) return;
+    
+        const s3Key = await uploadFileToS3(selectedFile);
+        if (!s3Key) return;
+    
+        const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${s3Key}`;
+    
         try {
-            await axios.post(`${apiUrl}api/file`, formData, {
-                // await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
+            await axios.post(`${apiUrl}api/file/save-metadata`, {
+                title: uploadTitleId,
+                name: selectedFile.name,
+                customName: newFileName,
+                s3Key,
+                url: fileUrl,
+                size: Number((selectedFile.size / 1024).toFixed(2))
+            }, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
+    
             fetchTitles();
             setVisibleUpload(false);
             setNewFileName('');
-
-            toast.current?.show({ severity: 'success', summary: 'Uploaded', detail: 'File uploaded successfuly', life: 2000 });
+            setSelectedFile(null);
+            setFilePreview('');
+            toast.current?.show({ severity: 'success', summary: 'Uploaded', detail: 'File uploaded successfully', life: 2000 });
         } catch (err) {
-            console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Upload failed', life: 3000 });
+            console.error("Error saving metadata:", err);
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Saving file failed', life: 3000 });
         }
     };
+    
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
@@ -219,7 +257,6 @@ const Titles = () => {
                         chooseLabel="Choose file"
                         uploadHandler={({ files }) => {
                             const file = files[0];
-                            // בדיקת גודל קובץ
                             if (file && file.size > 10 * 1024 * 1024) {
                                 setErrorMessage("File size must be 10MB or less.");
                                 return;

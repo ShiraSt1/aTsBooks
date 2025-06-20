@@ -13,6 +13,8 @@ router.get("/download/:fileId", fileController.downloadFile);
 router.delete("/:fileId",verifyJWT ,admirMiddleware,fileController.deleteFile);
 router.put("/:fileId", verifyJWT,upload.single("file"), fileController.updateFile);
 router.get('/view/:fileId',verifyJWT, fileController.viewFileContent);
+router.post('/presign', verifyJWT, admirMiddleware, fileController.getPresignedUrl);
+router.post('/save-metadata', verifyJWT, admirMiddleware, fileController.saveFileMetadata);
 
 router.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {

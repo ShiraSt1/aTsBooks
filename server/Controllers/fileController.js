@@ -8,6 +8,9 @@ const { log } = require("console");
 const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
+
 const uploadFile = async (req, res) => {
   try {
     const { title } = req.body;
@@ -188,6 +191,46 @@ const viewFileContent = async (req, res) => {
   }
 };
 
+/* */
+
+const getPresignedUrl = async (req, res) => {
+    try {
+        const { fileName, fileType } = req.body;
+        const key = `${Date.now()}-${fileName}`;
+
+        const command = new PutObjectCommand({
+            Bucket: BUCKET,
+            Key: key,
+            ContentType: fileType
+        });
+
+        const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 דקות
+
+        res.status(200).json({ url, key });
+    } catch (err) {
+        res.status(500).json({ message: "Error generating presigned URL", error: err.message });
+    }
+};
+
+const saveFileMetadata = async (req, res) => {
+    try {
+        const { name, customName, s3Key, url, title, size } = req.body;
+
+        const file = await File.create({
+            name,
+            customName: customName || null,
+            s3Key,
+            url,
+            title,
+            size,
+        });
+
+        res.status(201).json(file);
+    } catch (err) {
+        res.status(500).json({ message: "Error saving file metadata", error: err.message });
+    }
+};
+
 module.exports = {
   uploadFile,
   getFilesByTitle,
@@ -197,4 +240,6 @@ module.exports = {
   deleteFile,
   updateFile,
   viewFileContent,
+  getPresignedUrl,
+  saveFileMetadata
 };
