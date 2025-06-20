@@ -238,7 +238,7 @@ const Titles = () => {
                 style={{ width: '30rem', borderRadius: '8px', textAlign: 'center' }}
                 className="custom-upload-dialog"
             >
-                {isLoading && (
+                {/* {isLoading && (
                     <div
                         style={{
                             display: 'flex',
@@ -251,7 +251,7 @@ const Titles = () => {
                         <ProgressSpinner style={{ width: '40px', height: '40px' }} strokeWidth="4" />
                         <span style={{ fontSize: '1.2rem', color: '#2196F3' }}>Uploading file...</span>
                     </div>
-                )}
+                )} */}
                 <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
                     <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
                         File name
@@ -288,7 +288,7 @@ const Titles = () => {
                         </div>
                     )}
                     <div className="flex justify-content-center gap-3">
-                        <Button
+                        {/* <Button
                             label="Upload"
                             onClick={() => {
                                 if (selectedFile) {
@@ -299,7 +299,30 @@ const Titles = () => {
                             }}
                             className="p-button-primary"
                             style={{ width: '40%' }}
-                        />
+                        /> */}
+                        <Button
+                            onClick={() => {
+                                if (selectedFile) {
+                                    handleUpload({ files: [selectedFile] }); // קריאה ל-handleUpload עם הקובץ הנבחר
+                                } else {
+                                    toast.current?.show({ severity: 'warn', summary: 'Error', detail: 'Press upload below', life: 3000 });
+                                }
+                            }}
+                            disabled={isLoading}
+                            className="p-button-primary"
+                            style={{ width: '40%', position: 'relative' }}
+                        >
+                            {isLoading ? (
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                                    <ProgressSpinner
+                                        style={{ width: '20px', height: '20px' }}
+                                        strokeWidth="4"
+                                    />
+                                </div>
+                            ) : (
+                                "Upload"
+                            )}
+                        </Button>
                         <Button
                             label="Cancel"
                             onClick={() => {
