@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const corsOptions = require("./config/corsOptions")
 const connectDB = require("./config/dbConn.js")
 const mongoose  = require("mongoose")
+const rateLimit = require('express-rate-limit');
 
 const multer = require("multer");
 const storage = multer.diskStorage({
@@ -21,6 +22,13 @@ const upload = multer({ storage: storage });
 const app = express()
 const PORT = process.env.PORT || 3001
 const path = require('path');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 דקות
+  max: 100, // 100 בקשות לחלון זמן
+});
+
+app.use(limiter); 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

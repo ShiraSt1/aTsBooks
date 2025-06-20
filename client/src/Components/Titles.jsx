@@ -32,8 +32,7 @@ const Titles = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setBook(res.data);
-            console.log("Book data:", res.data);
-            
+
         } catch (err) {
             if (err.status === 400)
                 toast?.current.show({ severity: 'error', summary: 'Error', detail: 'No book found', life: 3000 });
@@ -80,9 +79,9 @@ const Titles = () => {
                         <div className="flex justify-between align-items-center w-full gap-2">
                             <span
                                 style={{
-                                    maxWidth: '30%', // חצי מהרוחב של השורה
+                                    maxWidth: '30%',
                                     overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
+                                    // textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap'
                                 }}
                                 title={file.name} // מציג את השם המלא כ-tooltip על מעבר עכבר
@@ -136,7 +135,7 @@ const Titles = () => {
     };
 
     const handleUpload = async ({ files }) => {
-        
+
         const file = files[0];
         const formData = new FormData();
         formData.append('file', file);
@@ -160,7 +159,7 @@ const Titles = () => {
     };
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
-
+    const [errorMessage, setErrorMessage] = useState('');
     return (
         <div className="p-4">
             {book && (
@@ -208,13 +207,23 @@ const Titles = () => {
                         className="p-inputtext-lg"
                         style={{ borderRadius: '6px', width: '100%' }}
                     />
+                    {errorMessage && (
+                        <div style={{ color: 'red', marginTop: '8px' }}>
+                            {errorMessage}
+                        </div>
+                    )}
                     <FileUpload
                         mode="basic"
                         auto={false} // ביטול העלאה אוטומטית
                         customUpload
-                        // uploadHandler={handleUpload}
                         chooseLabel="Choose file"
                         uploadHandler={({ files }) => {
+                            const file = files[0];
+                            // בדיקת גודל קובץ
+                            if (file && file.size > 10 * 1024 * 1024) {
+                                setErrorMessage("File size must be 10MB or less.");
+                                return;
+                            }
                             setSelectedFile(files[0]); // שמירת הקובץ הנבחר ב-state זמני
                             setFilePreview(files[0]?.name || ''); // הצגת שם הקובץ הנבחר
                         }}

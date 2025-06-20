@@ -110,15 +110,20 @@ const createNewBook = async (req, res) => {
 
     // העלאת תמונה ל-S3
     let image = null;
+    const filePath = req.file.path;
+    const fileStream = fs.createReadStream(filePath);
     try {
         const key = `bookImages/${Date.now()}_${req.file.originalname}`;
-        await s3.putObject({
+        await s3.upload({
             Bucket: BUCKET,
             Key: key,
-            Body: req.file.buffer,
+            Body: fileStream,
             ContentType: req.file.mimetype
         }).promise();
+        await fs.promises.unlink(filePath);
+        
         image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    
     } catch (err) {
         console.error("S3 upload error:", err.message);
         return res.status(500).send("Failed to upload image");
@@ -151,7 +156,7 @@ const createNewBook = async (req, res) => {
     }
 
     try {
-        const titles = ['Books', 'Exams', 'Flash Cards', 'CD','Videos', 'Others']
+        const titles = ['Books', 'Exams', 'Flash Cards', 'CD', 'Videos', 'Others']
         await Promise.all(
             titles.map(title => Title.create({ name: title, book: book._id }))
         );
@@ -207,7 +212,7 @@ const updateBook = async (req, res) => {
         }
         // Update grades
         let gradesArray = [];
-        
+
         if (grades && typeof grades === "object") {
             gradesArray = Array.isArray(grades) ? grades : Object.values(grades);
         }
@@ -234,13 +239,16 @@ const updateBook = async (req, res) => {
         book.name = name;
         book.grades = gradeIds;
         if (newImage) {
+            const filePath = newImage.path;
+            const fileStream = fs.createReadStream(filePath);
             const newKey = Date.now() + "-" + newImage.originalname;
             await s3.putObject({
                 Bucket: BUCKET,
                 Key: newKey,
-                Body: newImage.buffer,
+                Body: fileStream,
                 ContentType: newImage.mimetype,
             }).promise();
+        await fs.promises.unlink(filePath);
 
             book.image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${newKey}`;
         }

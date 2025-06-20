@@ -15,22 +15,23 @@ const uploadFile = async (req, res) => {
       return res.status(400).send({ message: "No file has been uploaded" });
     }
 
-    const s3Params = {
+    const filePath = req.file.path; // הנתיב בדיסק
+    const fileStream = fs.createReadStream(filePath);
+    const result = await s3.upload({
       Bucket: BUCKET,
-      Key: Date.now() + "_" + req.file.originalname,
-      Body: req.file.buffer,
+      Key: Date.now() + '-' + req.file.originalname,
+      Body: fileStream,
       ContentType: req.file.mimetype,
-    };
-    
-    await s3.putObject(s3Params).promise();
+    }).promise();
+    await fs.promises.unlink(filePath);
 
-    const fileUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Params.Key}`;
+
+    const fileUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${result.Key}`;
 
     const newFile = await File.create({
       name: req.file.originalname,
       url: fileUrl,
-      s3Key: s3Params.Key,
-      // path: req.file.path,
+      s3Key: result.Key,
       size: Number((req.file.size / 1024).toFixed(2)),
       title,
     });
@@ -78,8 +79,6 @@ const downloadFile = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "No file found" });
     }
-    // res.download(file.path, file.name);
-    // return res.redirect(file.url);
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET,
       Key: file.s3Key,
@@ -100,13 +99,11 @@ const deleteFileFunction = async (fileId) => {
   const file = await File.findById(fileId);
   if (!file) throw new Error("File not found");
   try {
-    // await fs.promises.unlink(path.resolve(file.path));
     await s3.deleteObject({
       Bucket: BUCKET,
       Key: file.s3Key,
     }).promise();
   } catch (err) {
-    // if (err.code !== "ENOENT") throw err; // מסמך שלא נמצא - ממשיכים למחוק מה-DB
     console.error("S3 delete error:", err.message);
   }
   await File.deleteOne({ _id: fileId });
@@ -136,27 +133,26 @@ const updateFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).send({ message: "No file has been chosen for update" });
     }
-    // מחיקת הקובץ הישן מהדיסק
-    // const oldFilePath = path.join(__dirname, "..", existingFile.path);
-    // if (fs.existsSync(oldFilePath)) {
-    //   fs.unlinkSync(oldFilePath);
-    // }
-
-    // עדכון במסד הנתונים עם המידע החדש
-    // existingFile.name = req.file.originalname;
-    // existingFile.path = req.file.path;
-    // existingFile.size = Number((req.file.size / 1024).toFixed(2));
-    // await existingFile.save();
-    // res.status(200).send(existingFile);
     await s3.deleteObject({
       Bucket: BUCKET,
       Key: existingFile.s3Key,
     }).promise();
-    const newUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${newKey}`;
+
+    const filePath = req.file.path; // הנתיב בדיסק
+    const fileStream = fs.createReadStream(filePath);
+    const result = await s3.upload({
+      Bucket: BUCKET,
+      Key: Date.now() + '-' + req.file.originalname,
+      Body: fileStream,
+      ContentType: req.file.mimetype,
+    }).promise();
+    await fs.promises.unlink(filePath);
+
+    const newUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${result.Key}`;
 
     // עדכון במסד
     existingFile.name = req.file.originalname;
-    existingFile.s3Key = newKey;
+    existingFile.s3Key = result.Key;
     existingFile.url = newUrl;
     existingFile.size = Number((req.file.size / 1024).toFixed(2));
     await existingFile.save();
@@ -176,22 +172,7 @@ const viewFileContent = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "File not found" });
     }
-    // const absolutePath = path.resolve(file.path);
-    // const contentType = mime.lookup(file.name) || "application/octet-stream";
-
-    // res.setHeader("Content-Type", contentType);
-    // res.setHeader("Content-Disposition", "inline");
-
-    // const stream = fs.createReadStream(absolutePath);
-    // stream.pipe(res);
-
-    // stream.on("error", (err) => {
-    //   res.status(500).send({
-    //     message: "Error reading file content",
-    //     error: err.message,
-    //   });
-    // });
-    // return res.redirect(file.url);
+    
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET,
       Key: file.s3Key,
