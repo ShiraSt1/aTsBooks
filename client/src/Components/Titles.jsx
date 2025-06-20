@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Titles = () => {
     const [items, setItems] = useState([]);
@@ -247,7 +248,7 @@ const Titles = () => {
                             marginTop: '1rem'
                         }}
                     >
-                        <i className="pi pi-spinner pi-spin" style={{ fontSize: '1.2rem', color: '#2196F3' }}></i>
+                        <ProgressSpinner style={{ width: '40px', height: '40px' }} strokeWidth="4" />
                         <span style={{ fontSize: '1.2rem', color: '#2196F3' }}>Uploading file...</span>
                     </div>
                 )}
