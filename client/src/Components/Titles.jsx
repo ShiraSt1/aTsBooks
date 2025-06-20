@@ -288,18 +288,6 @@ const Titles = () => {
                         </div>
                     )}
                     <div className="flex justify-content-center gap-3">
-                        {/* <Button
-                            label="Upload"
-                            onClick={() => {
-                                if (selectedFile) {
-                                    handleUpload({ files: [selectedFile] }); // קריאה ל-handleUpload עם הקובץ הנבחר
-                                } else {
-                                    toast.current?.show({ severity: 'warn', summary: 'Error', detail: 'Press upload below', life: 3000 });
-                                }
-                            }}
-                            className="p-button-primary"
-                            style={{ width: '40%' }}
-                        /> */}
                         <Button
                             onClick={() => {
                                 if (selectedFile) {
@@ -313,14 +301,15 @@ const Titles = () => {
                             style={{ width: '40%', position: 'relative' }}
                         >
                             {isLoading ? (
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%',gap: '0.5rem',marginTop: '1rem' }}>
                                     <ProgressSpinner
                                         style={{ width: '20px', height: '20px' }}
                                         strokeWidth="4"
                                     />
+                                    <span>Loading</span>
                                 </div>
                             ) : (
-                                "Upload"
+                                <span>Upload</span>
                             )}
                         </Button>
                         <Button
