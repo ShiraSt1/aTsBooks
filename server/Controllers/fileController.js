@@ -215,7 +215,11 @@ const getPresignedUrl = async (req, res) => {
     }
     res.status(200).json({ url, key });
   } catch (err) {
-    res.status(500).json({ message: "Error generating presigned URL", error: err.message });
+    console.error("Presigned URL error:", err); // חשוב מאוד להוסיף את זה
+    res.status(500).json({
+      message: "Error generating presigned URL",
+      error: err.message
+    });
   }
 };
 
