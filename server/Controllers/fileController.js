@@ -9,7 +9,7 @@ const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { PutObjectCommand , GetObjectCommand} = require('@aws-sdk/client-s3');
 
 const uploadFile = async (req, res) => {
   try {
