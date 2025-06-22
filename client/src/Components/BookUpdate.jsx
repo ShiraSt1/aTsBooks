@@ -11,18 +11,15 @@ const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book
     const [selectedImage, setSelectedImage] = useState(null); // תמונה שנבחרה
     const [preview, setPreview] = useState(book?.image ? `${book.image}`: "");
-    // const [preview, setPreview] = useState(book?.image ? `${process.env.REACT_APP_API_URL}${book.image}` : "");
     const [grades, setGrades] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]);
     const nameRef = useRef("");
     const [name, setName] = useState(book?.name || "");
     const apiUrl = getConfig().API_URL;
 
-    // הבאת כיתות זמינות
     const AvailablGrade = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/grade`);
-            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`);
             if (res.status === 204) {
                 setGrades([]);
             } else {
@@ -42,7 +39,6 @@ const BookUpdate = (props) => {
         AvailablGrade();
     }, []);
 
-    // הגדרת כיתות ראשוניות
     useEffect(() => {
         if (book?.grades && book.grades.length > 0) {
             const initialGrades = book.grades.map((grade) => grade.name);
@@ -53,14 +49,12 @@ const BookUpdate = (props) => {
     useEffect(() => {
         if (book?.image) {
             setPreview(`${book.image}`);
-            // setPreview(`${process.env.REACT_APP_API_URL}${book.image}`);
         }
     }, [book.image]);
     
     // העלאת תמונה חדשה
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
-        // const file = e.files[0];
         if (file) {
             setSelectedImage(file);
             setPreview(URL.createObjectURL(file)); // עדכון תצוגה מקדימה

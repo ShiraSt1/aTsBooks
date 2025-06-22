@@ -7,7 +7,6 @@ require('dotenv').config();
 const sendEmail = require('../utils/sendEmail');
 const { log } = require("console");
 
-//פונקצית שליחת מייל
 const sendEmailFunction = async (to, subject, html) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.office365.com',
@@ -34,7 +33,6 @@ const sendEmailFunction = async (to, subject, html) => {
     }
 };
 
-//get all user
 const getAllUser = async (req, res) => {
     const users = await User.find().lean()
     if (!users?.length)
@@ -42,7 +40,6 @@ const getAllUser = async (req, res) => {
     res.json(users)
 }
 
-//update
 const updateUser = async (req, res) => {
     const { _id, name, phone, email } = req.body
     const user = await User.findById(_id)
@@ -66,7 +63,6 @@ const updateUser = async (req, res) => {
     res.json(updateUser)
 }
 
-//register
 const register = async (req, res) => {
     const { password, name, email, phone } = req.body
 
@@ -113,7 +109,6 @@ const register = async (req, res) => {
     })
 };
 
-//login
 const login = async (req, res) => {
     try {
         const { email, password } = req.body
@@ -275,7 +270,6 @@ const deleteUser = async (req, res) => {
     res.json(user)
 }
 
-// Store the verification codes in memory (for simplicity; use a database in production).
 const verificationCodes = {};
 
 const sendVerificationCode = async (req, res) => {
@@ -285,20 +279,16 @@ const sendVerificationCode = async (req, res) => {
         return res.status(400).json({ message: 'Email is required.' });
     }
     try {
-        // Find the user by email
         const user = await User.findOne({ email }).exec();
 
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        // Generate a random verification code
         const verificationCode = crypto.randomInt(100000, 999999);
 
-        // Store the code along with the user's email
         verificationCodes[email] = verificationCode;
 
-        // Send the verification code via email
         const emailHtml = `
             <p>Your password reset verification code is: <strong>${verificationCode}</strong></p>
             <p>If you did not request this, please ignore this email.</p>
@@ -319,28 +309,22 @@ const resetPasswordWithCode = async (req, res) => {
     }
 
     try {
-        // Validate the verification code
         if (verificationCodes[email] !== parseInt(verificationCode)) {
             return res.status(400).json({ message: 'Invalid verification code.' });
         }
 
-        // Find the user by email
         const user = await User.findOne({ email }).exec();
 
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        // Hash the new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update the user's password
         user.password = hashedPassword;
 
-        // Save the updated user
         await user.save();
 
-        // Remove the verification code (it's no longer needed)
         delete verificationCodes[email];
 
         res.status(200).json({ message: 'Password reset successfully.' });

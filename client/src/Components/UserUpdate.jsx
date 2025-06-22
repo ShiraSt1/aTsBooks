@@ -34,7 +34,6 @@ const UpdateUser = (props) => {
         };
         try {
             const res = await axios.put(`${apiUrl}api/user`, updatedUser, {
-                // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user`, updatedUser, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {

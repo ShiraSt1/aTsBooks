@@ -5,7 +5,6 @@ const titleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        // enum: ['Book', 'Exams', 'Exercises', 'Disk','Videos', 'Other'], 
         enum: ['Books', 'Exams', 'Flash Cards', 'CD','Videos', 'Others'], 
     },
     book: {

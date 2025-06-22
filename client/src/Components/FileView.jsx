@@ -22,14 +22,9 @@ const FileView = () => {
 
   const fetchFile = async () => {
     try {
-      // קריאת שרת עם headers
       const response = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
-        // const response = await axios.get(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, {
         headers: { 'Authorization': `Bearer ${token}` }, // הוספת הטוקן ב-Headers
-        // responseType: 'blob', // טיפוס blob עבור קבצים
       });
-      // יצירת URL זמני מה-blob
-      // const url = URL.createObjectURL(response.data);
       const { url, name, contentType } = response.data;
       const extension = fileId.split('.').pop().toLowerCase();
       

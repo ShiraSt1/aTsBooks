@@ -24,7 +24,6 @@ const BookCreate = (props) => {
 
     const AvailablGrade = async () => {
         try {
-            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`, {
                 const res = await axios.get(`${apiUrl}api/grade`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -56,7 +55,6 @@ const BookCreate = (props) => {
 
     const handleCreateClick = () => {
         createBook(name, selectedGrades, selectedimage);
-        // setVisibleCreatBook(false);
     };
 
     return (
@@ -113,10 +111,7 @@ const BookCreate = (props) => {
                                 setPreview(URL.createObjectURL(file));
                             }
                         }}
-                        // emptyTemplate={<p>Drag an image file or click to select.</p>}
                         chooseLabel="Choose"
-                        // uploadLabel="Confirm"
-                        // cancelLabel="Cancel"
                     />
                     {preview && <img src={preview} alt="Preview" style={{ width: 150, marginTop: 10 }} />}
                 </div>

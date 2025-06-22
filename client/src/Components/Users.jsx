@@ -28,7 +28,6 @@ const Users = () => {
     const getUsers = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/user`, {
-                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/user`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -51,7 +50,6 @@ const Users = () => {
         };
         try {
             const res = await axios.post(`${apiUrl}api/user`, newUser, {
-                // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user`, newUser, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200 || res.status === 201) {
@@ -80,7 +78,6 @@ const Users = () => {
     const deleteUser = async (id) => {
         try {
             const res = await axios.delete(`${apiUrl}api/user/${id}`, {
-                // const res = await axios.delete(`${process.env.REACT_APP_API_URL}api/user/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -97,7 +94,6 @@ const Users = () => {
         try {
             const _id = id;
             const res = await axios.put(`${apiUrl}api/user/confirm`, { _id }, {
-                // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user/confirm`, { _id }, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -124,15 +120,6 @@ const Users = () => {
                 <UserProfile name={item.name}></UserProfile>
                 <span className="font-semibold">{item.email}</span>
                 <span className="font-semibold">{item.phone}</span>
-                {/* <div className="flex-1 flex flex-column gap-2">
-                    <div className="flex align-items-center gap-2">
-                        <div className="flex align-items-center gap-2">
-                            <br />
-                            <i className="pi pi-calendar text-sm"></i>
-                            <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                </div> */}
                 <FaTrashAlt size={20} className="delete-icon" onClick={() => confirmDeleteUser(item._id)} />
             </div>
         );

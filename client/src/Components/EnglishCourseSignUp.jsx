@@ -57,7 +57,6 @@ const EnglishCourseSignUp = () => {
     }
     try {
       const res = await axios.post(`${apiUrl}api/course/register`, formData, {
-        // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         }

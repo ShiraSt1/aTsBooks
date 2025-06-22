@@ -22,7 +22,6 @@ const Home = () => {
     setSubscribed(false);
     try {
       const res = await axios.post(`${apiUrl}api/course/newsLetter`, data, {
-        // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/course/newsLetter`, e, {
         headers: {
           "Content-Type": "application/json",
         }

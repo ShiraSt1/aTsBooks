@@ -35,7 +35,6 @@ const registerToCourse = async (req, res) => {
 `;
 
     await sendEmail(process.env.GMAIL_ADMIN, `A new message from ${firstName} ${lastName}`, emailHtml, email, files ? files : [])
-    // req.files?.forEach(file => fs.unlinkSync(file.path));
     return res.status(201).json({
         message: `An email sent to administrator`
     })

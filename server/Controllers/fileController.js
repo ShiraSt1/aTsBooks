@@ -154,7 +154,6 @@ const updateFile = async (req, res) => {
 
     const newUrl = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${result.Key}`;
 
-    // עדכון במסד
     existingFile.name = req.file.originalname;
     existingFile.s3Key = result.Key;
     existingFile.url = newUrl;
@@ -185,7 +184,6 @@ const viewFileContent = async (req, res) => {
     const url = await getSignedUrl(s3, command, { expiresIn: 60 });
 
 
-    // res.redirect(url);
     res.status(200).json({
       url,
       name: file.name,
@@ -198,8 +196,6 @@ const viewFileContent = async (req, res) => {
     });
   }
 };
-
-/* */
 
 const getPresignedUrl = async (req, res) => {
   try {

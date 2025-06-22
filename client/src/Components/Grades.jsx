@@ -19,11 +19,9 @@ const Grades = () => {
     const toast = useRef(null);
     const apiUrl = getConfig().API_URL;
 
-    //GET - getAllGrades/
     const getGrades = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/grade`)
-            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade`)
             if (res.status === 200) {
                 setGradesData(res.data)
             }
@@ -35,13 +33,11 @@ const Grades = () => {
     const getGradeById = async (id) => {
         try {
             const res = await axios.get(`${apiUrl}api/grade/${id}`)
-            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/grade/${id}`)
         } catch (e) {
             console.error(e)
         }
     }
 
-    //******Grade - createGrade***** */
     const createGrade = async (selectedItem, imageRef) => {
         const newGrade = {
             name: selectedItem,
@@ -49,7 +45,6 @@ const Grades = () => {
         }
         try {
             const res = await axios.post(`${apiUrl}api/grade`, newGrade, {
-                // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/grade`, newGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 201) {
@@ -70,7 +65,6 @@ const Grades = () => {
         }
     }
 
-    //********useEffect
     useEffect(() => {
         getGrades()
     }, [])

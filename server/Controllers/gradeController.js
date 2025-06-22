@@ -2,7 +2,6 @@ const Grade = require("../models/Grade");
 const Book = require("../models/Book")
 const { deleteBook } = require('../Controllers/bookController');
 
-// create
 const creatNewGrade = async (req, res) => {
     const { name, image } = req.body;
     if (!name) {
@@ -20,7 +19,6 @@ const creatNewGrade = async (req, res) => {
     res.status(201).json(grade);
 };
 
-// read
 const getAllGrade = async (req, res) => {
     try {
         const grades = await Grade.find().lean(); // שליפת הכיתות
@@ -28,7 +26,6 @@ const getAllGrade = async (req, res) => {
             return res.status(204).json({ message: 'No grades found' });
         }
 
-        // מיון לפי סדר ה-enum
         const enumOrder = ['first grade', 'second grade', 'third grade', 'fourth grade', 'fifth grade', 'sixth grade', 'seventh grade', 'eighth grade','ninth grade','tenth grade','eleventh grade','twelfth grade'];
         grades.sort((a, b) => {
             return enumOrder.indexOf(a.name) - enumOrder.indexOf(b.name);
@@ -50,7 +47,6 @@ const getGradeById = async (req, res) => {
     res.json(grade);
 };
 
-// update
 const updateGrade = async (req, res) => {
     const { _id, name, image } = req.body;
     if (!name) {
@@ -65,13 +61,11 @@ const updateGrade = async (req, res) => {
     if (duplicate && duplicate._id.toString() !== _id) {
         return res.status(409).json({ message: "Duplicate grade name" });
     }
-    //change the books of this grade
 
     const books = await Book.find({ grades: _id }).exec();
     if (books.length > 0) {
         await Promise.all(
             books.map(async (book) => {
-                // עדכון הספר
                 book.grades = book.grades.filter((gradeId) => gradeId.toString() !== _id); // הסרת הכיתה הישנה
                 book.grades.push(_id); // הוספת הכיתה החדשה
                 await book.save();
@@ -90,7 +84,6 @@ const updateGrade = async (req, res) => {
     res.json(grades);
 };
 
-// delete
 const deleteGrade = async (req, res) => {
     const { id } = req.params;
     const grade = await Grade.findById(id);
@@ -117,7 +110,6 @@ const deleteGrade = async (req, res) => {
     if (!result.deletedCount) {
         return res.status(500).json({ message: "Failed to delete grade" });
     }
-    // החזרת הרשימה החדשה של הכיתת
     const grades = await Grade.find().lean();
     if (!grades?.length < 0) {
         return res.status(204).json({ message: 'No grades found' });

@@ -28,7 +28,6 @@ const Register = () => {
         const newUser = { name, email, phone, password };
         try {
             const res = await axios.post(`${apiUrl}api/user/register`, newUser);
-            // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/user/register`, newUser);
 
             if (res.status === 409) {
                 toast.current.show({ severity: 'error', detail: 'This email already has an acount.', life: 3000 });

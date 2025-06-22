@@ -27,13 +27,11 @@ const FilesDataView = ({ titleId }) => {
         const fetchTitleAndBook = async () => {
             try {
                 const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
-                // const titleRes = await axios.get(`${process.env.REACT_APP_API_URL}api/title/${titleId}`);
                 const title = titleRes.data;
 
                 const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
-                // const bookRes = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${title.book}`);
                 setBook(bookRes.data);
-                fetchFiles(); // כבר קיים אצלך
+                fetchFiles(); 
             } catch (err) {
                 console.error("Error fetching title or book:", err);
             }
@@ -48,7 +46,6 @@ const FilesDataView = ({ titleId }) => {
         setFiles([]);
         try {
             const res = await axios.get(`${apiUrl}api/file/title/${titleId}`);
-            // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${titleId}`);
             setFiles(res.data);
             setLoading(false);
         } catch (err) {
@@ -66,7 +63,6 @@ const FilesDataView = ({ titleId }) => {
 
         try {
             const res = await axios.post(`${apiUrl}api/file`, formData, {
-                // const res = await axios.post(`${process.env.REACT_APP_API_URL}api/file`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -82,7 +78,6 @@ const FilesDataView = ({ titleId }) => {
     const handleDelete = async (fileId) => {
         try {
             await axios.delete(`${apiUrl}api/file/${fileId}`);
-            // await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`);
             setFiles(prev => prev.filter(file => file._id !== fileId));
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File deleted ', life: 3000 });
         } catch (err) {
@@ -90,26 +85,6 @@ const FilesDataView = ({ titleId }) => {
             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error deleting file.', life: 3000 });
         }
     };
-
-    // const handleDownload = async (fileId) => {
-    //     try {
-    //         const res = await axios.get(`${apiUrl}api/file/download/${fileId}`, {
-    //             headers: { Authorization: `Bearer ${token}` }
-    //         });
-    //         // window.open(res.data.url, "_blank");
-    //         const a = document.createElement('a');
-    //         a.href = res.data.url;
-    //         a.download = ''; // לא חובה שם, S3 כבר מחזיק את השם בקובץ
-    //         document.body.appendChild(a);
-    //         a.click();
-    //         document.body.removeChild(a);
-    //     } catch (err) {
-    //         console.error("Error getting download URL", err);
-    //         toast.current?.show({ severity: 'error', detail: 'Error downloading file', life: 3000 });
-    //     }
-    //     // window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
-    //     // window.open(`${process.env.REACT_APP_API_URL}api/file/download/${fileId}`, '_blank');
-    // };
 
     const handleDownload = (fileId) => {
         window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
@@ -125,8 +100,6 @@ const FilesDataView = ({ titleId }) => {
             console.error("Error getting view URL", err);
             toast.current?.show({ severity: 'error', detail: 'Error viewing file', life: 3000 });
         }
-        // window.open(`${apiUrl}api/file/view/${fileId}`, '_blank');
-        // window.open(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, '_blank');
     };
 
     const handleUpdate = async (e) => {
@@ -136,7 +109,6 @@ const FilesDataView = ({ titleId }) => {
 
         try {
             const res = await axios.put(`${apiUrl}api/file/${selectedFile._id}`, formData);
-            // const res = await axios.put(`${process.env.REACT_APP_API_URL}api/file/${selectedFile._id}`, formData);
             setFiles(prev => prev.map(file => file._id === res.data._id ? res.data : file));
             setVisibleUpdate(false);
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File updated ', life: 3000 });
@@ -161,8 +133,6 @@ const FilesDataView = ({ titleId }) => {
                 <div className="col-12 md:col-6 flex justify-content-center align-items-center">
                     {book?.image && (
                         <img
-                            // src={`${apiUrl}uploads/${book.image}`}
-                            // src={`${process.env.REACT_APP_API_URL}uploads/${book.image}`}
                             src={book.image}
                             alt={book.image}
                             style={{
@@ -171,8 +141,6 @@ const FilesDataView = ({ titleId }) => {
                                 borderRadius: '16px',
                                 objectFit: 'cover',
                                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                                // height: "100%",
-                                // minHeight: '100px'
                             }}
                         />
                     )}

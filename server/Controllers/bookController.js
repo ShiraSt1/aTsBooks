@@ -9,89 +9,6 @@ const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 const upload = multer({ storage: multer.memoryStorage() });
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         const uploadPath = path.join(__dirname, '../uploads/bookImages');
-//         if (!fs.existsSync(uploadPath)) {
-//             fs.mkdirSync(uploadPath);
-//         }
-//         cb(null, uploadPath);
-//     },
-//     filename: (req, file, cb) => {
-//         const ext = path.extname(file.originalname);
-//         const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
-//         cb(null, uniqueName);
-//     }
-// });
-// const upload = multer({ storage });
-
-// const createNewBook = async (req, res) => {
-//     const { name, grades } = req.body
-//     // const image = req.file ? 'uploads/bookImages/' + req.file.filename : null;
-//     let image = null;
-//     if (req.file) {
-//         const key = `bookImages/${Date.now()}_${req.file.originalname}`;
-//         await s3.putObject({
-//             Bucket: BUCKET,
-//             Key: key,
-//             Body: req.file.buffer,
-//             ContentType: req.file.mimetype
-//         }).promise();
-
-//         image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-//     }
-//     let gradesArr = [];
-//     gradesArr = grades
-//     if (!name) {
-//         return res.status(400).send("name is required")
-//     }
-//     if (!req.file) {
-//         return res.status(400).send("image is required")
-//     }
-//     const existBook = await Book.findOne({ name: name }).populate("grades");
-//     if (existBook) {
-//         return res.status(402).send("invalid name")
-//     }
-
-//     let gradeDocs = []
-
-//     if (typeof gradesArr === "string" && gradesArr != "[]") {
-//         try {
-//             gradesArr = JSON.parse(gradesArr);
-//             if (!Array.isArray(gradesArr)) {
-//                 return res.status(400).send("grades must be an array");
-//             }
-//             gradeDocs = await Promise.all(
-//                 gradesArr.map(grade => Grade.findOne({ name: grade }))
-//             );
-//         } catch (error) {
-//             console.error("Failed to parse gradesArr:", error);
-//             return res.status(400).send("Invalid grades format");
-//         }
-//     }
-
-//     // סינון רק כיתות שנמצאו בפועל
-//     const validGrades = gradeDocs.filter(doc => doc);
-//     const gradeIds = validGrades.map(doc => doc._id);
-
-//     const book = await Book.create({ name, grades: gradeIds, image });
-//     if (!book) {
-//         return res.status(400).send("invalid book")
-//     }
-//     try {
-//         const titles = ['Book', 'Exams', 'Exercises', 'Disk', 'Videos', 'Other'];
-
-//         const titleDocs = await Promise.all(
-//             titles.map(name => Title.create({ name, book: book._id }))
-//         );
-
-//         res.json(book);
-//     } catch (error) {
-//         console.error('Error creating titles:', error);
-//         return res.status(500).json({ message: 'Failed to create titles', error: error.message });
-//     }
-// }
-
 const createNewBook = async (req, res) => {
     const { name, grades } = req.body;
 
@@ -108,7 +25,6 @@ const createNewBook = async (req, res) => {
         return res.status(402).send("invalid name");
     }
 
-    // העלאת תמונה ל-S3
     let image = null;
     const filePath = req.file.path;
     const fileStream = fs.createReadStream(filePath);
@@ -129,7 +45,6 @@ const createNewBook = async (req, res) => {
         return res.status(500).send("Failed to upload image");
     }
 
-    // עיבוד כיתות
     let gradesArr = grades;
     let gradeDocs = [];
     if (typeof gradesArr === "string" && gradesArr !== "[]") {
@@ -189,7 +104,6 @@ const getBookById = async (req, res) => {
 
 const getBooksForGrade = async (req, res) => {
     const { Id } = req.params
-    // חפש את כל הספרים שהכיתה עם ה-ID הזה נמצאת במערך grades
     try {
         const books = await Book.find({ grades: Id }).lean().populate("grades")
         if (Array.isArray(books) && books.length === 0) {
@@ -210,14 +124,12 @@ const updateBook = async (req, res) => {
         if (!book) {
             return res.status(400).json({ message: 'Book not found' });
         }
-        // Update grades
         let gradesArray = [];
 
         if (grades && typeof grades === "object") {
             gradesArray = Array.isArray(grades) ? grades : Object.values(grades);
         }
 
-        // Ensure gradesArray is an array
         if (!Array.isArray(gradesArray)) {
             return res.status(400).send("Grades must be an array or an object convertible to an array");
         }
@@ -228,7 +140,6 @@ const updateBook = async (req, res) => {
         const validGrades = gradeDocs.filter(doc => doc);
         const gradeIds = validGrades.map(doc => doc._id);
 
-        // מחיקת התמונה הקודמת אם יש תמונה חדשה
         if (newImage && book.image) {
             await s3.deleteObject({
                 Bucket: BUCKET,

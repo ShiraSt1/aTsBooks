@@ -22,7 +22,6 @@ const sendEmail = (to, subject, html,replyTo=null, attachments = []) => {
     if (error) {
       console.error('Error in sending email:', error);
     } else {
-      // console.log('Email sent:', info.response);
     }
   });
 };

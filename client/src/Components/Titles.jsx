@@ -30,7 +30,6 @@ const Titles = () => {
     const fetchBook = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
-                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setBook(res.data);
@@ -44,7 +43,6 @@ const Titles = () => {
 
     const uploadFileToS3 = async (file) => {
         try {
-            // שלב 1: בקשת URL זמני מהשרת
             const res = await axios.post(`${apiUrl}api/file/presign`, {
                 fileName: file.name,
                 fileType: file.type
@@ -54,7 +52,6 @@ const Titles = () => {
 
             const { url, key } = res.data;
 
-            // שלב 2: העלאה ישירה ל־S3
             await axios.put(url, file, {
                 headers: {
                     'Content-Type': file.type
@@ -78,14 +75,12 @@ const Titles = () => {
     const fetchTitles = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
-                // const res = await axios.get(`${process.env.REACT_APP_API_URL}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const titles = res.data;
             const filesMap = {};
             for (const title of titles) {
                 const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
-                    // const filesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -112,7 +107,6 @@ const Titles = () => {
                                 style={{
                                     maxWidth: '30%',
                                     overflow: 'hidden',
-                                    // textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap'
                                 }}
                                 title={file.name} // מציג את השם המלא כ-tooltip על מעבר עכבר
@@ -127,7 +121,6 @@ const Titles = () => {
                                 <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
                                     window.open(`${apiUrl}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
-                                        // window.open(`${process.env.REACT_APP_API_URL}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank'
                                     );
                                 }} />
                                 {user?.roles === "Admin" && (<>
@@ -150,7 +143,6 @@ const Titles = () => {
     const handleDelete = async (fileId, titleId) => {
         try {
             await axios.delete(`${apiUrl}api/file/${fileId}`, {
-                // await axios.delete(`${process.env.REACT_APP_API_URL}api/file/${fileId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFilesByTitle(prev => ({
@@ -214,7 +206,6 @@ const Titles = () => {
                     <div className="flex justify-content-center md:w-4">
                         <img
                             src={book.image}
-                            // src={`${process.env.REACT_APP_API_URL}${book.image}`}
                             alt="Book"
                             className="border-round shadow-2"
                             style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}
@@ -238,20 +229,6 @@ const Titles = () => {
                 style={{ width: '30rem', borderRadius: '8px', textAlign: 'center' }}
                 className="custom-upload-dialog"
             >
-                {/* {isLoading && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '0.5rem',
-                            marginTop: '1rem'
-                        }}
-                    >
-                        <ProgressSpinner style={{ width: '40px', height: '40px' }} strokeWidth="4" />
-                        <span style={{ fontSize: '1.2rem', color: '#2196F3' }}>Uploading file...</span>
-                    </div>
-                )} */}
                 <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
                     <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
                         File name
