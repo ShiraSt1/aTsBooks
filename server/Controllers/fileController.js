@@ -176,13 +176,20 @@ const viewFileContent = async (req, res) => {
       return res.status(404).send({ message: "File not found" });
     }
 
-    const url = s3.getSignedUrl('getObject', {
+    const command = new GetObjectCommand({
       Bucket: BUCKET,
       Key: file.s3Key,
-      Expires: 60
     });
 
-    res.redirect(url);
+    const url = await getSignedUrl(s3, command, { expiresIn: 60 });
+
+
+    // res.redirect(url);
+    res.status(200).json({
+      url,
+      name: file.name,
+      contentType: mime.lookup(file.name) || 'application/octet-stream'
+    });
   } catch (err) {
     res.status(500).send({
       message: "Error viewing file content",

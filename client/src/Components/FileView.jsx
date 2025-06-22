@@ -26,19 +26,24 @@ const FileView = () => {
       const response = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
         // const response = await axios.get(`${process.env.REACT_APP_API_URL}api/file/view/${fileId}`, {
         headers: { 'Authorization': `Bearer ${token}` }, // הוספת הטוקן ב-Headers
-        responseType: 'blob', // טיפוס blob עבור קבצים
+        // responseType: 'blob', // טיפוס blob עבור קבצים
       });
       // יצירת URL זמני מה-blob
-      const url = URL.createObjectURL(response.data);
-      setFileUrl(url);
-      setLoading(false);
+      // const url = URL.createObjectURL(response.data);
+      const { url, name, contentType } = response.data;
       const extension = fileId.split('.').pop().toLowerCase();
-      if (['mp4', 'webm'].includes(extension)) setFileType('video');
-      else if (['mp3', 'wav', 'ogg'].includes(extension)) setFileType('audio');
-      else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(extension)) setFileType('image');
-      else if (['pdf'].includes(extension)) setFileType('pdf');
-      else if (['txt', 'doc', 'docx'].includes(extension)) setFileType('document');
+      
+      let type = 'iframe';
+      if (['mp4', 'webm'].includes(extension)) type = 'video';
+      else if (['mp3', 'wav', 'ogg'].includes(extension)) type = 'audio';
+      else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(extension)) type = 'image';
+      else if (['pdf'].includes(extension)) type = 'pdf';
+      else if (['txt', 'doc', 'docx'].includes(extension)) type = 'document';
       else setFileType('iframe');
+
+      setFileUrl(url);
+      setFileType(type);
+      setLoading(false);
     }
     catch (err) {
       console.error("Error in loading file", err);
