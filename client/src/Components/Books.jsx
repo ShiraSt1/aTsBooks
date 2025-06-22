@@ -172,12 +172,15 @@ export default function BooksDataView() {
         }
     };
 
-    const handleNavigation = (id) => {
+    const handleNavigation = (book) => {
         if (!token) {
             toast.current.show({ severity: 'error', detail: 'You must log-in to view the book files.', life: 3000 });
         }
+        else if (book.name == "Take It Easy" || book.name == "Go Ahead" || book.name == "Go Ahead Boys") {
+            toast.current.show({ severity: 'error', detail: 'This book is not in use any more.', life: 3000 });
+        }
         else {
-            navigate(`/titles/${id}`);
+            navigate(`/titles/${book._id}`);
         }
     };
 
@@ -185,14 +188,19 @@ export default function BooksDataView() {
         <div className="col-12 sm:col-6 lg:col-4 xl:col-3 p-2" key={book._id}>
             <div
                 className="p-4 border-1 surface-border surface-card border-round"
-                onClick={() => handleNavigation(book._id)}
+                onClick={() => handleNavigation(book)}
                 style={{ cursor: 'pointer', height: "640px" }}>
-                <div style={{ height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
+                <div style={{ position: 'relative', width: '100%', height: "550px" }} className="flex flex-column align-items-center gap-3 py-5">
                     <img
                         className="object-cover w-full h-full"
                         src={book.image}
                         alt={book.name}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: '100px' }}
+                        style={{
+                            width: "100%", height: "100%", objectFit: "cover", minHeight: '100px',
+                            filter: book.name === "Take It Easy" || book.name=="Go Ahead" || book.name=="Go Ahead Boys" ? "grayscale(100%) brightness(1)" : "none",
+                            opacity: book.name === "Take It Easy" || book.name=="Go Ahead" || book.name=="Go Ahead Boys" ? 0.6 : 1,
+                            borderRadius: '8px'
+                        }}
                     />
                     <div className="text-2xl font-bold">{book.name}</div>
                     {book.grades && book.grades.length > 0 && (
@@ -207,7 +215,7 @@ export default function BooksDataView() {
                     )}
                 </div>
                 <div
-                    style={{ marginTop: 'auto',  paddingBottom: '0px',paddingTop: '0px', marginBottom: '0px' }}
+                    style={{ marginTop: 'auto', paddingBottom: '0px', paddingTop: '0px', marginBottom: '0px' }}
                     className="card flex flex-wrap gap-2 justify-content-center">
                     {user?.roles === "Admin" && (
                         <>

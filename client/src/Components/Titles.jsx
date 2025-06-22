@@ -103,7 +103,7 @@ const Titles = () => {
                 items: (filesMap[title._id] || []).map(file => ({
                     label: (
                         <div className="flex justify-between align-items-center w-full gap-2">
-                            <span
+                            {/* <span
                                 style={{
                                     maxWidth: '30%',
                                     overflow: 'hidden',
@@ -112,7 +112,21 @@ const Titles = () => {
                                 title={file.name} // מציג את השם המלא כ-tooltip על מעבר עכבר
                             >
                                 {file.name}
+                            </span> */}
+                            <span
+                                style={{
+                                    flexGrow: 1,
+                                    minWidth: 0,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block'
+                                }}
+                                title={file.customName || file.name}
+                            >
+                                {file.customName || file.name}
                             </span>
+
                             <span className="flex gap-2">
                                 <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
@@ -195,6 +209,7 @@ const Titles = () => {
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
+
     return (
         <div className="p-4">
             {book && (
@@ -278,7 +293,7 @@ const Titles = () => {
                             style={{ width: '40%', position: 'relative' }}
                         >
                             {isLoading ? (
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%',gap: '0.5rem',marginTop: '1rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5rem', marginTop: '1rem' }}>
                                     <ProgressSpinner
                                         style={{ width: '20px', height: '20px' }}
                                         strokeWidth="4"
