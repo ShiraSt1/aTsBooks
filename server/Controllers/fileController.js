@@ -82,12 +82,13 @@ const downloadFile = async (req, res) => {
     if (!file) {
       return res.status(404).send({ message: "No file found" });
     }
-    const url = s3.getSignedUrl('getObject', {
+    const command = new GetObjectCommand({
       Bucket: BUCKET,
       Key: file.s3Key,
-      Expires: 60,
       ResponseContentDisposition: `attachment; filename="${file.name}"`,
     });
+
+    const url = await getSignedUrl(s3, command, { expiresIn: 60 });
 
     res.redirect(url);
   } catch (err) {
