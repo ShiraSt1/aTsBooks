@@ -75,7 +75,6 @@ const Grades = () => {
             } finally {
                 setCompLoading(false)
             }
-            loadAll();
         }
         loadAll()
     }, [])
