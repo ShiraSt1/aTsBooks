@@ -39,41 +39,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(limiter);
 
-app.get('/api/sitemap', (req, res) => {
-  res.type('application/xml');
-  res.send(`
-    <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-<url>
-  <loc>https://atsbooks-h4jx.onrender.com/</loc>
-  <lastmod>2025-06-23T19:59:11+00:00</lastmod>
-</url>
-</urlset>
-  `);
-});
-
-app.get('/googleea171b815b7e0bf10.html', (req, res) => {
-  res.set('Content-Type', 'text/plain');
-  res.send('google-site-verification: googleea171b815b7e0bf10.html');
-});
-
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
 app.use("/api/grade", require("./routes/grade.js"))
 app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
-
-app.get('/sitemap.xml', (req, res) => {
-  res.type('application/xml');
-  res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
-});
-
 
 const startServer = async () => {
   try {
