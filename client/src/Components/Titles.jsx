@@ -103,16 +103,7 @@ const Titles = () => {
                 items: (filesMap[title._id] || []).map(file => ({
                     label: (
                         <div className="flex justify-between align-items-center w-full gap-2">
-                            {/* <span
-                                style={{
-                                    maxWidth: '30%',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap'
-                                }}
-                                title={file.name} // מציג את השם המלא כ-tooltip על מעבר עכבר
-                            >
-                                {file.name}
-                            </span> */}
+
                             <span
                                 style={{
                                     flexGrow: 1,
@@ -122,9 +113,13 @@ const Titles = () => {
                                     whiteSpace: 'nowrap',
                                     display: 'block'
                                 }}
-                                title={file.customName || file.name}
+                                title={file.name}
                             >
-                                {file.customName || file.name}
+                                {file.name}
+                                {(file.name).length > 30
+                                    ? (file.name).slice(0, 30) + '...'
+                                    : (file.name)
+                                }
                             </span>
 
                             <span className="flex gap-2">
