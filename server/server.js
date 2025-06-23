@@ -58,13 +58,8 @@ app.get('/api/sitemap', (req, res) => {
 });
 
 app.get('/googleea171b815b7e0bf10.html', (req, res) => {
-  res.sendFile(path.resolve('public/googleea171b815b7e0bf10.html'));
+  res.send('google-site-verification: googleea171b815b7e0bf10.html');
 });
-
-app.get('/text.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'text.html'));
-});
-
 
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
