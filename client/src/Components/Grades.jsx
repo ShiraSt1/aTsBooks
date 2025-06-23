@@ -77,6 +77,7 @@ const Grades = () => {
             }
             loadAll();
         }
+        loadAll()
     }, [])
 
     const itemTemplate = (grade, index) => {
