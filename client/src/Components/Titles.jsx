@@ -115,9 +115,9 @@ const Titles = () => {
                                 }}
                                 title={file.name}
                             >
-                                {file.name}
+                                {/* {file.name} */}
                                 {(file.name).length > 30
-                                    ? (file.name).slice(0, 30) + '...'
+                                    ? (file.name).slice(0,30) + '...'
                                     : (file.name)
                                 }
                             </span>
