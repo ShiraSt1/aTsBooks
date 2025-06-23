@@ -1,3 +1,7 @@
 User-agent: *
 Disallow:
 Sitemap: https://atsbooks-h4jx.onrender.com/api/sitemap
+
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
