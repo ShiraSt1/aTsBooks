@@ -37,10 +37,6 @@ app.use(express.json())
 app.use(express.static("public"))
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/sitemap.xml', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
-});
-
 app.use(limiter); 
 
 app.use("/api/user", require("./routes/user.js"))
@@ -49,6 +45,12 @@ app.use("/api/grade", require("./routes/grade.js"))
 app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml');
+  res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
+});
+
 
 const startServer = async () => {
   try {
