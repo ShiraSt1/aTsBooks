@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3001
 const path = require('path');
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 דקות
+  windowMs: 1 * 60 * 1000, // 15 דקות
   max: 100, // 100 בקשות לחלון זמן
 });
 
