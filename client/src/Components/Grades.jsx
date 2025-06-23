@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { Toast } from 'primereact/toast';
 import '../Styles/Grades.css';
 import { getConfig } from '../config';
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const Grades = () => {
 
