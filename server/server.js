@@ -28,7 +28,6 @@ const limiter = rateLimit({
   max: 100, // 100 בקשות לחלון זמן
 });
 
-app.use(limiter); 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -36,6 +35,8 @@ app.use(cors(corsOptions))
 app.options('*', cors(corsOptions)); // פתרון לבקשות preflight
 app.use(express.json())
 app.use(express.static("public"))
+
+app.use(limiter); 
 
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
