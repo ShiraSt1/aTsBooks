@@ -57,6 +57,10 @@ app.get('/api/sitemap', (req, res) => {
   `);
 });
 
+app.get('/googleea171b815b7e0bf10.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'googleea171b815b7e0bf10.html'));
+});
+
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
 app.use("/api/grade", require("./routes/grade.js"))
