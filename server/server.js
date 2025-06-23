@@ -58,6 +58,7 @@ app.get('/api/sitemap', (req, res) => {
 });
 
 app.get('/googleea171b815b7e0bf10.html', (req, res) => {
+  res.set('Content-Type', 'text/plain');
   res.send('google-site-verification: googleea171b815b7e0bf10.html');
 });
 
