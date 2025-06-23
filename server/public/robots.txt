@@ -1,2 +1,3 @@
 User-agent: *
 Disallow:
+Sitemap: https://atsbooks-h4jx.onrender.com/api/sitemap

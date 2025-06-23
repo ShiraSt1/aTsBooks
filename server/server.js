@@ -4,7 +4,7 @@ const cors = require("cors")
 const nodemailer = require('nodemailer');
 const corsOptions = require("./config/corsOptions")
 const connectDB = require("./config/dbConn.js")
-const mongoose  = require("mongoose")
+const mongoose = require("mongoose")
 const rateLimit = require('express-rate-limit');
 
 const multer = require("multer");
@@ -37,11 +37,24 @@ app.use(express.json())
 app.use(express.static("public"))
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(limiter); 
+app.use(limiter);
 
-app.get('/sitemap.xml', (req, res) => {
+app.get('/api/sitemap', (req, res) => {
   res.type('application/xml');
-  res.sendFile(path.join(__dirname, 'uploads', 'sitemap.xml'));
+  res.send(`
+    <?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+<url>
+  <loc>https://atsbooks-h4jx.onrender.com/</loc>
+  <lastmod>2025-06-23T19:59:11+00:00</lastmod>
+</url>
+</urlset>
+  `);
 });
 
 app.use("/api/user", require("./routes/user.js"))
@@ -62,7 +75,7 @@ const startServer = async () => {
     await connectDB(); // מחכה לחיבור למסד הנתונים
     console.log("Connected to MongoDB");
 
-    app.listen(PORT, '0.0.0.0',() => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (err) {
