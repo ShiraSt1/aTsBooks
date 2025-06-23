@@ -18,6 +18,7 @@ const Grades = () => {
     const [visibleCreatGrade, setVisibleCreatGrade] = useState(false);
     const toast = useRef(null);
     const apiUrl = getConfig().API_URL;
+    const [compLoading, setCompLoading] = useState(false);
 
     const getGrades = async () => {
         try {
@@ -66,7 +67,15 @@ const Grades = () => {
     }
 
     useEffect(() => {
-        getGrades()
+        const loadAll = async () => {
+            setCompLoading(true)
+            try {
+                getGrades()
+            } finally {
+                setCompLoading(false)
+            }
+            loadAll();
+        }
     }, [])
 
     const itemTemplate = (grade, index) => {
@@ -81,13 +90,19 @@ const Grades = () => {
     };
 
     return (<>
-        <Toast ref={toast} />
-        {user?.roles === "Admin" && (
-            <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatGrade(true)} className="add-button" />)}
-        <CreateGrade createGrade={createGrade} setVisibleCreatGrade={setVisibleCreatGrade} visibleCreatGrade={visibleCreatGrade} />
-        <div className="card">
-            <DataView value={gradesData} listTemplate={listTemplate} />
-        </div>
+        {compLoading ? (
+            <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+                <ProgressSpinner />
+            </div>
+        ) : (<>
+            <Toast ref={toast} />
+            {user?.roles === "Admin" && (
+                <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatGrade(true)} className="add-button" />)}
+            <CreateGrade createGrade={createGrade} setVisibleCreatGrade={setVisibleCreatGrade} visibleCreatGrade={visibleCreatGrade} />
+            <div className="card">
+                <DataView value={gradesData} listTemplate={listTemplate} />
+            </div>
+        </>)}
     </>)
 }
 

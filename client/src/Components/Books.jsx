@@ -31,15 +31,24 @@ export default function BooksDataView() {
     const apiUrl = getConfig().API_URL;
     const msgs = useRef(null);
     const toast = useRef(null);
+    const [compLoading, setCompLoading] = useState(false);
 
     useEffect(() => {
-        if (gradeId) {
-            getGradeName(gradeId);
-            getBooksByGrade(gradeId); // Fetch books for the specific grade
-        } else {
-            getBooks();
-            setGradeName(''); // Fetch all books if no gradeId is provided
+        const loadAll = async () => {
+            setCompLoading(true)
+            try {
+                if (gradeId) {
+                    await getGradeName(gradeId);
+                    await getBooksByGrade(gradeId); // Fetch books for the specific grade
+                } else {
+                    await getBooks();
+                    setGradeName(''); // Fetch all books if no gradeId is provided
+                }
+            } finally {
+                setCompLoading(false)
+            }
         }
+        loadAll();
     }, [gradeId, flagGradeId]);
 
     const getGradeName = async (Id) => {
@@ -197,8 +206,8 @@ export default function BooksDataView() {
                         alt={book.name}
                         style={{
                             width: "100%", height: "100%", objectFit: "cover", minHeight: '100px',
-                            filter: book.name === "Take It Easy" || book.name=="Go Ahead" || book.name=="Go Ahead Boys" ? "grayscale(100%) brightness(1)" : "none",
-                            opacity: book.name === "Take It Easy" || book.name=="Go Ahead" || book.name=="Go Ahead Boys" ? 0.6 : 1,
+                            filter: book.name === "Take It Easy" || book.name == "Go Ahead" || book.name == "Go Ahead Boys" ? "grayscale(100%) brightness(1)" : "none",
+                            opacity: book.name === "Take It Easy" || book.name == "Go Ahead" || book.name == "Go Ahead Boys" ? 0.6 : 1,
                             borderRadius: '8px'
                         }}
                     />
@@ -270,29 +279,35 @@ export default function BooksDataView() {
 
     return (
         <div>
-            <Toast ref={toast} />
-            <Messages ref={msgs} />
-            <Toast ref={toastDelete} />
-            <ConfirmPopup />
-            {loading && (
-                <div style={{ margin: "20px" }}>
-                    <ProgressSpinner style={{ width: '30px', height: '30px' }} strokeWidth="5" />
-                    <p>Wait just a moment please...</p>
+            {compLoading ? (
+                <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+                    <ProgressSpinner />
                 </div>
-            )}
-            <div>
-                {gradeName && (
-                    <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
-                )}
-            </div>
-            {user?.roles === "Admin" && (
-                <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatBook(true)} className="add-button" />)}
-            <BookCreate createBook={createBook} setVisibleCreatBook={setVisibleCreatBook} visibleCreatBook={visibleCreatBook} />
-            <div className="card">
-                <DataView value={Array.isArray(books) ? books : []} listTemplate={listTemplate} layout={layout} />
-            </div>
-            {selectedBook ? <BookUpdate updateBook={updateBook} setVisible={setVisible} visible={visible} book={selectedBook} /> : <></>}
-
+            ) :
+                (<>
+                    <Toast ref={toast} />
+                    <Messages ref={msgs} />
+                    <Toast ref={toastDelete} />
+                    <ConfirmPopup />
+                    {loading && (
+                        <div style={{ margin: "20px" }}>
+                            <ProgressSpinner style={{ width: '30px', height: '30px' }} strokeWidth="5" />
+                            <p>Wait just a moment please...</p>
+                        </div>
+                    )}
+                    <div>
+                        {gradeName && (
+                            <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
+                        )}
+                    </div>
+                    {user?.roles === "Admin" && (
+                        <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatBook(true)} className="add-button" />)}
+                    <BookCreate createBook={createBook} setVisibleCreatBook={setVisibleCreatBook} visibleCreatBook={visibleCreatBook} />
+                    <div className="card">
+                        <DataView value={Array.isArray(books) ? books : []} listTemplate={listTemplate} layout={layout} />
+                    </div>
+                    {selectedBook ? <BookUpdate updateBook={updateBook} setVisible={setVisible} visible={visible} book={selectedBook} /> : <></>}
+                </>)}
         </div>
     );
 }

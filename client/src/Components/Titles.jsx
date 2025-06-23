@@ -26,6 +26,7 @@ const Titles = () => {
     const navigate = useNavigate();
     const apiUrl = getConfig().API_URL;
     const [isLoading, setIsLoading] = useState(false);
+    const [compLoading, setCompLoading] = useState(false);
 
     const fetchBook = async () => {
         try {
@@ -68,8 +69,16 @@ const Titles = () => {
 
 
     useEffect(() => {
-        fetchBook();
-        fetchTitles();
+        const loadAll = async () => {
+            setCompLoading(true)
+            try {
+                fetchBook();
+                fetchTitles();
+            } finally {
+                setCompLoading(false)
+            }
+        }
+        loadAll();
     }, []);
 
     const fetchTitles = async () => {
@@ -117,7 +126,7 @@ const Titles = () => {
                             >
                                 {/* {file.name} */}
                                 {(file.name).length > 30
-                                    ? (file.name).slice(0,30) + '...'
+                                    ? (file.name).slice(0, 30) + '...'
                                     : (file.name)
                                 }
                             </span>
@@ -207,112 +216,118 @@ const Titles = () => {
 
     return (
         <div className="p-4">
-            {book && (
-                <h2 className="text-center mb-4">{book.name}</h2>
-            )}
-            <div className="flex flex-column md:flex-row gap-4">
-                {/* תמונת הספר בצד שמאל */}
-                {book?.image && (
-                    <div className="flex justify-content-center md:w-4">
-                        <img
-                            src={book.image}
-                            alt="Book"
-                            className="border-round shadow-2"
-                            style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}
-                        />
-                    </div>
+            {compLoading ? (
+                <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+                    <ProgressSpinner />
+                </div>
+            ) : (<>
+                {book && (
+                    <h2 className="text-center mb-4">{book.name}</h2>
                 )}
-                {/* כותרות בצד ימין */}
-                <div className="flex-grow-1">
-
-                    <PanelMenu model={items} className="w-full md:w-30rem" />
-                </div>
-            </div>
-            <Dialog
-                header="Upload new file"
-                visible={visibleUpload}
-                onHide={() => {
-                    setVisibleUpload(false);
-                    setSelectedFile(null); // איפוס הקובץ הנבחר אם החלון נסגר
-                    setFilePreview(''); // איפוס תצוגת שם הקובץ
-                }}
-                style={{ width: '30rem', borderRadius: '8px', textAlign: 'center' }}
-                className="custom-upload-dialog"
-            >
-                <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
-                    <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
-                        File name
-                    </label>
-                    <InputText
-                        id="fileName"
-                        placeholder="Enter file name"
-                        value={newFileName}
-                        onChange={(e) => setNewFileName(e.target.value)}
-                        className="p-inputtext-lg"
-                        style={{ borderRadius: '6px', width: '100%' }}
-                    />
-                    {errorMessage && (
-                        <div style={{ color: 'red', marginTop: '8px' }}>
-                            {errorMessage}
+                <div className="flex flex-column md:flex-row gap-4">
+                    {/* תמונת הספר בצד שמאל */}
+                    {book?.image && (
+                        <div className="flex justify-content-center md:w-4">
+                            <img
+                                src={book.image}
+                                alt="Book"
+                                className="border-round shadow-2"
+                                style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}
+                            />
                         </div>
                     )}
-                    <FileUpload
-                        mode="basic"
-                        auto={false} // ביטול העלאה אוטומטית
-                        customUpload
-                        chooseLabel="Choose file"
-                        uploadHandler={({ files }) => {
-                            setSelectedFile(files[0]); // שמירת הקובץ הנבחר ב-state זמני
-                            setFilePreview(files[0]?.name || ''); // הצגת שם הקובץ הנבחר
-                        }}
-                        className="p-button-primary"
-                        style={{ width: '100%' }}
+                    {/* כותרות בצד ימין */}
+                    <div className="flex-grow-1">
 
-                    />
-                    {filePreview && (
-                        <div style={{ textAlign: 'left', fontSize: '0.9rem', color: '#555' }}>
-                            <strong>Selected file:</strong> {filePreview}
-                        </div>
-                    )}
-                    <div className="flex justify-content-center gap-3">
-                        <Button
-                            onClick={() => {
-                                if (selectedFile) {
-                                    handleUpload({ files: [selectedFile] }); // קריאה ל-handleUpload עם הקובץ הנבחר
-                                } else {
-                                    toast.current?.show({ severity: 'warn', summary: 'Error', detail: 'Press upload below', life: 3000 });
-                                }
-                            }}
-                            disabled={isLoading}
-                            className="p-button-primary"
-                            style={{ width: '40%', position: 'relative' }}
-                        >
-                            {isLoading ? (
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5rem', marginTop: '1rem' }}>
-                                    <ProgressSpinner
-                                        style={{ width: '20px', height: '20px' }}
-                                        strokeWidth="4"
-                                    />
-                                    <span>Loading</span>
-                                </div>
-                            ) : (
-                                <span>Upload</span>
-                            )}
-                        </Button>
-                        <Button
-                            label="Cancel"
-                            onClick={() => {
-                                setVisibleUpload(false);
-                                setSelectedFile(null); // איפוס הקובץ הנבחר
-                                setFilePreview(''); // איפוס שם הקובץ
-                            }}
-                            className="p-button-secondary"
-                            style={{ width: '40%' }}
-                        />
+                        <PanelMenu model={items} className="w-full md:w-30rem" />
                     </div>
                 </div>
-            </Dialog>
-            <Toast ref={toast} />
+                <Dialog
+                    header="Upload new file"
+                    visible={visibleUpload}
+                    onHide={() => {
+                        setVisibleUpload(false);
+                        setSelectedFile(null); // איפוס הקובץ הנבחר אם החלון נסגר
+                        setFilePreview(''); // איפוס תצוגת שם הקובץ
+                    }}
+                    style={{ width: '30rem', borderRadius: '8px', textAlign: 'center' }}
+                    className="custom-upload-dialog"
+                >
+                    <div className="flex flex-column gap-4" style={{ padding: '1.5rem' }}>
+                        <label htmlFor="fileName" className="font-medium" style={{ textAlign: 'left' }}>
+                            File name
+                        </label>
+                        <InputText
+                            id="fileName"
+                            placeholder="Enter file name"
+                            value={newFileName}
+                            onChange={(e) => setNewFileName(e.target.value)}
+                            className="p-inputtext-lg"
+                            style={{ borderRadius: '6px', width: '100%' }}
+                        />
+                        {errorMessage && (
+                            <div style={{ color: 'red', marginTop: '8px' }}>
+                                {errorMessage}
+                            </div>
+                        )}
+                        <FileUpload
+                            mode="basic"
+                            auto={false} // ביטול העלאה אוטומטית
+                            customUpload
+                            chooseLabel="Choose file"
+                            uploadHandler={({ files }) => {
+                                setSelectedFile(files[0]); // שמירת הקובץ הנבחר ב-state זמני
+                                setFilePreview(files[0]?.name || ''); // הצגת שם הקובץ הנבחר
+                            }}
+                            className="p-button-primary"
+                            style={{ width: '100%' }}
+
+                        />
+                        {filePreview && (
+                            <div style={{ textAlign: 'left', fontSize: '0.9rem', color: '#555' }}>
+                                <strong>Selected file:</strong> {filePreview}
+                            </div>
+                        )}
+                        <div className="flex justify-content-center gap-3">
+                            <Button
+                                onClick={() => {
+                                    if (selectedFile) {
+                                        handleUpload({ files: [selectedFile] }); // קריאה ל-handleUpload עם הקובץ הנבחר
+                                    } else {
+                                        toast.current?.show({ severity: 'warn', summary: 'Error', detail: 'Press upload below', life: 3000 });
+                                    }
+                                }}
+                                disabled={isLoading}
+                                className="p-button-primary"
+                                style={{ width: '40%', position: 'relative' }}
+                            >
+                                {isLoading ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5rem', marginTop: '1rem' }}>
+                                        <ProgressSpinner
+                                            style={{ width: '20px', height: '20px' }}
+                                            strokeWidth="4"
+                                        />
+                                        <span>Loading</span>
+                                    </div>
+                                ) : (
+                                    <span>Upload</span>
+                                )}
+                            </Button>
+                            <Button
+                                label="Cancel"
+                                onClick={() => {
+                                    setVisibleUpload(false);
+                                    setSelectedFile(null); // איפוס הקובץ הנבחר
+                                    setFilePreview(''); // איפוס שם הקובץ
+                                }}
+                                className="p-button-secondary"
+                                style={{ width: '40%' }}
+                            />
+                        </div>
+                    </div>
+                </Dialog>
+                <Toast ref={toast} />
+            </>)}
         </div>
     );
 };
