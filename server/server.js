@@ -37,6 +37,10 @@ app.use(express.json())
 app.use(express.static("public"))
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/sitemap.xml', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
+});
+
 app.use(limiter); 
 
 app.use("/api/user", require("./routes/user.js"))
