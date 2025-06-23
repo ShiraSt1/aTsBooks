@@ -10,6 +10,7 @@ import { Toast } from 'primereact/toast';
 import '../Styles/Grades.css';
 import { getConfig } from '../config';
 import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 
 const Grades = () => {
 
@@ -93,7 +94,10 @@ const Grades = () => {
     return (<>
         {compLoading ? (
             <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-                <ProgressSpinner />
+                <div className="flex justify-center items-center gap-3 text-xl mt-6">
+                    <div className="custom-spinner" />
+                    <span>Loading, please wait...</span>
+                </div>
             </div>
         ) : (<>
             <Toast ref={toast} />

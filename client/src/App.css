@@ -454,3 +454,18 @@ background-color: #e4e4e4;     /* רקע בהובר */
 .custom-button .pi {
 color: inherit !important;     /* האייקון מקבל את צבע הטקסט */
 }
+
+
+/*555555555555555555555555*/
+.custom-spinner {
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}

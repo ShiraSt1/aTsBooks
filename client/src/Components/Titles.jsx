@@ -82,6 +82,7 @@ const Titles = () => {
     }, []);
 
     const fetchTitles = async () => {
+        setCompLoading(true);
         try {
             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -155,6 +156,8 @@ const Titles = () => {
         } catch (err) {
             console.error(err);
             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error loading', life: 3000 });
+        } finally {
+            setCompLoading(false);
         }
     };
 
@@ -218,7 +221,10 @@ const Titles = () => {
         <div className="p-4">
             {compLoading ? (
                 <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-                    <ProgressSpinner />
+                    <div className="flex justify-center items-center gap-3 text-xl mt-6">
+                        <div className="custom-spinner" />
+                        <span>Loading, please wait...</span>
+                    </div>
                 </div>
             ) : (<>
                 {book && (

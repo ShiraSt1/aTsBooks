@@ -13,6 +13,7 @@ import { Toast } from 'primereact/toast';
 import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
 import { getConfig } from '../config';
 import { Messages } from 'primereact/messages';
+import { Skeleton } from 'primereact/skeleton';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -281,7 +282,10 @@ export default function BooksDataView() {
         <div>
             {compLoading ? (
                 <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-                    <ProgressSpinner />
+                    <div className="flex justify-center items-center gap-3 text-xl mt-6">
+                        <div className="custom-spinner" />
+                        <span>Loading, please wait...</span>
+                    </div>
                 </div>
             ) :
                 (<>
@@ -311,3 +315,4 @@ export default function BooksDataView() {
         </div>
     );
 }
+
