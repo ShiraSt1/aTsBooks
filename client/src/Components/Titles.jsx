@@ -12,7 +12,17 @@ import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
-const TitleHeader = ({ title, loadingId, handleDownload, setUploadTitleId, setVisibleUpload, setErrorMessage, user }) => {
+const TitleHeader = ({
+    title,
+    loadingId,
+    handleDownload,
+    setUploadTitleId,
+    setVisibleUpload,
+    setErrorMessage,
+    user
+}) => {
+    const isLoading = loadingId === title._id;
+
     return (
         <div className="flex items-center justify-between w-full px-1 py-2">
             <span className="text-base leading-none">{title.name}</span>
@@ -20,19 +30,19 @@ const TitleHeader = ({ title, loadingId, handleDownload, setUploadTitleId, setVi
             <div className="flex items-center gap-2">
                 <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
 
-                <i
-                    className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id}`}
+                <span
+                    className={`zip-icon-${title._id} cursor-pointer`}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleDownload(title._id);
                     }}
-                    style={{
-                        fontSize: '1.2rem',
-                        lineHeight: '1',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                    }}
-                ></i>
+                >
+                    {isLoading ? (
+                        <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem' }}></i>
+                    ) : (
+                        <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem' }}></i>
+                    )}
+                </span>
 
                 {user?.roles === "Admin" && (
                     <Button
@@ -136,16 +146,16 @@ const Titles = () => {
             const panelItems = titles.map(title => ({
                 label: (
                     <TitleHeader
-                        key={`${title._id}-${loadingId}`}
-                        title={title}
-                        loadingId={loadingId}
-                        handleDownload={handleDownload}
-                        setUploadTitleId={setUploadTitleId}
-                        setVisibleUpload={setVisibleUpload}
-                        setErrorMessage={setErrorMessage}
-                        user={user}
+                      key={`${title._id}`} // מספיק key לפי ה־title
+                      title={title}
+                      loadingId={loadingId}
+                      handleDownload={handleDownload}
+                      setUploadTitleId={setUploadTitleId}
+                      setVisibleUpload={setVisibleUpload}
+                      setErrorMessage={setErrorMessage}
+                      user={user}
                     />
-                ),
+                  ),
                 // label: (
                 //     <div key={`${title._id}-${loadingId}`} className="flex items-center justify-between w-full px-1 py-2">
                 //         {/* כותרת */}
