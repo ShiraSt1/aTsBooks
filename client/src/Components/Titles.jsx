@@ -136,15 +136,16 @@ const Titles = () => {
             const panelItems = titles.map(title => ({
                 label: (
                     <TitleHeader
-                      title={title}
-                      loadingId={loadingId}
-                      handleDownload={handleDownload}
-                      setUploadTitleId={setUploadTitleId}
-                      setVisibleUpload={setVisibleUpload}
-                      setErrorMessage={setErrorMessage}
-                      user={user}
+                        key={`${title._id}-${loadingId}`}
+                        title={title}
+                        loadingId={loadingId}
+                        handleDownload={handleDownload}
+                        setUploadTitleId={setUploadTitleId}
+                        setVisibleUpload={setVisibleUpload}
+                        setErrorMessage={setErrorMessage}
+                        user={user}
                     />
-                  ),
+                ),
                 // label: (
                 //     <div key={`${title._id}-${loadingId}`} className="flex items-center justify-between w-full px-1 py-2">
                 //         {/* כותרת */}
