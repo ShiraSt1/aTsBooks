@@ -291,6 +291,8 @@ const Titles = () => {
     const handleDownload = async (titleId) => {
         try {
             setLoadingId(titleId);
+            console.log('in function handleDownload. LoadingId:', loadingId);
+            
             const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -301,6 +303,7 @@ const Titles = () => {
             toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'הורדה נכשלה', life: 3000 });
         } finally {
             setLoadingId(null);
+            console.log('in function handleDownload. LoadingId:', loadingId);
         }
     };
 
