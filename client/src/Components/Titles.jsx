@@ -174,8 +174,6 @@ const Titles = () => {
                                 style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}} 
                                 onClick={(e) => {e.stopPropagation();handleDownload(title._id)}}></i>
                             )}
-                            {loadingId?<i className="pi pi-spinner pi-spin text-blue-500" 
-                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>:''}
                             {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
                                 <Button
@@ -348,6 +346,8 @@ const Titles = () => {
             {book && (
                 <h2 className="text-center mb-4">{book.name}</h2>
             )}
+            {loadingId?<i className="pi pi-spinner pi-spin text-blue-500" 
+                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>:''}
             <div className="flex flex-column md:flex-row gap-4">
                 {/* תמונת הספר בצד שמאל */}
                 {book?.image && (
