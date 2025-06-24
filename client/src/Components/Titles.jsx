@@ -315,7 +315,8 @@ const Titles = () => {
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
-                                    display: 'block'
+                                    display: 'block',
+                                    marginTop: '1rem'
                                 }}
                                 title={file.name}
                             >
