@@ -292,6 +292,7 @@ const Titles = () => {
         try {
             setLoadingId(titleId);
             console.log('in function handleDownload. LoadingId:', loadingId);
+            console.log('in function handleDownload. titleId:', titleId);
             
             const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -300,10 +301,10 @@ const Titles = () => {
             window.open(downloadUrl, '_blank');
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'הורדה נכשלה', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
         } finally {
             setLoadingId(null);
-            console.log('in function handleDownload. LoadingId:', loadingId);
+            console.log('in finally. LoadingId:', loadingId);
         }
     };
 
