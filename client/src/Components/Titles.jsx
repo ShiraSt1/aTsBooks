@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import { Button } from 'primereact/button';
+import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
@@ -153,6 +154,97 @@ const Titles = () => {
     //     } 
     // };
 
+    // const fetchTitles = async () => {
+    //     try {
+    //         const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
+    //             headers: { 'Authorization': `Bearer ${token}` }
+    //         });
+    //         const titles = res.data;
+    //         const filesMap = {};
+    //         for (const title of titles) {
+    //             const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
+    //                 headers: { 'Authorization': `Bearer ${token}` }
+    //             });
+    //             filesMap[title._id] = filesRes.data;
+    //         }
+    //         setFilesByTitle(filesMap);
+    
+    //         const panelItems = titles.map(title => ({
+    //             label: (
+    //                 <div className="flex justify-between items-center w-full">
+    //                     <span>{title.name}</span>
+    
+    //                     <div className="flex gap-2">
+    //                         <Button
+    //                             label={loadingId === title._id ? 'preparing...' : 'ZIP'}
+    //                             icon="pi pi-download"
+    //                             className="p-button-sm p-button-outlined"
+    //                             onClick={(e) => {
+    //                                 e.stopPropagation();
+    //                                 handleDownload(title._id);
+    //                             }}
+    //                             disabled={loadingId === title._id}
+    //                         />
+    //                         {user?.roles === "Admin" && (
+    //                             <Button
+    //                                 icon="pi pi-plus"
+    //                                 className="p-button-sm p-button-text"
+    //                                 onClick={(e) => {
+    //                                     setErrorMessage("");
+    //                                     e.stopPropagation();
+    //                                     setUploadTitleId(title._id);
+    //                                     setVisibleUpload(true);
+    //                                 }}
+    //                             />
+    //                         )}
+    //                     </div>
+    //                 </div>
+    //             ),
+    //             items: (filesMap[title._id] || []).map(file => ({
+    //                 label: (
+    //                     <div className="flex justify-between align-items-center w-full gap-2">
+    //                         <span
+    //                             style={{
+    //                                 flexGrow: 1,
+    //                                 minWidth: 0,
+    //                                 overflow: 'hidden',
+    //                                 textOverflow: 'ellipsis',
+    //                                 whiteSpace: 'nowrap',
+    //                                 display: 'block'
+    //                             }}
+    //                             title={file.name}
+    //                         >
+    //                             {file.name.length > 30 ? file.name.slice(0, 30) + '...' : file.name}
+    //                         </span>
+    
+    //                         <span className="flex gap-2">
+    //                             <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
+    //                                 e.stopPropagation();
+    //                                 navigate(`/fileview/${file._id}`);
+    //                             }} />
+    //                             <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
+    //                                 e.stopPropagation();
+    //                                 window.open(`${apiUrl}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank');
+    //                             }} />
+    //                             {user?.roles === "Admin" && (
+    //                                 <Button icon="pi pi-trash" rounded text size="small" severity="danger" onClick={(e) => {
+    //                                     e.stopPropagation();
+    //                                     handleDelete(file._id, title._id);
+    //                                 }} />
+    //                             )}
+    //                         </span>
+    //                     </div>
+    //                 )
+    //             }))
+    //         }));
+    
+    //         setItems(panelItems);
+    //     } catch (err) {
+    //         console.error(err);
+    //         toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'error in loading title', life: 3000 });
+    //     }
+    // };
+    
     const fetchTitles = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
@@ -160,12 +252,14 @@ const Titles = () => {
             });
             const titles = res.data;
             const filesMap = {};
+    
             for (const title of titles) {
                 const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 filesMap[title._id] = filesRes.data;
             }
+    
             setFilesByTitle(filesMap);
     
             const panelItems = titles.map(title => ({
@@ -174,16 +268,19 @@ const Titles = () => {
                         <span>{title.name}</span>
     
                         <div className="flex gap-2">
+                            {/* Tooltip for ZIP icon */}
+                            <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
+    
                             <Button
-                                label={loadingId === title._id ? 'preparing...' : 'ZIP'}
-                                icon="pi pi-download"
-                                className="p-button-sm p-button-outlined"
+                                icon={loadingId === title._id ? 'pi pi-spin pi-spinner' : 'pi pi-download'}
+                                className={`p-button-rounded p-button-text zip-icon-${title._id}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleDownload(title._id);
                                 }}
                                 disabled={loadingId === title._id}
                             />
+    
                             {user?.roles === "Admin" && (
                                 <Button
                                     icon="pi pi-plus"
@@ -244,6 +341,7 @@ const Titles = () => {
         }
     };
     
+
     const handleDelete = async (fileId, titleId) => {
         try {
             await axios.delete(`${apiUrl}api/file/${fileId}`, {
@@ -296,6 +394,22 @@ const Titles = () => {
         }
     };
     const [loadingId, setLoadingId] = useState(null);
+    // const handleDownload = async (titleId) => {
+    //     try {
+    //         setLoadingId(titleId);
+    //         const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
+    //             headers: { 'Authorization': `Bearer ${token}` }
+    //         });
+    //         const { downloadUrl } = res.data;
+    //         window.open(downloadUrl, '_blank');
+    //     } catch (err) {
+    //         console.error(err);
+    //         toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Download failed', life: 3000 });
+    //     } finally {
+    //         setLoadingId(null);
+    //     }
+    //   };
+      
     const handleDownload = async (titleId) => {
         try {
             setLoadingId(titleId);
@@ -306,12 +420,12 @@ const Titles = () => {
             window.open(downloadUrl, '_blank');
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Download failed', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'הורדה נכשלה', life: 3000 });
         } finally {
             setLoadingId(null);
         }
-      };
-      
+    };
+    
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
 
