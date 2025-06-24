@@ -4,7 +4,7 @@ const archiver = require('archiver');
 const { v4: uuidv4 } = require('uuid');
 const File = require('../models/File');
 const Title = require('../models/Title');
-const { s3, PutObjectCommand, GetObjectCommand, getSignedS3Url } = require('../utils/s3');
+const { s3, PutObjectCommand, GetObjectCommand, getSignedS3Url } = require('../utils/s3Client');
 
 exports.downloadTitleAsZip = async (req, res) => {
   const { titleId } = req.params;
@@ -12,7 +12,7 @@ exports.downloadTitleAsZip = async (req, res) => {
   try {
     const files = await File.find({ title: titleId });
     const title = await Title.findById(titleId);
-    if (!files.length || !title) return res.status(404).json({ message: 'לא נמצאו קבצים או כותרת' });
+    if (!files.length || !title) return res.status(404).json({ message: 'No files found' });
 
     const folderName = title.name.replace(/\s+/g, '_');
     const zipId = uuidv4();
@@ -55,6 +55,6 @@ exports.downloadTitleAsZip = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'שגיאה ביצירת הקובץ להורדה' });
+    res.status(500).json({ message: 'error in oreoering file to download' });
   }
 };
