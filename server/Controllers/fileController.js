@@ -5,7 +5,7 @@ const path = require("path");
 const mime = require("mime-types");
 const { log } = require("console");
 
-const s3 = require('../utils/s3Client');
+const {s3} = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
