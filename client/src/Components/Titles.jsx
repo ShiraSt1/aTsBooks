@@ -168,12 +168,12 @@ const Titles = () => {
     //             filesMap[title._id] = filesRes.data;
     //         }
     //         setFilesByTitle(filesMap);
-    
+
     //         const panelItems = titles.map(title => ({
     //             label: (
     //                 <div className="flex justify-between items-center w-full">
     //                     <span>{title.name}</span>
-    
+
     //                     <div className="flex gap-2">
     //                         <Button
     //                             label={loadingId === title._id ? 'preparing...' : 'ZIP'}
@@ -216,7 +216,7 @@ const Titles = () => {
     //                         >
     //                             {file.name.length > 30 ? file.name.slice(0, 30) + '...' : file.name}
     //                         </span>
-    
+
     //                         <span className="flex gap-2">
     //                             <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
     //                                 e.stopPropagation();
@@ -237,57 +237,66 @@ const Titles = () => {
     //                 )
     //             }))
     //         }));
-    
+
     //         setItems(panelItems);
     //     } catch (err) {
     //         console.error(err);
     //         toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'error in loading title', life: 3000 });
     //     }
     // };
-    
+
     const fetchTitles = async () => {
         try {
             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
             const titles = res.data;
             const filesMap = {};
-    
+
             for (const title of titles) {
                 const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 filesMap[title._id] = filesRes.data;
             }
-    
+
             setFilesByTitle(filesMap);
-    
+
             const panelItems = titles.map(title => ({
                 label: (
-                    <div className="flex justify-between items-center w-full">
-                        <span>{title.name}</span>
-    
-                        <div className="flex gap-2">
-                            {/* Tooltip for ZIP icon */}
+                    <div className="flex items-center justify-between w-full px-1 py-2">
+                        {/* כותרת */}
+                        <span className="text-base leading-none">{title.name}</span>
+
+                        {/* אייקונים מימין */}
+                        <div className="flex items-center gap-2">
                             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-    
-                            <Button
-                                icon={loadingId === title._id ? 'pi pi-spin pi-spinner' : 'pi pi-download'}
-                                className={`p-button-rounded p-button-text zip-icon-${title._id}`}
+
+                            {/* אייקון הורדה / טעינה */}
+                            <i
+                                className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
+
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleDownload(title._id);
                                 }}
-                                disabled={loadingId === title._id}
-                            />
-    
+                                style={{
+                                    fontSize: '1.2rem',
+                                    lineHeight: '1',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                }}
+                            ></i>
+
+                            {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
                                 <Button
                                     icon="pi pi-plus"
                                     className="p-button-sm p-button-text"
                                     onClick={(e) => {
-                                        setErrorMessage("");
                                         e.stopPropagation();
+                                        setErrorMessage("");
                                         setUploadTitleId(title._id);
                                         setVisibleUpload(true);
                                     }}
@@ -298,7 +307,7 @@ const Titles = () => {
                 ),
                 items: (filesMap[title._id] || []).map(file => ({
                     label: (
-                        <div className="flex justify-between align-items-center w-full gap-2">
+                        <div className="flex justify-between items-center w-full gap-2">
                             <span
                                 style={{
                                     flexGrow: 1,
@@ -312,7 +321,7 @@ const Titles = () => {
                             >
                                 {file.name.length > 30 ? file.name.slice(0, 30) + '...' : file.name}
                             </span>
-    
+
                             <span className="flex gap-2">
                                 <Button icon="pi pi-eye" rounded text size="small" onClick={(e) => {
                                     e.stopPropagation();
@@ -333,14 +342,13 @@ const Titles = () => {
                     )
                 }))
             }));
-    
+
             setItems(panelItems);
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'error in loading title', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בטעינת כותרות', life: 3000 });
         }
     };
-    
 
     const handleDelete = async (fileId, titleId) => {
         try {
@@ -409,7 +417,7 @@ const Titles = () => {
     //         setLoadingId(null);
     //     }
     //   };
-      
+
     const handleDownload = async (titleId) => {
         try {
             setLoadingId(titleId);
@@ -425,7 +433,7 @@ const Titles = () => {
             setLoadingId(null);
         }
     };
-    
+
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
 
