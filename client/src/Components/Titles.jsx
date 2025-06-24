@@ -12,54 +12,6 @@ import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
-// const TitleHeader = ({
-//     title,
-//     loadingId,
-//     handleDownload,
-//     setUploadTitleId,
-//     setVisibleUpload,
-//     setErrorMessage,
-//     user
-// }) => {
-//     const isLoading = loadingId === title._id;
-
-//     return (
-//         <div className="flex items-center justify-between w-full px-1 py-2">
-//             <span className="text-base leading-none">{title.name}</span>
-
-//             <div className="flex items-center gap-2">
-//                 <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-//                 <span
-//                     className={`zip-icon-${title._id} cursor-pointer`}
-//                     onClick={(e) => {
-//                         e.stopPropagation();
-//                         handleDownload(title._id);
-//                     }}
-//                 >
-//                     {isLoading ? (
-//                         <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
-//                     ) : (
-//                         <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
-//                     )}
-//                 </span>
-
-//                 {user?.roles === "Admin" && (
-//                     <Button
-//                         icon="pi pi-plus"
-//                         className="p-button-sm p-button-text"
-//                         onClick={(e) => {
-//                             e.stopPropagation();
-//                             setErrorMessage("");
-//                             setUploadTitleId(title._id);
-//                             setVisibleUpload(true);
-//                         }}
-//                     />
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
 const Titles = () => {
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
@@ -117,11 +69,8 @@ const Titles = () => {
     };
 
     useEffect(() => {
-
-
         fetchBook();
         fetchTitles();
-
     }, []);
 
     const fetchTitles = async () => {
@@ -143,18 +92,6 @@ const Titles = () => {
             setFilesByTitle(filesMap);
 
             const panelItems = titles.map(title => ({
-                // label: (
-                //     <TitleHeader
-                //       key={`${title._id}`} 
-                //       title={title}
-                //       loadingId={loadingId}
-                //       handleDownload={handleDownload}
-                //       setUploadTitleId={setUploadTitleId}
-                //       setVisibleUpload={setVisibleUpload}
-                //       setErrorMessage={setErrorMessage}
-                //       user={user}
-                //     />
-                //   ),
                 label: (
                     <div key={`${title._id}-${loadingId}`} className="flex items-center justify-between w-full px-1 py-2">
                         {/* כותרת */}
@@ -207,8 +144,10 @@ const Titles = () => {
                                     navigate(`/fileview/${file._id}`);
                                 }} />
                                 <Button icon="pi pi-download" rounded text size="small" onClick={(e) => {
+                                    setIsLoading(true);
                                     e.stopPropagation();
                                     window.open(`${apiUrl}api/file/download/${file._id}?name=${file.customName || file.name}`, '_blank');
+                                    setIsLoading(false);
                                 }} />
                                 {user?.roles === "Admin" && (
                                     <Button icon="pi pi-trash" rounded text size="small" severity="danger" onClick={(e) => {
@@ -280,13 +219,10 @@ const Titles = () => {
             setIsLoading(false)
         }
     };
-   
+
     const handleDownload = async (titleId) => {
         try {
             setLoadingId(titleId);
-            console.log('in function handleDownload. LoadingId:', loadingId);
-            console.log('in function handleDownload. titleId:', titleId);
-
             const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -297,7 +233,6 @@ const Titles = () => {
             toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
         } finally {
             setLoadingId(null);
-            console.log('in finally. LoadingId:', loadingId);
         }
     };
 
@@ -305,29 +240,18 @@ const Titles = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     return (
-        <div className="p-4">
-
-            {/* {book && (
-                <h2 className="text-center mb-4">{book.name}</h2>
+        <div className="p-4 ">
+            {book && (
+                <div className="flex items-center justify-center gap-4 mb-4 w-full">
+                    <h2 className="m-0" style={{ paddingLeft: '45%' }}>{book.name}</h2>
+                    {loadingId && (
+                        <div className="flex items-center">
+                            <div className="custom-spinner" />
+                        </div>
+                     )} 
+                </div>
             )}
-            {loadingId ? <i className="pi pi-spinner pi-spin text-blue-500"
-                style={{ fontSize: '1.2rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', }}></i> : ''} */}
-                {book && (
-  <div className="flex items-center justify-center gap-2 mb-4">
-    <h2 className="m-0">{book.name}</h2>
-    {loadingId && (
-      <i
-        className="pi pi-spinner pi-spin text-blue-500"
-        style={{
-          fontSize: '1.2rem',
-          lineHeight: '1',
-          display: 'inline-flex',
-          alignItems: 'center',
-        }}
-      ></i>
-    )}
-  </div>
-)}
+
             <div className="flex flex-column md:flex-row gap-4">
                 {/* תמונת הספר בצד שמאל */}
                 {book?.image && (
@@ -436,289 +360,3 @@ const Titles = () => {
 };
 
 export default Titles;
-
-
-// import React, { useEffect, useState, useRef } from 'react';
-// import { Accordion, AccordionTab } from 'primereact/accordion';
-// import { Button } from 'primereact/button';
-// import { Tooltip } from 'primereact/tooltip';
-// import { Dialog } from 'primereact/dialog';
-// import { FileUpload } from 'primereact/fileupload';
-// import { Toast } from 'primereact/toast';
-// import { InputText } from 'primereact/inputtext';
-// import axios from 'axios';
-// import { useParams, useNavigate } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-// import { getConfig } from '../config';
-// import { ProgressSpinner } from 'primereact/progressspinner';
-
-// const Titles = () => {
-//     const [titles, setTitles] = useState([]);
-//     const [filesByTitle, setFilesByTitle] = useState({});
-//     const [loadingId, setLoadingId] = useState(null);
-//     const [visibleUpload, setVisibleUpload] = useState(false);
-//     const [uploadTitleId, setUploadTitleId] = useState(null);
-//     const [newFileName, setNewFileName] = useState('');
-//     const [selectedFile, setSelectedFile] = useState(null);
-//     const [filePreview, setFilePreview] = useState('');
-//     const [book, setBook] = useState(null);
-//     const [isUploading, setIsUploading] = useState(false);
-//     const [errorMessage, setErrorMessage] = useState('');
-
-//     const { token, user } = useSelector((state) => state.token);
-//     const { bookId } = useParams();
-//     const navigate = useNavigate();
-//     const apiUrl = getConfig().API_URL;
-//     const toast = useRef(null);
-
-//     const fetchBook = async () => {
-//         try {
-//             const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             setBook(res.data);
-//         } catch (err) {
-//             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to load book', life: 3000 });
-//         }
-//     };
-
-//     const fetchTitles = async () => {
-//         try {
-//             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             setTitles(res.data);
-
-//             const filesMap = {};
-//             for (const title of res.data) {
-//                 const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
-//                     headers: { Authorization: `Bearer ${token}` },
-//                 });
-//                 filesMap[title._id] = filesRes.data;
-//             }
-//             setFilesByTitle(filesMap);
-//         } catch (err) {
-//             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to load titles', life: 3000 });
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchBook();
-//         fetchTitles();
-//     }, []);
-
-//     const handleDownloadZip = async (titleId) => {
-//         try {
-//             setLoadingId(titleId);
-//             const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             window.open(res.data.downloadUrl, '_blank');
-//         } catch (err) {
-//             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Download failed', life: 3000 });
-//         } finally {
-//             setLoadingId(null);
-//         }
-//     };
-
-//     const handleDelete = async (fileId, titleId) => {
-//         try {
-//             await axios.delete(`${apiUrl}api/file/${fileId}`, {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             fetchTitles();
-//         } catch (err) {
-//             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Delete failed', life: 3000 });
-//         }
-//     };
-
-//     const uploadFileToS3 = async (file) => {
-//         try {
-//             const res = await axios.post(
-//                 `${apiUrl}api/file/presign`,
-//                 { fileName: file.name, fileType: file.type },
-//                 { headers: { Authorization: `Bearer ${token}` } }
-//             );
-//             await axios.put(res.data.url, file, {
-//                 headers: { 'Content-Type': file.type },
-//             });
-//             return res.data.key;
-//         } catch (err) {
-//             return null;
-//         }
-//     };
-
-//     const handleUpload = async () => {
-//         if (!selectedFile || !uploadTitleId) return;
-
-//         setIsUploading(true);
-//         const s3Key = await uploadFileToS3(selectedFile);
-//         if (!s3Key) {
-//             setIsUploading(false);
-//             return;
-//         }
-
-//         const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${s3Key}`;
-
-//         try {
-//             await axios.post(
-//                 `${apiUrl}api/file/save-metadata`,
-//                 {
-//                     title: uploadTitleId,
-//                     name: selectedFile.name,
-//                     customName: newFileName,
-//                     s3Key,
-//                     url: fileUrl,
-//                     size: Number((selectedFile.size / 1024).toFixed(2)),
-//                 },
-//                 { headers: { Authorization: `Bearer ${token}` } }
-//             );
-
-//             fetchTitles();
-//             setVisibleUpload(false);
-//             setNewFileName('');
-//             setSelectedFile(null);
-//             setFilePreview('');
-//         } catch (err) {
-//             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Saving metadata failed', life: 3000 });
-//         } finally {
-//             setIsUploading(false);
-//         }
-//     };
-
-//     return (
-//         <div className="p-4">
-//             {book && <h2 className="text-center mb-4">{book.name}</h2>}
-
-//             {/* <div className="flex flex-column md:flex-row gap-4"> */}
-//             <div className="flex flex-col lg:flex-row gap-4">
-
-//                 {/* תמונת הספר בצד שמאל */}
-//                 {book?.image && (
-//                     <div className="w-full lg:w-[50%] flex justify-center">
-//                         <img
-//                             src={book.image}
-//                             alt="Book"
-//                             className="border-round shadow-2"
-//                             style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}
-//                         />
-//                     </div>
-//                 )}
-
-//                 {/* כותרות בצד ימין<div className="flex flex-column md:flex-row gap-4"></div> */}
-//                 <div className="w-full md:w-[70%] lg:w-[50%]  ml-auto">
-
-
-//                     {/*width:'50%' */}
-//                     <Accordion multiple activeIndex={[]}>
-//                         {titles.map((title) => (
-//                             <AccordionTab
-//                                 key={title._id}
-//                                 header={
-//                                     <div className="flex justify-between items-center w-full gap-4">
-//                                         <span className="text-sm font-medium" style={{ marginTop: '3px' }}>{title.name}</span>
-//                                         <div className="flex items-center gap-2">
-//                                             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-//                                             <span
-//                                                 className={`zip-icon-${title._id} cursor-pointer`}
-//                                                 onClick={(e) => {
-//                                                     e.stopPropagation();
-//                                                     handleDownloadZip(title._id);
-//                                                 }}
-//                                             >
-//                                                 {loadingId === title._id ? (
-//                                                     <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem' }}></i>
-//                                                 ) : (
-//                                                     <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem' }}></i>
-//                                                 )}
-//                                             </span>
-//                                             {user?.roles === 'Admin' && (
-//                                                 <Button
-//                                                     icon="pi pi-plus"
-//                                                     className="p-button-sm p-button-text"
-//                                                     onClick={(e) => {
-//                                                         e.stopPropagation();
-//                                                         setUploadTitleId(title._id);
-//                                                         setVisibleUpload(true);
-//                                                     }}
-//                                                 />
-//                                             )}
-//                                         </div>
-//                                     </div>
-//                                 }
-//                             >
-//                                 {(filesByTitle[title._id] || []).map((file) => (
-//                                     <div key={file._id} className="flex justify-between items-center w-full my-2">
-//                                         <span
-//                                             style={{
-//                                                 // flexGrow: 0.5,
-//                                                 // marginTop:'20 rem',
-//                                                 paddingTop: '1rem',
-//                                                 // borderTop:'1rem',
-//                                                 overflow: 'hidden',
-//                                                 textOverflow: 'ellipsis',
-//                                                 whiteSpace: 'nowrap',
-//                                                 fontSize: '0.875rem'
-//                                             }}
-//                                             title={file.name}
-//                                         >
-//                                             {file.name.length > 30 ? file.name.slice(0, 30) + '...' : file.name}
-//                                         </span>
-//                                         <div className="flex gap-2">
-//                                             <Button icon="pi pi-eye" rounded text size="small" onClick={() => navigate(`/fileview/${file._id}`)} />
-//                                             <Button
-//                                                 icon="pi pi-download"
-//                                                 rounded
-//                                                 text
-//                                                 size="small"
-//                                                 onClick={() =>
-//                                                     window.open(
-//                                                         `${apiUrl}api/file/download/${file._id}?name=${file.customName || file.name}`,
-//                                                         '_blank'
-//                                                     )
-//                                                 }
-//                                             />
-//                                             {user?.roles === 'Admin' && (
-//                                                 <Button
-//                                                     icon="pi pi-trash"
-//                                                     rounded
-//                                                     text
-//                                                     size="small"
-//                                                     severity="danger"
-//                                                     onClick={() => handleDelete(file._id, title._id)}
-//                                                 />
-//                                             )}
-//                                         </div>
-//                                     </div>
-//                                 ))}
-//                             </AccordionTab>
-//                         ))}
-//                     </Accordion>
-//                 </div>
-//             </div>
-
-//             <Dialog header="Upload File" visible={visibleUpload} onHide={() => setVisibleUpload(false)}>
-//                 <div className="flex flex-column gap-3">
-//                     <InputText placeholder="File name" value={newFileName} onChange={(e) => setNewFileName(e.target.value)} />
-//                     <FileUpload
-//                         mode="basic"
-//                         auto={false}
-//                         customUpload
-//                         chooseLabel="Choose File"
-//                         uploadHandler={({ files }) => {
-//                             setSelectedFile(files[0]);
-//                             setFilePreview(files[0]?.name || '');
-//                         }}
-//                     />
-//                     {filePreview && <span className="text-sm text-gray-600">Selected: {filePreview}</span>}
-//                     <Button label="Upload" onClick={handleUpload} disabled={isUploading} />
-//                 </div>
-//             </Dialog>
-
-//             <Toast ref={toast} />
-//         </div>
-//     );
-
-// };
-
-// export default Titles;
