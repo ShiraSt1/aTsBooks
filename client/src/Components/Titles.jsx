@@ -12,6 +12,45 @@ import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
+const TitleHeader = ({ title, loadingId, handleDownload, setUploadTitleId, setVisibleUpload, setErrorMessage, user }) => {
+    return (
+        <div className="flex items-center justify-between w-full px-1 py-2">
+            <span className="text-base leading-none">{title.name}</span>
+
+            <div className="flex items-center gap-2">
+                <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
+
+                <i
+                    className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id}`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleDownload(title._id);
+                    }}
+                    style={{
+                        fontSize: '1.2rem',
+                        lineHeight: '1',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                    }}
+                ></i>
+
+                {user?.roles === "Admin" && (
+                    <Button
+                        icon="pi pi-plus"
+                        className="p-button-sm p-button-text"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setErrorMessage("");
+                            setUploadTitleId(title._id);
+                            setVisibleUpload(true);
+                        }}
+                    />
+                )}
+            </div>
+        </div>
+    );
+};
+
 const Titles = () => {
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
@@ -96,46 +135,57 @@ const Titles = () => {
 
             const panelItems = titles.map(title => ({
                 label: (
-                    <div key={`${title._id}-${loadingId}`} className="flex items-center justify-between w-full px-1 py-2">
-                        {/* כותרת */}
-                        <span className="text-base leading-none">{title.name}</span>
+                    <TitleHeader
+                      title={title}
+                      loadingId={loadingId}
+                      handleDownload={handleDownload}
+                      setUploadTitleId={setUploadTitleId}
+                      setVisibleUpload={setVisibleUpload}
+                      setErrorMessage={setErrorMessage}
+                      user={user}
+                    />
+                  ),
+                // label: (
+                //     <div key={`${title._id}-${loadingId}`} className="flex items-center justify-between w-full px-1 py-2">
+                //         {/* כותרת */}
+                //         <span className="text-base leading-none">{title.name}</span>
 
-                        {/* אייקונים מימין */}
-                        <div className="flex items-center gap-2">
-                            <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
+                //         {/* אייקונים מימין */}
+                //         <div className="flex items-center gap-2">
+                //             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
 
-                            {/* אייקון הורדה / טעינה */}
-                            <i
-                                className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
+                //             {/* אייקון הורדה / טעינה */}
+                //             <i
+                //                 className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDownload(title._id);
-                                }}
-                                style={{
-                                    fontSize: '1.2rem',
-                                    lineHeight: '1',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                }}
-                            ></i>
+                //                 onClick={(e) => {
+                //                     e.stopPropagation();
+                //                     handleDownload(title._id);
+                //                 }}
+                //                 style={{
+                //                     fontSize: '1.2rem',
+                //                     lineHeight: '1',
+                //                     display: 'inline-flex',
+                //                     alignItems: 'center',
+                //                 }}
+                //             ></i>
 
-                            {/* כפתור הוספת קובץ – רק למנהל */}
-                            {user?.roles === "Admin" && (
-                                <Button
-                                    icon="pi pi-plus"
-                                    className="p-button-sm p-button-text"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setErrorMessage("");
-                                        setUploadTitleId(title._id);
-                                        setVisibleUpload(true);
-                                    }}
-                                />
-                            )}
-                        </div>
-                    </div>
-                ),
+                //             {/* כפתור הוספת קובץ – רק למנהל */}
+                //             {user?.roles === "Admin" && (
+                //                 <Button
+                //                     icon="pi pi-plus"
+                //                     className="p-button-sm p-button-text"
+                //                     onClick={(e) => {
+                //                         e.stopPropagation();
+                //                         setErrorMessage("");
+                //                         setUploadTitleId(title._id);
+                //                         setVisibleUpload(true);
+                //                     }}
+                //                 />
+                //             )}
+                //         </div>
+                //     </div>
+                // ),
                 items: (filesMap[title._id] || []).map(file => ({
                     label: (
                         <div className="flex justify-between items-center w-full gap-2">
