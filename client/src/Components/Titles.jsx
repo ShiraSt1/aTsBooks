@@ -288,12 +288,16 @@ const Titles = () => {
         }
     };
     const handleDownload = (titleId) => {
+        console.log(`Requesting download for title ID: ${titleId}`);
+        
         setLoadingId(titleId);
         setShouldDownload(true); // מסמן שרוצים להריץ את ההורדה אחרי שה־loadingId התעדכן
     };
 
     useEffect(() => {
         const download = async () => {
+            console.log(`Starting download for loadingId: ${loadingId}`);
+            
             try {
                 const res = await axios.get(`${apiUrl}api/download-zip/${loadingId}`, {
                     headers: { Authorization: `Bearer ${token}` }
