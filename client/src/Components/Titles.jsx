@@ -76,7 +76,6 @@ const Titles = () => {
     const apiUrl = getConfig().API_URL;
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
-    const [shouldDownload, setShouldDownload] = useState(false);
 
     const fetchBook = async () => {
         try {
@@ -165,15 +164,9 @@ const Titles = () => {
                         <div className="flex items-center gap-2">
                             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
                             {/* אייקון הורדה / טעינה */}
-                            {loadingId === title._id ? (
-                                console.log(`Loading ID: ${loadingId}, Title ID: ${title._id}`),
-                                <i className="pi pi-spinner pi-spin text-blue-500" 
-                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>
-                            ) : (
-                                <i className={`pi pi-download text-blue-500 cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
-                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}} 
-                                onClick={(e) => {e.stopPropagation();handleDownload(title._id)}}></i>
-                            )}
+                            <i className={`pi pi-download text-blue-500 cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
+                                style={{ fontSize: '1.2rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', }}
+                                onClick={(e) => { e.stopPropagation(); handleDownload(title._id) }}></i>
                             {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
                                 <Button
@@ -287,55 +280,26 @@ const Titles = () => {
             setIsLoading(false)
         }
     };
-    const handleDownload = (titleId) => {
-        console.log(`Requesting download for title ID: ${titleId}`);
-        
-        setLoadingId(titleId);
-        setShouldDownload(true); // מסמן שרוצים להריץ את ההורדה אחרי שה־loadingId התעדכן
-    };
+   
+    const handleDownload = async (titleId) => {
+        try {
+            setLoadingId(titleId);
+            console.log('in function handleDownload. LoadingId:', loadingId);
+            console.log('in function handleDownload. titleId:', titleId);
 
-    useEffect(() => {
-        const download = async () => {
-            console.log(`Starting download for loadingId: ${loadingId}`);
-            
-            try {
-                const res = await axios.get(`${apiUrl}api/download-zip/${loadingId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const { downloadUrl } = res.data;
-                window.open(downloadUrl, '_blank');
-            } catch (err) {
-                console.error('Download failed:', err);
-            } finally {
-                setLoadingId(null);
-                setShouldDownload(false); // מנקה את הדגל
-            }
-        };
-
-        if (shouldDownload && loadingId) {
-            download();
+            const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const { downloadUrl } = res.data;
+            window.open(downloadUrl, '_blank');
+        } catch (err) {
+            console.error(err);
+            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
+        } finally {
+            setLoadingId(null);
+            console.log('in finally. LoadingId:', loadingId);
         }
-    }, [loadingId, shouldDownload]);
-
-    // const handleDownload = async (titleId) => {
-    //     try {
-    //         setLoadingId(titleId);
-    //         console.log('in function handleDownload. LoadingId:', loadingId);
-    //         console.log('in function handleDownload. titleId:', titleId);
-            
-    //         const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
-    //             headers: { 'Authorization': `Bearer ${token}` }
-    //         });
-    //         const { downloadUrl } = res.data;
-    //         window.open(downloadUrl, '_blank');
-    //     } catch (err) {
-    //         console.error(err);
-    //         toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
-    //     } finally {
-    //         setLoadingId(null);
-    //         console.log('in finally. LoadingId:', loadingId);
-    //     }
-    // };
+    };
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
@@ -343,11 +307,27 @@ const Titles = () => {
     return (
         <div className="p-4">
 
-            {book && (
+            {/* {book && (
                 <h2 className="text-center mb-4">{book.name}</h2>
             )}
-            {loadingId?<i className="pi pi-spinner pi-spin text-blue-500" 
-                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>:''}
+            {loadingId ? <i className="pi pi-spinner pi-spin text-blue-500"
+                style={{ fontSize: '1.2rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', }}></i> : ''} */}
+                {book && (
+  <div className="flex items-center justify-center gap-2 mb-4">
+    <h2 className="m-0">{book.name}</h2>
+    {loadingId && (
+      <i
+        className="pi pi-spinner pi-spin text-blue-500"
+        style={{
+          fontSize: '1.2rem',
+          lineHeight: '1',
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      ></i>
+    )}
+  </div>
+)}
             <div className="flex flex-column md:flex-row gap-4">
                 {/* תמונת הספר בצד שמאל */}
                 {book?.image && (
