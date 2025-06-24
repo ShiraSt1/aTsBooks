@@ -76,7 +76,6 @@ const Titles = () => {
     }, []);
 
     const fetchTitles = async () => {
-        setCompLoading(true);
         try {
             const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -150,9 +149,7 @@ const Titles = () => {
         } catch (err) {
             console.error(err);
             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error loading', life: 3000 });
-        } finally {
-            setCompLoading(false);
-        }
+        } 
     };
 
     const handleDelete = async (fileId, titleId) => {
