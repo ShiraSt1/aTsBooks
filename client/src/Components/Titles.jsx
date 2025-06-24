@@ -75,6 +75,8 @@ const Titles = () => {
     const navigate = useNavigate();
     const apiUrl = getConfig().API_URL;
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingId, setLoadingId] = useState(null);
+    const [shouldDownload, setShouldDownload] = useState(false);
 
     const fetchBook = async () => {
         try {
@@ -114,7 +116,6 @@ const Titles = () => {
             return null;
         }
     };
-
 
     useEffect(() => {
 
@@ -286,27 +287,50 @@ const Titles = () => {
             setIsLoading(false)
         }
     };
-    const [loadingId, setLoadingId] = useState(null);
-
-    const handleDownload = async (titleId) => {
-        try {
-            setLoadingId(titleId);
-            console.log('in function handleDownload. LoadingId:', loadingId);
-            console.log('in function handleDownload. titleId:', titleId);
-            
-            const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const { downloadUrl } = res.data;
-            window.open(downloadUrl, '_blank');
-        } catch (err) {
-            console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
-        } finally {
-            setLoadingId(null);
-            console.log('in finally. LoadingId:', loadingId);
-        }
+    const handleDownload = (titleId) => {
+        setLoadingId(titleId);
+        setShouldDownload(true); // מסמן שרוצים להריץ את ההורדה אחרי שה־loadingId התעדכן
     };
+
+    useEffect(() => {
+        const download = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}api/download-zip/${loadingId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const { downloadUrl } = res.data;
+                window.open(downloadUrl, '_blank');
+            } catch (err) {
+                console.error('Download failed:', err);
+            } finally {
+                setLoadingId(null);
+                setShouldDownload(false); // מנקה את הדגל
+            }
+        };
+
+        if (shouldDownload && loadingId) {
+            download();
+        }
+    }, [loadingId, shouldDownload]);
+    // const handleDownload = async (titleId) => {
+    //     try {
+    //         setLoadingId(titleId);
+    //         console.log('in function handleDownload. LoadingId:', loadingId);
+    //         console.log('in function handleDownload. titleId:', titleId);
+            
+    //         const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
+    //             headers: { 'Authorization': `Bearer ${token}` }
+    //         });
+    //         const { downloadUrl } = res.data;
+    //         window.open(downloadUrl, '_blank');
+    //     } catch (err) {
+    //         console.error(err);
+    //         toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
+    //     } finally {
+    //         setLoadingId(null);
+    //         console.log('in finally. LoadingId:', loadingId);
+    //     }
+    // };
 
     const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
     const [errorMessage, setErrorMessage] = useState('');
