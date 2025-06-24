@@ -174,6 +174,8 @@ const Titles = () => {
                                 style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}} 
                                 onClick={(e) => {e.stopPropagation();handleDownload(title._id)}}></i>
                             )}
+                            {loadingId?<i className="pi pi-spinner pi-spin text-blue-500" 
+                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>:''}
                             {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
                                 <Button
@@ -316,6 +318,7 @@ const Titles = () => {
             download();
         }
     }, [loadingId, shouldDownload]);
+
     // const handleDownload = async (titleId) => {
     //     try {
     //         setLoadingId(titleId);
