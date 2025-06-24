@@ -45,7 +45,7 @@ app.use("/api/grade", require("./routes/grade.js"))
 app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
-app.use('/api', require("./routes/downloadRoutes.js"));
+app.use('/api', require("./routes/download.js"));
 
 const startServer = async () => {
   try {
