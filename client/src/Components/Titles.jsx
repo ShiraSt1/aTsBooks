@@ -12,53 +12,53 @@ import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
-const TitleHeader = ({
-    title,
-    loadingId,
-    handleDownload,
-    setUploadTitleId,
-    setVisibleUpload,
-    setErrorMessage,
-    user
-}) => {
-    const isLoading = loadingId === title._id;
+// const TitleHeader = ({
+//     title,
+//     loadingId,
+//     handleDownload,
+//     setUploadTitleId,
+//     setVisibleUpload,
+//     setErrorMessage,
+//     user
+// }) => {
+//     const isLoading = loadingId === title._id;
 
-    return (
-        <div className="flex items-center justify-between w-full px-1 py-2">
-            <span className="text-base leading-none">{title.name}</span>
+//     return (
+//         <div className="flex items-center justify-between w-full px-1 py-2">
+//             <span className="text-base leading-none">{title.name}</span>
 
-            <div className="flex items-center gap-2">
-                <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-                <span
-                    className={`zip-icon-${title._id} cursor-pointer`}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleDownload(title._id);
-                    }}
-                >
-                    {isLoading ? (
-                        <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
-                    ) : (
-                        <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
-                    )}
-                </span>
+//             <div className="flex items-center gap-2">
+//                 <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
+//                 <span
+//                     className={`zip-icon-${title._id} cursor-pointer`}
+//                     onClick={(e) => {
+//                         e.stopPropagation();
+//                         handleDownload(title._id);
+//                     }}
+//                 >
+//                     {isLoading ? (
+//                         <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
+//                     ) : (
+//                         <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem', paddingLeft: '10px' }}></i>
+//                     )}
+//                 </span>
 
-                {user?.roles === "Admin" && (
-                    <Button
-                        icon="pi pi-plus"
-                        className="p-button-sm p-button-text"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setErrorMessage("");
-                            setUploadTitleId(title._id);
-                            setVisibleUpload(true);
-                        }}
-                    />
-                )}
-            </div>
-        </div>
-    );
-};
+//                 {user?.roles === "Admin" && (
+//                     <Button
+//                         icon="pi pi-plus"
+//                         className="p-button-sm p-button-text"
+//                         onClick={(e) => {
+//                             e.stopPropagation();
+//                             setErrorMessage("");
+//                             setUploadTitleId(title._id);
+//                             setVisibleUpload(true);
+//                         }}
+//                     />
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
 
 const Titles = () => {
     const [items, setItems] = useState([]);
@@ -163,18 +163,16 @@ const Titles = () => {
                         {/* אייקונים מימין */}
                         <div className="flex items-center gap-2">
                             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-
                             {/* אייקון הורדה / טעינה */}
-                            {/* <i className={`pi ${loadingId === title._id ? 'pi-spin pi-spinner' : 'pi pi-download'} cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
-                                onClick={(e) => {e.stopPropagation();handleDownload(title._id);}}
-                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}>
-                            </i> */}
                             {loadingId === title._id ? (
-                                <i className="pi pi-spinner pi-spin text-blue-500" style={{ fontSize: '1.2rem' }}></i>
+                                console.log(`Loading ID: ${loadingId}, Title ID: ${title._id}`),
+                                <i className="pi pi-spinner pi-spin text-blue-500" 
+                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}}></i>
                             ) : (
-                                <i className="pi pi-download text-blue-500" style={{ fontSize: '1.2rem' }} onClick={(e) => {e.stopPropagation();handleDownload(title._id)}}></i>
+                                <i className={`pi pi-download text-blue-500 cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
+                                style={{fontSize: '1.2rem',lineHeight: '1',display: 'inline-flex',alignItems: 'center',}} 
+                                onClick={(e) => {e.stopPropagation();handleDownload(title._id)}}></i>
                             )}
-
                             {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
                                 <Button
