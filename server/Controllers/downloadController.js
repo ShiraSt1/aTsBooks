@@ -27,7 +27,7 @@ exports.downloadTitleAsZip = async (req, res) => {
     const { Readable } = require('stream');
     for (const file of files) {
       const command = new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET,
+        Bucket: process.env.S3_BUCKET_NAME,
         Key: file.s3Key,
       });
       const s3Response = await s3.send(command);
@@ -42,7 +42,7 @@ exports.downloadTitleAsZip = async (req, res) => {
     const zipKey = `zips/${zipId}.zip`;
 
     await s3.send(new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET,
+      Bucket: process.env.S3_BUCKET_NAME,
       Key: zipKey,
       Body: zipStream,
       ContentType: 'application/zip',
@@ -55,6 +55,6 @@ exports.downloadTitleAsZip = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'error in oreoering file to download' });
+    res.status(500).json({ message: 'error in creating file to download' });
   }
 };

@@ -175,7 +175,7 @@ const Titles = () => {
     
                         <div className="flex gap-2">
                             <Button
-                                label={loadingId === title._id ? 'מכין...' : 'ZIP'}
+                                label={loadingId === title._id ? 'preparing...' : 'ZIP'}
                                 icon="pi pi-download"
                                 className="p-button-sm p-button-outlined"
                                 onClick={(e) => {
@@ -240,7 +240,7 @@ const Titles = () => {
             setItems(panelItems);
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בטעינת כותרות', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'error in loading title', life: 3000 });
         }
     };
     
@@ -306,7 +306,7 @@ const Titles = () => {
             window.open(downloadUrl, '_blank');
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'הורדה נכשלה', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Download failed', life: 3000 });
         } finally {
             setLoadingId(null);
         }

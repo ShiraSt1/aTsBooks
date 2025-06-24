@@ -9,7 +9,7 @@ const s3 = new S3Client({
 });
 const getSignedS3Url = async (key) => {
   const command = new GetObjectCommand({
-    Bucket: process.env.AWS_BUCKET,
+    Bucket: process.env.S3_BUCKET_NAME,
     Key: key,
   });
   return await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 דקות
