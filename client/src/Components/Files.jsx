@@ -22,11 +22,9 @@ const FilesDataView = ({ titleId }) => {
     const { token } = useSelector((state) => state.token);
     const toast = useRef(null);
     const navigate = useNavigate();
-    const [compLoading, setCompLoading] = useState(false);
 
     useEffect(() => {
         const fetchTitleAndBook = async () => {
-            setCompLoading(true)
             try {
                 const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
                 const title = titleRes.data;
@@ -36,8 +34,6 @@ const FilesDataView = ({ titleId }) => {
                 fetchFiles(); 
             } catch (err) {
                 console.error("Error fetching title or book:", err);
-            }finally{
-                setCompLoading(false);
             }
         };
 
@@ -126,14 +122,6 @@ const FilesDataView = ({ titleId }) => {
 
     return (
         <div className="p-4">
-            {compLoading ? (
-            <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-                <div className="flex justify-center items-center gap-3 text-xl mt-6">
-                    <div className="custom-spinner" />
-                    <span>Loading, please wait...</span>
-                </div>
-            </div>
-        ) :(<>
             {/* כותרת ראשית עם שם הספר */}
             {book && (
                 <h2 className="text-center mb-4">{book.name}-{book.image}</h2>
@@ -204,7 +192,6 @@ const FilesDataView = ({ titleId }) => {
             </Dialog>
 
             <Toast ref={toast} />
-            </>)}
         </div>
     );
 };
