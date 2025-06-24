@@ -274,7 +274,7 @@ const Titles = () => {
                 )}
                 {/* כותרות בצד ימין */}
                 <div className="flex-grow-1">
-                    <PanelMenu model={items} className="w-full md:w-30rem" />
+                    <PanelMenu key={loadingId} model={items} className="w-full md:w-30rem" />
                 </div>
             </div>
             <Dialog
