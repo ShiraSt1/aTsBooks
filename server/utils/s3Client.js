@@ -1,5 +1,5 @@
-const { S3Client } = require('@aws-sdk/client-s3');
-
+const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -7,5 +7,12 @@ const s3 = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
+const getSignedS3Url = async (key) => {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_BUCKET,
+    Key: key,
+  });
+  return await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 דקות
+};
 
-module.exports = s3;
+module.exports = { s3, getSignedS3Url, GetObjectCommand, PutObjectCommand };
