@@ -100,22 +100,20 @@ const Titles = () => {
                         {/* אייקונים מימין */}
                         <div className="flex items-center gap-2">
                             <Tooltip target={`.zip-icon-${title._id}`} content="Download all files" />
-                            {/* אייקון הורדה / טעינה */}
+                            {/* אייקון הורדה */}
                             <i className={`pi pi-download text-blue-500 cursor-pointer text-blue-500 zip-icon-${title._id} ml-2`}
                                 style={{ fontSize: '1.2rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', }}
                                 onClick={(e) => { e.stopPropagation(); handleDownload(title._id) }}></i>
                             {/* כפתור הוספת קובץ – רק למנהל */}
                             {user?.roles === "Admin" && (
-                                <Button
-                                    icon="pi pi-plus"
-                                    className="p-button-sm p-button-text"
+                                <i className={`pi pi-plus text-blue-500 cursor-pointer text-blue-500 ml-2`}
+                                    style={{ fontSize: '1.2rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', }}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setErrorMessage("");
                                         setUploadTitleId(title._id);
                                         setVisibleUpload(true);
-                                    }}
-                                />
+                                    }}></i>
                             )}
                         </div>
                     </div>
@@ -248,7 +246,7 @@ const Titles = () => {
                         <div className="flex items-center">
                             <div className="custom-spinner" />
                         </div>
-                     )} 
+                    )}
                 </div>
             )}
 
