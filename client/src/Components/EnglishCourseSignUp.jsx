@@ -51,24 +51,18 @@ const EnglishCourseSignUp = () => {
     formData.append("email", form.email);
     formData.append("message", form.message);
     if (form.files) {
-      form.files.forEach(file => {
-        formData.append("files", file);
-      });
+      form.files.forEach(file => formData.append("files", file));
     }
     try {
-      const res = await axios.post(`${apiUrl}api/course/register`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        }
-      });
+      const res = await axios.post(`${apiUrl}api/course/register`, formData);
       if (res.status === 201 || res.status === 200) {
         setServerResponse(true);
       } else {
-        toast.current.show({ severity: 'error', detail: 'There was a problem sending your message.', life: 3000 });
+        toast.current.show({ severity: 'error', detail: `There was a problem sending your message.`, life: 3000 });
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.current.show({ severity: 'error', detail: 'There was a problem sending your message.', life: 3000 });
+      toast.current.show({ severity: 'error', detail: `There was a problem sending your message.`, life: 3000 });
     } finally {
       setLoading(false);
     }

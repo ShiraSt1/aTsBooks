@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3001
 const path = require('path');
 
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 15 דקות
+  windowMs: 15 * 60 * 1000, // 15 דקות
   max: 100, // 100 בקשות לחלון זמן
 });
 
@@ -39,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(limiter);
 
+app.use(express.urlencoded({ extended: true })); 
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
 app.use("/api/grade", require("./routes/grade.js"))

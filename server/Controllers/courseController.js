@@ -13,14 +13,15 @@ const registerToCourse = async (req, res) => {
     if (!firstName || !lastName || !email || !message) {
         return res.status(400).json({ message: 'All fields are required' })
     }
+    console.log("req.body ", req.body);
+    
     const files = req.files
         ? req.files.map(file => ({
             filename: file.originalname,
             path: file.path,
             contentType: file.mimetype
-        }))
-        : [];
-
+        })): [];
+        
     const emailHtml = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>
