@@ -5,11 +5,14 @@ const path = require("path");
 const mime = require("mime-types");
 const { log } = require("console");
 
-const {s3} = require('../utils/s3Client');
+const { s3 } = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const { PutObjectCommand , GetObjectCommand} = require('@aws-sdk/client-s3');
+const { PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+
+const NodeCache = require('node-cache');
+const myCache = new NodeCache({ stdTTL: 600 });
 
 const uploadFile = async (req, res) => {
   try {
@@ -49,14 +52,19 @@ const uploadFile = async (req, res) => {
 };
 
 const getFilesByTitle = async (req, res) => {
+
   try {
     const { titleId } = req.params;
+    const files_cache = myCache.get(`files_by_title_${titleId}`); // נסה לשלוף מהמטמון
+    if (files_cache) {
+      return res.json(files_cache); // אם יש במטמון – שלח אותו מיד
+    }
     const files = await File.find({ title: titleId }).populate("title").exec();
 
     if (!files || files.length === 0) {
       return res.status(204).send([]);
     }
-
+    myCache.set('`files_by_title_${titleId}`', files);
     res.status(200).send(files);
   } catch (err) {
     res.status(500).send({
@@ -67,8 +75,13 @@ const getFilesByTitle = async (req, res) => {
 };
 
 const getAllFiles = async (req, res) => {
+  const files_cache = myCache.get('all_files'); // נסה לשלוף מהמטמון
+  if (files_cache) {
+    return res.json(files_cache); // אם יש במטמון – שלח אותו מיד
+  }
   try {
     const files = await File.find().populate("title").exec();
+    myCache.set('all_files', files);
     res.status(200).send(files);
   } catch (err) {
     res.status(500).send({ message: "Error fetching files ", error: err.message });

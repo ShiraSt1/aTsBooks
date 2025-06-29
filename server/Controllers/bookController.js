@@ -8,6 +8,8 @@ const fs = require('fs');
 const s3 = require('../utils/s3Client');
 const BUCKET = process.env.S3_BUCKET_NAME;
 const upload = multer({ storage: multer.memoryStorage() });
+const NodeCache = require('node-cache');
+const myCache = new NodeCache({ stdTTL: 600 });
 
 const createNewBook = async (req, res) => {
     const { name, grades } = req.body;
@@ -37,9 +39,9 @@ const createNewBook = async (req, res) => {
             ContentType: req.file.mimetype
         }).promise();
         await fs.promises.unlink(filePath);
-        
+
         image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-    
+
     } catch (err) {
         console.error("S3 upload error:", err.message);
         return res.status(500).send("Failed to upload image");
@@ -83,8 +85,13 @@ const createNewBook = async (req, res) => {
 };
 
 const getAllBooks = async (req, res) => {
+    const books_cache = myCache.get('all_books'); // נסה לשלוף מהמטמון
+    if (books_cache) {
+        return res.json(books_cache); // אם יש במטמון – שלח אותו מיד
+    }
     try {
         const books = await Book.find().lean().populate("grades")
+        myCache.set('all_books', data);
         res.json(books)
     }
     catch {
@@ -104,11 +111,17 @@ const getBookById = async (req, res) => {
 
 const getBooksForGrade = async (req, res) => {
     const { Id } = req.params
+    const books_cache = myCache.get(`books_by_grade_${Id}`); // נסה לשלוף מהמטמון
+    if (books_cache) {
+        return res.json(books_cache); // אם יש במטמון – שלח אותו מיד
+    }
+
     try {
         const books = await Book.find({ grades: Id }).lean().populate("grades")
         if (Array.isArray(books) && books.length === 0) {
             return res.status(204).json({ message: 'No books found for this grade' })
         }
+        myCache.set(`books_by_grade_${Id}`, books);
         res.json(books)
     }
     catch {
@@ -159,7 +172,7 @@ const updateBook = async (req, res) => {
                 Body: fileStream,
                 ContentType: newImage.mimetype,
             }).promise();
-        await fs.promises.unlink(filePath);
+            await fs.promises.unlink(filePath);
 
             book.image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${newKey}`;
         }

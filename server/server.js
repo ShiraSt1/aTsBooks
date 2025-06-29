@@ -34,7 +34,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions)); // פתרון לבקשות preflight
 app.use(express.json())
-app.use(express.static("public"))
+app.use(express.static("public",{maxAge: '1h'}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(limiter);
