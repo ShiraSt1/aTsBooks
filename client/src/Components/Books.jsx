@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function BooksDataView() {
     const location = useLocation();
-    const gradeId = null;
+    const gradeId = location.state ? location.state.gradeId : null;
     const [books, setBooks] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [selectedBook, setSelectedBook] = useState({});
@@ -39,8 +39,8 @@ export default function BooksDataView() {
 
     useEffect(() => {
         const loadAll = async () => {
-            gradeId = location.state ? gradeId : null;
             setCompLoading(true)
+            
             try {
                 if (gradeId != null) {
                     await getGradeName(gradeId);
