@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function BooksDataView() {
     const location = useLocation();
-    const gradeId = location.state?gradeId:null;
+    const gradeId = null;
     const [books, setBooks] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [selectedBook, setSelectedBook] = useState({});
@@ -39,9 +39,10 @@ export default function BooksDataView() {
 
     useEffect(() => {
         const loadAll = async () => {
+            gradeId = location.state ? gradeId : null;
             setCompLoading(true)
             try {
-                if (gradeId!=null) {
+                if (gradeId != null) {
                     await getGradeName(gradeId);
                     await getBooksByGrade(gradeId); // Fetch books for the specific grade
                 } else {
@@ -194,7 +195,7 @@ export default function BooksDataView() {
             toast.current.show({ severity: 'error', detail: 'This book is not in use any more.', life: 3000 });
         }
         else {
-            navigate(`/titles/${book.name}`,{state:{bookId:book._id}});
+            navigate(`/titles/${book.name}`, { state: { bookId: book._id } });
         }
     };
 
@@ -285,7 +286,7 @@ export default function BooksDataView() {
     return (
         <div>
             <Helmet>
-                <title>aTsBooks | Our English Books {gradeName?`for ${gradeName}`:''}</title>
+                <title>aTsBooks | Our English Books {gradeName ? `for ${gradeName}` : ''}</title>
                 <meta name="description" content="Explore our full collection of English learning books for all age groups and levels. Perfect for home, school, or self-study – find your next favorite book today!" />
                 <meta name="keywords" content="English books, ESL materials, learn English, English for kids, English for teens, English reading practice" />
                 <meta property="og:title" content="All English Books – For Every Age and Level" />
@@ -312,10 +313,10 @@ export default function BooksDataView() {
                         </div>
                     )}
                     <div>
-                        {gradeName? (
-                            <h1 className="grade-header">{gradeName}</h1> 
-                        ):(
-                            <h1 className="grade-header">Our Books</h1> 
+                        {gradeName ? (
+                            <h1 className="grade-header">{gradeName}</h1>
+                        ) : (
+                            <h1 className="grade-header">Our Books</h1>
                         )}
                     </div>
                     {user?.roles === "Admin" && (
