@@ -164,7 +164,7 @@ const Titles = () => {
             setItems(panelItems);
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בטעינת כותרות', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error loading titles', life: 3000 });
         }
     };
 
@@ -230,7 +230,7 @@ const Titles = () => {
             window.open(downloadUrl, '_blank');
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'שגיאה', detail: 'Failed to download', life: 3000 });
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to download', life: 3000 });
         } finally {
             setLoadingId(null);
         }

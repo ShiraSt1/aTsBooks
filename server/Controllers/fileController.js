@@ -52,19 +52,23 @@ const uploadFile = async (req, res) => {
 };
 
 const getFilesByTitle = async (req, res) => {
-
   try {
     const { titleId } = req.params;
-    const files_cache = myCache.get(`files_by_title_${titleId}`); // נסה לשלוף מהמטמון
+
+    const files_cache = myCache.get(`files_by_title_${titleId}`);
     if (files_cache) {
-      return res.json(files_cache); // אם יש במטמון – שלח אותו מיד
+      return res.json(files_cache);
     }
+
     const files = await File.find({ title: titleId }).populate("title").exec();
 
     if (!files || files.length === 0) {
       return res.status(204).send([]);
     }
-    myCache.set('`files_by_title_${titleId}`', files);
+
+    const plainFiles = files.map(file => file.toObject());
+    myCache.set(`files_by_title_${titleId}`, plainFiles);
+
     res.status(200).send(files);
   } catch (err) {
     res.status(500).send({
@@ -81,7 +85,10 @@ const getAllFiles = async (req, res) => {
   }
   try {
     const files = await File.find().populate("title").exec();
-    myCache.set('all_files', files);
+
+    const plainFiles = files.map(file => file.toObject());
+    myCache.set('all_files', plainFiles);
+    
     res.status(200).send(files);
   } catch (err) {
     res.status(500).send({ message: "Error fetching files ", error: err.message });

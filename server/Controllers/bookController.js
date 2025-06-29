@@ -86,14 +86,14 @@ const createNewBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
     
-    const books_cache = myCache.get('all_books'); // נסה לשלוף מהמטמון
+    const books_cache = myCache.get('all_books'); 
     if (books_cache) {
-        return res.json(books_cache); // אם יש במטמון – שלח אותו מיד
+        return res.json(books_cache); 
     }
     try {
-        
         const books = await Book.find().lean().populate("grades")
-        // myCache.set('all_books', data);
+        const plainBooks = books.map(book => book.toObject());
+        myCache.set('all_books', plainBooks);
         res.json(books)
     }
     catch {
@@ -124,7 +124,9 @@ const getBooksForGrade = async (req, res) => {
         if (Array.isArray(books) && books.length === 0) {
             return res.status(204).json({ message: 'No books found for this grade' })
         }
-        myCache.set(`books_by_grade_${Id}`, books);
+        const plainBooks = books.map(book => book.toObject());
+
+        myCache.set(`books_by_grade_${Id}`, plainBooks);
         res.json(books)
     }
     catch {
