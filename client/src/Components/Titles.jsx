@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const Titles = () => {
     const location = useLocation();
@@ -241,6 +242,14 @@ const Titles = () => {
 
     return (
         <div className="p-4 ">
+            <Helmet>
+                <title>aTsBooks | {book.name} </title>
+                <meta name="description" content={`Explore all resources for "${book.name}": workbook, tests, audio files, videos, and more.`} />
+                <meta name="keywords" content={`${book.name}, English book, workbook, audio files, ESL resources, tests, videos`} />
+                <meta property="og:title" content={`${book.name} | Complete English Resource Kit`} />
+                <meta property="og:description" content={`Get access to all materials related to "${book.name}" — perfect for teachers, students, and self-learners.`} />
+                <meta property="og:type" content="article" />
+            </Helmet>
             {book && (
                 <div className="flex items-center justify-center gap-4 mb-4 w-full">
                     <h2 className="m-0" style={{ paddingLeft: '45%' }}>{book.name}</h2>
