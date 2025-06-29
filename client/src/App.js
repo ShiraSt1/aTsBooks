@@ -60,7 +60,7 @@ const [configLoaded, setConfigLoaded] = useState(false);
         <Route path="/books/:gradeId" element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
         <Route path="/titles/:bookId" element={<Suspense fallback="loading..."><LazyTitles /></Suspense>} />
         <Route path="/fileview/:fileId" element={<Suspense fallback="loading..."><LazyFileView /></Suspense>} />
-        <Route path="/course" element={<Suspense fallback="loading..."><LazyEnglishCourseSignUp /></Suspense>} />
+        <Route path="/contact" element={<Suspense fallback="loading..."><LazyEnglishCourseSignUp /></Suspense>} />
       </Routes>
       </div>
     </div>

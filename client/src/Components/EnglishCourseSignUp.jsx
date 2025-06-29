@@ -5,6 +5,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
 import { getConfig } from '../config';
 import { Toast } from "primereact/toast";
+import { Helmet } from 'react-helmet-async';
 
 const EnglishCourseSignUp = () => {
   const apiUrl = getConfig().API_URL;
@@ -70,17 +71,26 @@ const EnglishCourseSignUp = () => {
 
   return (
     <div className="signup-form-container">
+      <Helmet>
+        <title>aTsBooks | Contact Us </title>
+        <meta name="description" content="Have a question or need help choosing the right English books? Contact us today – we're here to assist with orders, recommendations, and more." />
+        <meta name="keywords" content="contact, get in touch, English books support, ESL help, English learning questions, customer service" />
+        <meta property="og:title" content="Contact Us | We're Here to Help" />
+        <meta property="og:description" content="Reach out with any questions about our English books, age levels, or orders. Fast and friendly support!" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       <Toast ref={toast} />
       <h1 className="signup-title">Contact Us</h1>
-      <p className="signup-subtitle">
+      <h3 className="signup-subtitle">
         Have any questions, comments, or feedback?
-      </p>
-      <p className="signup-subtitle">
+      </h3>
+      <h3 className="signup-subtitle">
         Want to share your work with us?
-      </p>
-      <p className="signup-subtitle">
+      </h3>
+      <h3 className="signup-subtitle">
         Send us a message — we’d love to hear from you!
-      </p>
+      </h3>
 
       <div className="signup-form">
         {[["firstName", "What's your first name?"],

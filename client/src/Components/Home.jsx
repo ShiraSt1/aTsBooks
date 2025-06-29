@@ -4,6 +4,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import axios from 'axios';
 import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
 
@@ -40,6 +41,14 @@ const Home = () => {
   };
   return (
     <div className="home-container">
+      <Helmet>
+        <title>aTsBooks | Home</title>
+        <meta name="description" content="Discover the joy of learning English with our wide selection of books and learning materials for kids, teens, and adults. Fun, effective, and engaging!" />
+        <meta name="keywords" content="learn English, English books, English for kids, English reading, ESL resources, English workbooks, English learning materials" />
+        <meta property="og:title" content="Learn English Through Stories and Books" />
+        <meta property="og:description" content="Explore our collection of English books and resources for all levels. Start your English learning journey today!" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <Toast ref={toast} />
 
       <div className="image-section">

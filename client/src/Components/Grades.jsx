@@ -11,6 +11,7 @@ import '../Styles/Grades.css';
 import { getConfig } from '../config';
 import { ProgressSpinner } from "primereact/progressspinner";
 import { ProgressBar } from "primereact/progressbar";
+import { Helmet } from 'react-helmet-async';
 
 const Grades = () => {
 
@@ -92,6 +93,15 @@ const Grades = () => {
     };
 
     return (<>
+        <Helmet>
+            <title>aTsbooks | Select Grade</title>
+            <meta name="description" content="Choose the right English books by selecting a grade. Personalized learning resources for kids, teens, and young learners." />
+            <meta name="keywords" content="English books by grade, English by age group, ESL levels, English learning paths, books for kids, books for teens" />
+            <meta property="og:title" content="Choose Age or Grade | Tailored English Learning" />
+            <meta property="og:description" content="Pick a grade level or age group to explore English books designed for your learners' needs. Start the learning journey now!" />
+            <meta property="og:type" content="website" />
+        </Helmet>
+
         {compLoading ? (
             <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
                 <div className="flex justify-center items-center gap-3 text-xl mt-6">
@@ -101,6 +111,9 @@ const Grades = () => {
             </div>
         ) : (<>
             <Toast ref={toast} />
+
+            <h1 className="grade-header">Available Grades</h1> 
+
             {user?.roles === "Admin" && (
                 <Button icon="pi pi-plus" rounded aria-label="Filter" onClick={() => setVisibleCreatGrade(true)} className="add-button" />)}
             <CreateGrade createGrade={createGrade} setVisibleCreatGrade={setVisibleCreatGrade} visibleCreatGrade={visibleCreatGrade} />

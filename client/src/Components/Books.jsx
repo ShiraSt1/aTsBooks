@@ -14,6 +14,7 @@ import { confirmPopup, ConfirmPopup } from 'primereact/confirmpopup';
 import { getConfig } from '../config';
 import { Messages } from 'primereact/messages';
 import { Skeleton } from 'primereact/skeleton';
+import { Helmet } from 'react-helmet-async';
 
 export default function BooksDataView() {
     const [books, setBooks] = useState([]);
@@ -280,6 +281,14 @@ export default function BooksDataView() {
 
     return (
         <div>
+            <Helmet>
+                <title>aTsBooks | Our English Books {gradeName?`for ${gradeName}`:''}</title>
+                <meta name="description" content="Explore our full collection of English learning books for all age groups and levels. Perfect for home, school, or self-study – find your next favorite book today!" />
+                <meta name="keywords" content="English books, ESL materials, learn English, English for kids, English for teens, English reading practice" />
+                <meta property="og:title" content="All English Books – For Every Age and Level" />
+                <meta property="og:description" content="Discover our complete selection of engaging English books for kids, teens, and adults. Designed for fun, effective learning." />
+                <meta property="og:type" content="website" />
+            </Helmet>
             {compLoading ? (
                 <div className="flex justify-content-center align-items-center" style={{ height: '80vh' }}>
                     <div className="flex justify-center items-center gap-3 text-xl mt-6">
@@ -300,8 +309,10 @@ export default function BooksDataView() {
                         </div>
                     )}
                     <div>
-                        {gradeName && (
-                            <h1 className="grade-header">{gradeName}</h1> // שם הכיתה בראש
+                        {gradeName? (
+                            <h1 className="grade-header">{gradeName}</h1> 
+                        ):(
+                            <h1 className="grade-header">Our Books</h1> 
                         )}
                     </div>
                     {user?.roles === "Admin" && (

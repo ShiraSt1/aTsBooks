@@ -67,7 +67,7 @@ const MenuBar = () => {
 
   const regularItems = [
     ...commonItems,
-    { label: 'Contact Us', icon: 'pi pi-phone', command: () => navigate('/course') },
+    { label: 'Contact Us', icon: 'pi pi-phone', command: () => navigate('/contact') },
   ];
 
   return (
