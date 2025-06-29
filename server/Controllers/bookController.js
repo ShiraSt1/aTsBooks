@@ -92,8 +92,7 @@ const getAllBooks = async (req, res) => {
     }
     try {
         const books = await Book.find().lean().populate("grades")
-        const plainBooks = books.map(book => book.toObject());
-        myCache.set('all_books', plainBooks);
+        myCache.set('all_books', books);
         res.json(books)
     }
     catch {
@@ -124,9 +123,7 @@ const getBooksForGrade = async (req, res) => {
         if (Array.isArray(books) && books.length === 0) {
             return res.status(204).json({ message: 'No books found for this grade' })
         }
-        const plainBooks = books.map(book => book.toObject());
-
-        myCache.set(`books_by_grade_${Id}`, plainBooks);
+        myCache.set(`books_by_grade_${Id}`, books);
         res.json(books)
     }
     catch {

@@ -40,14 +40,13 @@ export default function BooksDataView() {
     useEffect(() => {
         const loadAll = async () => {
             setCompLoading(true)
-            
             try {
                 if (gradeId != null) {
                     await getGradeName(gradeId);
-                    await getBooksByGrade(gradeId); // Fetch books for the specific grade
+                    await getBooksByGrade(gradeId);
                 } else {
                     await getBooks();
-                    setGradeName(''); // Fetch all books if no gradeId is provided
+                    setGradeName(''); 
                 }
             } finally {
                 setCompLoading(false)
