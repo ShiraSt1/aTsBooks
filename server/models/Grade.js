@@ -7,7 +7,7 @@ const gradeSchema = new mongoose.Schema({
     enum:['first grade','second grade','third grade','fourth grade','fifth grade','sixth grade','seventh grade','eighth grade','ninth grade','tenth grade','eleventh grade','twelfth grade'],
     required:true 
     },
-image: {
+    image: {
         type:String,
     }
 },{})

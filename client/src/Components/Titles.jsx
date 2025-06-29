@@ -11,8 +11,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { useLocation } from 'react-router-dom';
 
 const Titles = () => {
+    const location = useLocation();
+    const bookId = location.state?.bookId;
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
     const [uploadTitleId, setUploadTitleId] = useState(null);
@@ -23,7 +26,6 @@ const Titles = () => {
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const toast = useRef(null);
-    const { bookId } = useParams();
     const navigate = useNavigate();
     const apiUrl = getConfig().API_URL;
     const [isLoading, setIsLoading] = useState(false);

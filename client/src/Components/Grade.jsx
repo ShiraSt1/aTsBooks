@@ -124,7 +124,7 @@ const Grade = (props) => {
             <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={props.grade._id}>
                 <div
                     className="p-4 border-1 surface-border surface-card border-round"
-                    onClick={(e) => { e.stopPropagation(); navigate(`/books/${props.grade._id}`) }}
+                    onClick={(e) => { e.stopPropagation(); navigate(`/books/${props.grade.name}`, { state: { gradeId: props.grade._id } }) }}
                     style={{ cursor: 'pointer' }}>
 
                     <div className="flex flex-column align-items-center gap-3 py-5">

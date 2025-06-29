@@ -15,8 +15,11 @@ import { getConfig } from '../config';
 import { Messages } from 'primereact/messages';
 import { Skeleton } from 'primereact/skeleton';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 
 export default function BooksDataView() {
+    const location = useLocation();
+    const gradeId = location.state?.gradeId;
     const [books, setBooks] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [selectedBook, setSelectedBook] = useState({});
@@ -24,7 +27,6 @@ export default function BooksDataView() {
     const [gradeName, setGradeName] = useState('');
     const [visibleCreatBook, setVisibleCreatBook] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { gradeId } = useParams();
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const [loading, setLoading] = useState(false);
@@ -191,7 +193,7 @@ export default function BooksDataView() {
             toast.current.show({ severity: 'error', detail: 'This book is not in use any more.', life: 3000 });
         }
         else {
-            navigate(`/titles/${book._id}`);
+            navigate(`/titles/${book.name}`,{state:{bookId:book._id}});
         }
     };
 

@@ -13,6 +13,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getConfig } from '../config';
+import { Helmet } from 'react-helmet-async';
 
 const Users = () => {
     const navigate = useNavigate();
@@ -131,6 +132,15 @@ const Users = () => {
 
     return (
         <div className="card">
+            <Helmet>
+                <title>aTsBooks | User Management</title>
+                <meta name="description" content="Admin dashboard: view, approve, and manage all registered users. Includes both approved and pending accounts." />
+                <meta name="robots" content="noindex, nofollow" />
+                <meta property="og:title" content="Admin | Manage Users" />
+                <meta property="og:description" content="Internal admin panel to manage user approvals and account statuses." />
+                <meta property="og:type" content="website" />
+            </Helmet>
+
             <Toast ref={toast} />
             <ConfirmDialog />
             <PickList
