@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function BooksDataView() {
     const location = useLocation();
-    const gradeId = location.state?.gradeId;
+    const gradeId = location.state?gradeId:null;
     const [books, setBooks] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [selectedBook, setSelectedBook] = useState({});
@@ -41,7 +41,7 @@ export default function BooksDataView() {
         const loadAll = async () => {
             setCompLoading(true)
             try {
-                if (gradeId) {
+                if (gradeId!=null) {
                     await getGradeName(gradeId);
                     await getBooksByGrade(gradeId); // Fetch books for the specific grade
                 } else {
@@ -68,6 +68,7 @@ export default function BooksDataView() {
     };
 
     const getBooks = async () => {
+
         try {
             const res = await axios.get(`${apiUrl}api/book`);
             if (res.status === 200) {

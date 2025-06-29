@@ -85,17 +85,19 @@ const createNewBook = async (req, res) => {
 };
 
 const getAllBooks = async (req, res) => {
+    
     const books_cache = myCache.get('all_books'); // נסה לשלוף מהמטמון
     if (books_cache) {
         return res.json(books_cache); // אם יש במטמון – שלח אותו מיד
     }
     try {
+        
         const books = await Book.find().lean().populate("grades")
-        myCache.set('all_books', data);
+        // myCache.set('all_books', data);
         res.json(books)
     }
     catch {
-        return res.status(400).json({ message: 'there is a bloblem louding the books' })
+        return res.status(400).json({ message: 'there is a problem loading the books' })
     }
 
 }
@@ -110,6 +112,7 @@ const getBookById = async (req, res) => {
 }
 
 const getBooksForGrade = async (req, res) => {
+
     const { Id } = req.params
     const books_cache = myCache.get(`books_by_grade_${Id}`); // נסה לשלוף מהמטמון
     if (books_cache) {
@@ -125,7 +128,7 @@ const getBooksForGrade = async (req, res) => {
         res.json(books)
     }
     catch {
-        return res.status(400).json({ message: 'there is a bloblem louding the books' })
+        return res.status(400).json({ message: 'there is a problem loading the books' })
     }
 }
 
