@@ -9,6 +9,7 @@ import '../Styles/login.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -79,7 +80,7 @@ const Login = () => {
                     setError('Email does not have an acount.');
                 } else if (err.response && err.response.status === 402) {
                     setError('Your password is not correct.');
-                }else if (err.response && err.response.status === 403) {
+                } else if (err.response && err.response.status === 403) {
                     setError('Your account has not been confirmed yet.');
                 } else {
                     setError('An error occurred, please try again.');
@@ -110,6 +111,15 @@ const Login = () => {
 
     return (
         <div className="login-page-container">
+            <Helmet>
+                <title>{`aTsBooks | Login`}</title>
+                <meta name="description" content="Log in to access your personal English learning materials, books, and resources on aTsBooks." />
+                <meta name="robots" content="noindex, nofollow" />
+                <meta property="og:title" content="Login | aTsBooks" />
+                <meta property="og:description" content="Access your personalized English learning resources by logging in to your aTsBooks account." />
+                <meta property="og:type" content="website" />
+            </Helmet>
+
             <Toast ref={toast} />
             {loading && (
                 <div className="loading-container">

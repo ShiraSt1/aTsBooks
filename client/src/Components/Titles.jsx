@@ -16,6 +16,7 @@ import { Helmet } from 'react-helmet-async';
 
 const Titles = () => {
     const location = useLocation();
+    const {bookName}= useParams();
     const bookId = location.state?.bookId;
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
@@ -37,6 +38,8 @@ const Titles = () => {
             const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            console.log("Book data:", res.data);
+            
             setBook(res.data);
 
         } catch (err) {
@@ -71,7 +74,7 @@ const Titles = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => {        
         fetchBook();
         fetchTitles();
     }, []);
@@ -237,22 +240,22 @@ const Titles = () => {
         }
     };
 
-    const [filePreview, setFilePreview] = useState(''); // תצוגה מקדימה של שם הקובץ הנבחר
+    const [filePreview, setFilePreview] = useState(''); 
     const [errorMessage, setErrorMessage] = useState('');
 
     return (
         <div className="p-4 ">
             <Helmet>
-                <title>aTsBooks | {book.name} </title>
-                <meta name="description" content={`Explore all resources for "${book.name}": workbook, tests, audio files, videos, and more.`} />
-                <meta name="keywords" content={`${book.name}, English book, workbook, audio files, ESL resources, tests, videos`} />
-                <meta property="og:title" content={`${book.name} | Complete English Resource Kit`} />
-                <meta property="og:description" content={`Get access to all materials related to "${book.name}" — perfect for teachers, students, and self-learners.`} />
+                <title>{`aTsBooks | ${bookName}`} </title>
+                <meta name="description" content={`Explore all resources for "${bookName}": workbook, teachers guide, tests, audio files, videos, and more.`} />
+                <meta name="keywords" content={`${bookName}, English book, workbook, audio files, ESL resources, tests, videos`} />
+                <meta property="og:title" content={`${bookName} | Complete English Resource Kit`} />
+                <meta property="og:description" content={`Get access to all materials related to "${bookName}" — perfect for teachers, and self-learners.`} />
                 <meta property="og:type" content="article" />
             </Helmet>
             {book && (
                 <div className="flex items-center justify-center gap-4 mb-4 w-full">
-                    <h2 className="m-0" style={{ paddingLeft: '45%' }}>{book.name}</h2>
+                    <h2 className="m-0" style={{ paddingLeft: '45%' }}>{bookName}</h2>
                     {loadingId && (
                         <div className="flex items-center">
                             <div className="custom-spinner" />

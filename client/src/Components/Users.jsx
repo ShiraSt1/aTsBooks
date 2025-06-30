@@ -133,7 +133,7 @@ const Users = () => {
     return (
         <div className="card">
             <Helmet>
-                <title>aTsBooks | User Management</title>
+                <title>{`aTsBooks | User Management`}</title>
                 <meta name="description" content="Admin dashboard: view, approve, and manage all registered users. Includes both approved and pending accounts." />
                 <meta name="robots" content="noindex, nofollow" />
                 <meta property="og:title" content="Admin | Manage Users" />

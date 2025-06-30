@@ -72,7 +72,7 @@ const EnglishCourseSignUp = () => {
   return (
     <div className="signup-form-container">
       <Helmet>
-        <title>aTsBooks | Contact Us </title>
+        <title>{`aTsBooks | Contact Us`} </title>
         <meta name="description" content="Have a question or need help choosing the right English books? Contact us today – we're here to assist with orders, recommendations, and more." />
         <meta name="keywords" content="contact, get in touch, English books support, ESL help, English learning questions, customer service" />
         <meta property="og:title" content="Contact Us | We're Here to Help" />

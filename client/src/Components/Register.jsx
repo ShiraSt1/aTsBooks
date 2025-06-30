@@ -6,6 +6,7 @@ import '../Styles/register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
+import { Helmet } from 'react-helmet-async';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -99,6 +100,15 @@ const Register = () => {
 
     return (
         <div className="register-page-container">
+            <Helmet>
+                <title>{`aTsBooks | Sign Up`}</title>
+                <meta name="description" content="Create your free aTsBooks account to access English learning books, workbooks, audio files, and more." />
+                <meta name="keywords" content="sign up, register, aTsBooks, create account, English learning access, free English books" />
+                <meta property="og:title" content="Sign Up | aTsBooks" />
+                <meta property="og:description" content="Join aTsBooks to access a full library of English learning resources for kids, teens, and adults." />
+                <meta property="og:type" content="website" />
+            </Helmet>
+
             <Toast ref={toast} />
             <div className="register-form-container">
                 {loading && (

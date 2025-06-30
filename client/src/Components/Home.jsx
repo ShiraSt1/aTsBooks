@@ -42,7 +42,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <Helmet>
-        <title>aTsBooks | Home</title>
+        <title>{`aTsBooks | Home`}</title>
         <meta name="description" content="Discover the joy of learning English with our wide selection of books and learning materials for kids, teens, and adults. Fun, effective, and engaging!" />
         <meta name="keywords" content="learn English, English books, English for kids, English reading, ESL resources, English workbooks, English learning materials,Tami Stern,Ayeley Toledano" />
         <meta property="og:title" content="Learn English Through Stories and Books" />

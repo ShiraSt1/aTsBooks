@@ -285,7 +285,7 @@ export default function BooksDataView() {
     return (
         <div>
             <Helmet>
-                <title>aTsBooks | Our English Books {gradeName ? `for ${gradeName}` : ''}</title>
+                <title>{`aTsBooks | Books`} {gradeName ? `for ${gradeName}` : ''}</title>
                 <meta name="description" content="Explore our full collection of English learning books for all age groups and levels. Perfect for home, school, or self-study – find your next favorite book today!" />
                 <meta name="keywords" content="English books, ESL materials, learn English, English for kids, English for teens, English reading practice" />
                 <meta property="og:title" content="All English Books – For Every Age and Level" />

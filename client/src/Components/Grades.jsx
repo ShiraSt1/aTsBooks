@@ -94,7 +94,7 @@ const Grades = () => {
 
     return (<>
         <Helmet>
-            <title>aTsbooks | Select Grade</title>
+            <title>{`aTsbooks | Grades`}</title>
             <meta name="description" content="Choose the right English books by selecting a grade. Personalized learning resources for kids, teens, and young learners." />
             <meta name="keywords" content="English books by grade, English by age group, ESL levels, English learning paths, books for kids, books for teens" />
             <meta property="og:title" content="Choose Age or Grade | Tailored English Learning" />
