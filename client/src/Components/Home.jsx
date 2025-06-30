@@ -44,7 +44,7 @@ const Home = () => {
       <Helmet>
         <title>aTsBooks | Home</title>
         <meta name="description" content="Discover the joy of learning English with our wide selection of books and learning materials for kids, teens, and adults. Fun, effective, and engaging!" />
-        <meta name="keywords" content="learn English, English books, English for kids, English reading, ESL resources, English workbooks, English learning materials" />
+        <meta name="keywords" content="learn English, English books, English for kids, English reading, ESL resources, English workbooks, English learning materials,Tami Stern,Ayeley Toledano" />
         <meta property="og:title" content="Learn English Through Stories and Books" />
         <meta property="og:description" content="Explore our collection of English books and resources for all levels. Start your English learning journey today!" />
         <meta property="og:type" content="website" />
