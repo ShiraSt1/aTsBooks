@@ -26,6 +26,11 @@ const path = require('path');
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 דקות
   max: 100, // 100 בקשות לחלון זמן
+message: {
+    status: 429,
+    error: 'Too many requests, please try again later.',
+    description: 'You have exceeded the number of allowed requests. Please wait before trying again.'
+  },
 });
 
 
