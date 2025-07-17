@@ -16,7 +16,6 @@ import { Helmet } from 'react-helmet-async';
 
 const Titles = () => {
     const location = useLocation();
-    // const {bookName}= useParams();
     const bookName= location.state?.bookName;
     const bookId = location.state?.bookId;
     const [items, setItems] = useState([]);
@@ -247,7 +246,7 @@ const Titles = () => {
     return (
         <div className="p-4 ">
             <Helmet>
-                <title>{`aTsBooks | ${bookName}`} </title>
+                <title>{`aTsBooks${bookName ? ' | ' + bookName : ''}`}</title>
                 <meta name="description" content={`Explore all resources for "${bookName}": workbook, teachers guide, tests, audio files, videos, and more.`} />
                 <meta name="keywords" content={`${bookName}, English book, workbook, audio files, ESL resources, tests, videos`} />
                 <meta property="og:title" content={`${bookName} | Complete English Resource Kit`} />
