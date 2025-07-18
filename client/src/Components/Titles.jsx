@@ -16,9 +16,7 @@ import { Helmet } from 'react-helmet-async';
 import api from '../api';
 
 const Titles = () => {
-    const location = useLocation();
-    const bookName= location.state?.bookName;
-    const bookId = location.state?.bookId;
+    const { bookName, bookId} = useParams();
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
     const [uploadTitleId, setUploadTitleId] = useState(null);

@@ -66,7 +66,7 @@ function App() {
           <Route path='/update' element={<Suspense fallback="loading..."><LazyUpdateUser /></Suspense>} />
           <Route path='/books' element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
           <Route path="/books/:gradeId" element={<Suspense fallback="loading..."><LazyBook /></Suspense>} />
-          <Route path="/titles/:bookId" element={<Suspense fallback="loading..."><LazyTitles /></Suspense>} />
+          <Route path="/book/:bookId/:bookName" element={<Suspense fallback="loading..."><LazyTitles /></Suspense>} />
           <Route path="/fileview/:fileId" element={<Suspense fallback="loading..."><LazyFileView /></Suspense>} />
           <Route path="/contact" element={<Suspense fallback="loading..."><LazyEnglishCourseSignUp /></Suspense>} />
         </Routes>

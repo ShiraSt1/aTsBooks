@@ -93,7 +93,7 @@ const FilesDataView = ({ titleId }) => {
     };
 
     const handleDownload = (fileId) => {
-        // window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
+        window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
         
     };
     
