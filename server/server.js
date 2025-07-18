@@ -6,6 +6,7 @@ const corsOptions = require("./config/corsOptions")
 const connectDB = require("./config/dbConn.js")
 const mongoose = require("mongoose")
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 
 const multer = require("multer");
 const storage = multer.diskStorage({
@@ -21,7 +22,6 @@ const upload = multer({ storage: storage });
 
 const app = express()
 const PORT = process.env.PORT || 3001
-const path = require('path');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 דקות
@@ -39,12 +39,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions)); // פתרון לבקשות preflight
 app.use(express.json())
-app.use(express.static("public",{maxAge: '1h'}))
+// app.use(express.static("public",{maxAge: '1h'}))
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build'))); 
 
 app.use(limiter);
 
 app.use(express.urlencoded({ extended: true })); 
+
 app.use("/api/user", require("./routes/user.js"))
 app.use("/api/book", require("./routes/book.js"))
 app.use("/api/grade", require("./routes/grade.js"))
@@ -52,6 +54,10 @@ app.use("/api/title", require("./routes/title.js"))
 app.use("/api/file", require("./routes/file.js"))
 app.use("/api/course", require("./routes/course.js"))
 app.use('/api', require("./routes/download.js"));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const startServer = async () => {
   try {
