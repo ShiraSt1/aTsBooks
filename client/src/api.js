@@ -5,20 +5,31 @@ const api = axios.create({
   baseURL: "http://localhost:3001/", 
 });
 
+let isToastVisible = false;
 // כאן אנחנו מוסיפים interceptor - קוד שרץ אוטומטית כשיש תגובת שגיאה
 api.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response?.status === 429) {
-        if (api.toast?.current) {
+        if (api.toast?.current && !isToastVisible) {
+          isToastVisible = true; // Prevent multiple toasts
           api.toast.current.show({
             severity: 'warn',
-            summary: 'הגבלת קצב',
+            summary: 'Warning',
             detail: 'You have sent too many requests. Please try again later.',
-            life: 4000,
+            life: 2000,
           });
+            setTimeout(() => {
+                isToastVisible = false; // Reset after 2 seconds
+            }, 2000);
         } else {
-          alert('You have sent too many requests. Please try again later.');
+            if(!isToastVisible) {
+                isToastVisible = true; // Prevent multiple alerts
+                alert('You have sent too many requests. Please try again later.');
+                setTimeout(() => {
+                    isToastVisible = false; // Reset after 2 seconds
+                }, 2000);
+            }
         }
       }
       return Promise.reject(error);

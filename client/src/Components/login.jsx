@@ -74,7 +74,7 @@ const Login = () => {
         if (email && password) {
             try {
                 // const res = await axios.post(`${apiUrl}api/user/login`, { email, password });
-                const res = await api.post('/api/user/user/login', { email, password });
+                const res = await api.post('/api/user/login', { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
                     navigate('/');
