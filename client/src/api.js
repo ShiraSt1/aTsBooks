@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // יצירת אינסטנס של axios (זה בדיוק כמו axios, אבל אפשר להוסיף לו הגדרות גלובליות)
 const api = axios.create({
-  baseURL: "http://localhost:3001/", 
+  baseURL: "https://atsbooks.onrender.com/", 
 });
 
 let isToastVisible = false;
