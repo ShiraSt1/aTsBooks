@@ -16,6 +16,7 @@ import { Messages } from 'primereact/messages';
 import { Skeleton } from 'primereact/skeleton';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
+import api from '../api';
 
 export default function BooksDataView() {
     const location = useLocation();
@@ -32,7 +33,7 @@ export default function BooksDataView() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toastDelete = useRef(null);
-    const apiUrl = getConfig().API_URL;
+    // const apiUrl = getConfig().API_URL;
     const msgs = useRef(null);
     const toast = useRef(null);
     const [compLoading, setCompLoading] = useState(false);
@@ -57,7 +58,8 @@ export default function BooksDataView() {
 
     const getGradeName = async (Id) => {
         try {
-            const res = await axios.get(`${apiUrl}api/grade/${Id}`); // נתיב לשרת לקבלת שם כיתה
+            // const res = await axios.get(`${apiUrl}api/grade/${Id}`); 
+            const res = await api.get(`/api/grade/${Id}`);
             if (res.status === 200) {
                 setGradeName(res.data.name); // עדכון שם הכיתה ב-state
             }
@@ -70,7 +72,8 @@ export default function BooksDataView() {
     const getBooks = async () => {
 
         try {
-            const res = await axios.get(`${apiUrl}api/book`);
+            // const res = await axios.get(`${apiUrl}api/book`);
+            const res = await api.get('/api/book');
             if (res.status === 200) {
                 setBooks(res.data);
             }
@@ -81,8 +84,8 @@ export default function BooksDataView() {
 
     const getBooksByGrade = async (Id) => {
         try {
-            const res = await axios.get(`${apiUrl}api/book/grade/${Id}`
-            );
+            // const res = await axios.get(`${apiUrl}api/book/grade/${Id}`);
+            const res = await api.get(`/api/book/grade/${Id}`);
             if (res.status === 200) {
                 setBooks(res.data);
             }
@@ -108,7 +111,8 @@ export default function BooksDataView() {
     const deleteBook = async (bookId) => {
         setLoading(true)
         try {
-            const res = await axios.delete(`${apiUrl}api/book/${bookId}`, {
+            // const res = await axios.delete(`${apiUrl}api/book/${bookId}`, {
+            const res = await api.delete(`api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFlagGradeId(!flagGradeId)
@@ -130,7 +134,8 @@ export default function BooksDataView() {
             formData.append('image', image);
         }
         try {
-            const res = await axios.put(`${apiUrl}api/book`, formData, {
+            // const res = await axios.put(`${apiUrl}api/book`, formData, {
+            const res = await api.put('/api/book', formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -157,7 +162,8 @@ export default function BooksDataView() {
         formData.append('grades', JSON.stringify(selectedItem));
         formData.append('image', image);
         try {
-            const res = await axios.post(`${apiUrl}api/book`, formData, {
+            // const res = await axios.post(`${apiUrl}api/book`, formData, {
+            const res = await api.post('/api/book', formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data' // הגדרת התוכן כ-multipart

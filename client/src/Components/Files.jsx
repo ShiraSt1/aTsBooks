@@ -9,6 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { logOut } from '../redux/tokenSlice';
 import { getConfig } from '../config';
 import { useSelector } from "react-redux";
+import api from '../api';
 
 const FilesDataView = ({ titleId }) => {
     const [files, setFiles] = useState([]);
@@ -26,10 +27,12 @@ const FilesDataView = ({ titleId }) => {
     useEffect(() => {
         const fetchTitleAndBook = async () => {
             try {
-                const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
+                // const titleRes = await axios.get(`${apiUrl}api/title/${titleId}`);
+                const titleRes = await api.get(`/api/title/${titleId}`);
                 const title = titleRes.data;
 
-                const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
+                // const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
+                const bookRes = await api.get(`/api/book/${title.book}`);
                 setBook(bookRes.data);
                 fetchFiles(); 
             } catch (err) {
@@ -45,7 +48,8 @@ const FilesDataView = ({ titleId }) => {
     const fetchFiles = async () => {
         setFiles([]);
         try {
-            const res = await axios.get(`${apiUrl}api/file/title/${titleId}`);
+            // const res = await axios.get(`${apiUrl}api/file/title/${titleId}`);
+            const res = await api.get(`/api/file/title/${titleId}`);
             setFiles(res.data);
             setLoading(false);
         } catch (err) {
@@ -62,7 +66,8 @@ const FilesDataView = ({ titleId }) => {
         formData.append('title', titleId);
 
         try {
-            const res = await axios.post(`${apiUrl}api/file`, formData, {
+            // const res = await axios.post(`${apiUrl}api/file`, formData, {
+            const res = await api.post('/api/file', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -77,7 +82,8 @@ const FilesDataView = ({ titleId }) => {
 
     const handleDelete = async (fileId) => {
         try {
-            await axios.delete(`${apiUrl}api/file/${fileId}`);
+            // await axios.delete(`${apiUrl}api/file/${fileId}`);
+            await api.delete(`/api/file/${fileId}`);
             setFiles(prev => prev.filter(file => file._id !== fileId));
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File deleted ', life: 3000 });
         } catch (err) {
@@ -87,12 +93,14 @@ const FilesDataView = ({ titleId }) => {
     };
 
     const handleDownload = (fileId) => {
-        window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
+        // window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
+        
     };
     
     const handleView = async (fileId) => {
         try {
-            const res = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+            // const res = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+                const res = await api.get(`/api/file/view/${fileId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             window.open(res.data.url, "_blank");
@@ -108,7 +116,8 @@ const FilesDataView = ({ titleId }) => {
         formData.append('newName', newFileName);
 
         try {
-            const res = await axios.put(`${apiUrl}api/file/${selectedFile._id}`, formData);
+            // const res = await axios.put(`${apiUrl}api/file/${selectedFile._id}`, formData);
+            const res = await api.put(`/api/file/${selectedFile._id}`, formData);
             setFiles(prev => prev.map(file => file._id === res.data._id ? res.data : file));
             setVisibleUpdate(false);
             toast.current?.show({ severity: 'success', summary: 'Success', detail: 'File updated ', life: 3000 });

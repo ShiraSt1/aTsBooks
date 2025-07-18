@@ -7,9 +7,10 @@ import { Password } from 'primereact/password'; // Correct import for Password
 import { setToken, logOut } from '../redux/tokenSlice'
 import '../Styles/login.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -26,7 +27,7 @@ const Login = () => {
     const [verificationCode, setVerificationCode] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const apiUrl = getConfig().API_URL;
+    // const apiUrl = getConfig().API_URL;
     const toast = useRef(null);
 
     const handlePasswordReset = async () => {
@@ -36,7 +37,8 @@ const Login = () => {
             return;
         }
         try {
-            const res = await axios.post(`${apiUrl}api/user/reset-password-with-code`, {
+            // const res = await axios.post(`${apiUrl}api/user/reset-password-with-code`, {
+            const res = await api.gpostet('/api/user/reset-password-with-code', {    
                 email,
                 verificationCode,
                 newPassword
@@ -55,7 +57,8 @@ const Login = () => {
 
     const sendVerificationCode = async () => {
         try {
-            const res = await axios.post(`${apiUrl}api/user/send-verification-code`, { email });
+            // const res = await axios.post(`${apiUrl}api/user/send-verification-code`, { email });
+            const res = await api.post('/api/user/send-verification-code', { email });
             if (res && res.status === 200) {
                 toast.current.show({ severity: 'info', detail: 'A verification code will be sent to your email.', life: 3000 });
                 setVerificationStep(true);
@@ -70,7 +73,8 @@ const Login = () => {
         setLoading(true);
         if (email && password) {
             try {
-                const res = await axios.post(`${apiUrl}api/user/login`, { email, password });
+                // const res = await axios.post(`${apiUrl}api/user/login`, { email, password });
+                const res = await api.post('/api/user/user/login', { email, password });
                 if (res && res.status === 200) {
                     dispatch(setToken({ token: res.data.accessToken, user: res.data.user }))
                     navigate('/');

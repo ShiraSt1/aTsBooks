@@ -8,10 +8,11 @@ import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { useSelector } from "react-redux";
 import { Toast } from 'primereact/toast';
 import '../Styles/Grades.css';
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
 import { ProgressSpinner } from "primereact/progressspinner";
 import { ProgressBar } from "primereact/progressbar";
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const Grades = () => {
 
@@ -20,12 +21,13 @@ const Grades = () => {
     const [gradesData, setGradesData] = useState([])
     const [visibleCreatGrade, setVisibleCreatGrade] = useState(false);
     const toast = useRef(null);
-    const apiUrl = getConfig().API_URL;
+    // const apiUrl = getConfig().API_URL;
     const [compLoading, setCompLoading] = useState(false);
 
     const getGrades = async () => {
         try {
-            const res = await axios.get(`${apiUrl}api/grade`)
+            // const res = await axios.get(`${apiUrl}api/grade`)
+            const res = await api.get('/api/grade');
             if (res.status === 200) {
                 setGradesData(res.data)
             }
@@ -36,7 +38,8 @@ const Grades = () => {
 
     const getGradeById = async (id) => {
         try {
-            const res = await axios.get(`${apiUrl}api/grade/${id}`)
+            // const res = await axios.get(`${apiUrl}api/grade/${id}`)
+            const res = await api.get(`/api/grade/${id}`);
         } catch (e) {
             console.error(e)
         }
@@ -48,7 +51,8 @@ const Grades = () => {
             image: imageRef.current.value ? imageRef.current.value : " "
         }
         try {
-            const res = await axios.post(`${apiUrl}api/grade`, newGrade, {
+            // const res = await axios.post(`${apiUrl}api/grade`, newGrade, {
+            const res = await api.post(`/api/grade`, newGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 201) {

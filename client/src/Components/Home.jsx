@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import home from '../Styles/home.jpg';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import axios from 'axios';
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const Home = () => {
 
-  const apiUrl = getConfig().API_URL;
+  // const apiUrl = getConfig().API_URL;
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
@@ -22,7 +23,8 @@ const Home = () => {
     const data = { name, email };
     setSubscribed(false);
     try {
-      const res = await axios.post(`${apiUrl}api/course/newsLetter`, data, {
+      // const res = await axios.post(`${apiUrl}api/course/newsLetter`, data, {
+      const res = await api.post(`/api/course/newsLetter`, data, {
         headers: {
           "Content-Type": "application/json",
         }

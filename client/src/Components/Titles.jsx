@@ -13,6 +13,7 @@ import { getConfig } from '../config';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const Titles = () => {
     const location = useLocation();
@@ -35,7 +36,8 @@ const Titles = () => {
 
     const fetchBook = async () => {
         try {
-            const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
+            // const res = await axios.get(`${apiUrl}api/book/${bookId}`, {
+            const res = await api.get(`/api/book/${bookId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             console.log("Book data:", res.data);
@@ -51,7 +53,8 @@ const Titles = () => {
 
     const uploadFileToS3 = async (file) => {
         try {
-            const res = await axios.post(`${apiUrl}api/file/presign`, {
+            // const res = await axios.post(`${apiUrl}api/file/presign`, {
+            const res = await api.post(`/api/file/presign`, {
                 fileName: file.name,
                 fileType: file.type
             }, {
@@ -81,15 +84,16 @@ const Titles = () => {
 
     const fetchTitles = async () => {
         try {
-            const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            // const res = await axios.get(`${apiUrl}api/title/getTitlesByBook/${bookId}`, {
+            const res = await api.get(`/api/title/getTitlesByBook/${bookId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }});
 
             const titles = res.data;
             const filesMap = {};
 
             for (const title of titles) {
-                const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
+                // const filesRes = await axios.get(`${apiUrl}api/file/title/${title._id}`, {
+                const filesRes = await api.get(`/api/file/title/${title._id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 filesMap[title._id] = filesRes.data;
@@ -168,13 +172,16 @@ const Titles = () => {
             setItems(panelItems);
         } catch (err) {
             console.error(err);
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error loading titles', life: 3000 });
+            if (err.response && err.response.status !== 429) {
+                toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error loading titles', life: 3000 });
+            }
         }
     };
 
     const handleDelete = async (fileId, titleId) => {
         try {
-            await axios.delete(`${apiUrl}api/file/${fileId}`, {
+            // await axios.delete(`${apiUrl}api/file/${fileId}`, {
+            await api.delete(`/api/file/${fileId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setFilesByTitle(prev => ({
@@ -199,7 +206,8 @@ const Titles = () => {
         const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${s3Key}`;
 
         try {
-            await axios.post(`${apiUrl}api/file/save-metadata`, {
+            // await axios.post(`${apiUrl}api/file/save-metadata`, {
+            await api.post('/api/file/save-metadata', {
                 title: uploadTitleId,
                 name: selectedFile.name,
                 customName: newFileName,
@@ -227,7 +235,8 @@ const Titles = () => {
     const handleDownload = async (titleId) => {
         try {
             setLoadingId(titleId);
-            const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
+            // const res = await axios.get(`${apiUrl}api/download-zip/${titleId}`, {
+            const res = await api.get(`/api/download-zip/${titleId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const { downloadUrl } = res.data;

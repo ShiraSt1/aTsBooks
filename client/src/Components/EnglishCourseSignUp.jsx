@@ -3,12 +3,13 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
 import { Toast } from "primereact/toast";
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const EnglishCourseSignUp = () => {
-  const apiUrl = getConfig().API_URL;
+  // const apiUrl = getConfig().API_URL;
   const toast = useRef(null);
   const [form, setForm] = useState({
     firstName: "",
@@ -55,7 +56,8 @@ const EnglishCourseSignUp = () => {
       form.files.forEach(file => formData.append("files", file));
     }
     try {
-      const res = await axios.post(`${apiUrl}api/course/register`, formData);
+      // const res = await axios.post(`${apiUrl}api/course/register`, formData);
+      const res = await api.post(`/api/course/register`, formData);
       if (res.status === 201 || res.status === 200) {
         setServerResponse(true);
       } else {

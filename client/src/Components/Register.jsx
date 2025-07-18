@@ -2,20 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Password } from 'primereact/password';
-import '../Styles/register.css'
+import '../Styles/register.css';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 import { Helmet } from 'react-helmet-async';
+import api from '../api';
 
 const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [name, setName] = useState('');
+    const [agreeToEmails, setAgreeToEmails] = useState(false); // ✅ Checkbox state
+    const [emailConsentError, setEmailConsentError] = useState(''); // ✅ Error state for checkbox
+
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const apiUrl = getConfig().API_URL;
     const [errors, setErrors] = useState({
         email: "",
         name: "",
@@ -25,20 +27,24 @@ const Register = () => {
     const toast = useRef(null);
 
     const createUser = async (name, email, phone, password) => {
+        if (!agreeToEmails) {
+            setEmailConsentError('You must agree to receive emails.');
+            return;
+        } else {
+            setEmailConsentError('');
+        }
+
         setLoading(true);
         const newUser = { name, email, phone, password };
         try {
-            const res = await axios.post(`${apiUrl}api/user/register`, newUser);
-
+            const res = await api.post('/api/user/register', newUser);
             if (res.status === 409) {
-                toast.current.show({ severity: 'error', detail: 'This email already has an acount.', life: 3000 });
-            }
-
-            else if (res.status === 200 || res.status === 201) {
-                navigate('/login')
+                toast.current.show({ severity: 'error', detail: 'This email already has an account.', life: 3000 });
+            } else if (res.status === 200 || res.status === 201) {
+                navigate('/login');
             }
         } catch (e) {
-            toast.current.show({ severity: 'error', detail: 'An error acured while sighning up. Please try again later.', life: 3000 });
+            toast.current.show({ severity: 'error', detail: 'An error occurred while signing up. Please try again later.', life: 3000 });
             console.error(e);
         } finally {
             setLoading(false);
@@ -46,9 +52,9 @@ const Register = () => {
     };
 
     useEffect(() => {
-        validateEmail(email); //****
-        validateName(name); //****
-        validatePassword(password); //****
+        validateEmail(email);
+        validateName(name);
+        validatePassword(password);
     }, [email, name, password]);
 
     const validateEmail = (value) => {
@@ -96,7 +102,7 @@ const Register = () => {
     };
 
     const isFormValid = Object.values(errors).every((error) => error === "") &&
-        email && name && password;
+        email && name && password && agreeToEmails;
 
     return (
         <div className="register-page-container">
@@ -146,13 +152,16 @@ const Register = () => {
                     <div className="register-input-wrapper">
                         <label className="register-label">Password</label>
                         <Password
-                            value={password}
-                            inputClassName="register-input"
-                            onChange={(e) => validatePassword(e.target.value)}
-                            placeholder="Enter your password"
-                            toggleMask
-                            feedback={false}
-                        />
+    value={password}
+    onChange={(e) => validatePassword(e.target.value)}
+    placeholder="Enter your password"
+    toggleMask
+    feedback={false}
+    className="register-password"
+/>
+
+
+
                         {errors.password && <small className="register-error">{errors.password}</small>}
                     </div>
 
@@ -167,14 +176,32 @@ const Register = () => {
                         />
                         {errors.phone && <small className="register-error">{errors.phone}</small>}
                     </div>
-                    <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
+
+                    <div className="register-input-wrapper">
+                        <label className="register-checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={agreeToEmails}
+                                onChange={(e) => {
+                                    setAgreeToEmails(e.target.checked);
+                                    if (e.target.checked) setEmailConsentError('');
+                                }}
+                            />
+                            &nbsp; I agree to receive emails and updates.
+                        </label>
+                        {emailConsentError && <small className="register-error">{emailConsentError}</small>}
+                    </div>
+
+
                     <button
                         type="button"
                         onClick={() => createUser(name, email, phone, password)}
                         className="register-button"
-                        disabled={!isFormValid}>
+                        disabled={!isFormValid}
+                    >
                         Register
                     </button>
+                    <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
                 </form>
             </div>
         </div>

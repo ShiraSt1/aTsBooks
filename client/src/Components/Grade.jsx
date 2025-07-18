@@ -11,7 +11,8 @@ import axios from 'axios'
 import '../Grade.css';
 import { useSelector } from "react-redux";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
+import api from '../api';
 
 const Grade = (props) => {
   
@@ -22,7 +23,7 @@ const Grade = (props) => {
     const { token } = useSelector((state) => state.token);
     const { user } = useSelector((state) => state.token);
     const navigate = useNavigate();
-    const apiUrl = getConfig().API_URL;
+    // const apiUrl = getConfig().API_URL;
 
     const updateGrade = async (selectedItem, imageRef) => {
         const updatedGrade = {
@@ -30,7 +31,8 @@ const Grade = (props) => {
             name: selectedItem,
         };
         try {
-            const res = await axios.put(`${apiUrl}api/grade`, updatedGrade, {
+            // const res = await axios.put(`${apiUrl}api/grade`, updatedGrade, {
+            const res = await api.put(`/api/grade`, updatedGrade, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (res.status === 200) {
@@ -57,7 +59,8 @@ const Grade = (props) => {
 
     const deleteGrade = async (id) => {
         try {
-            const res = await axios.delete(`${apiUrl}api/grade/${id}`, {
+            // const res = await axios.delete(`${apiUrl}api/grade/${id}`, {
+            const res = await api.delete(`/api/grade/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (Array.isArray(res.data)) {

@@ -101,3 +101,70 @@
       font-size: 1rem;
     }
   }
+
+  /* Match Password input with other inputs */
+.register-password-wrapper {
+  width: 100%;
+}
+
+.register-password-wrapper .p-inputtext {
+  width: 100%;
+  padding: 0.75rem; /* להתאים לשאר האינפוטים אם יש */
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* הופך את קונטיינר הסיסמה לגובה מלא ורוחב מלא כמו שאר הקלטים */
+.register-password {
+  width: 100%;
+}
+
+/* שולט על ה-input עצמו של PrimeReact */
+.register-password .p-inputtext {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* דואג שגם ה-wrapper הפנימי של ה-Password לא יכביד */
+.register-password .p-password-input {
+  width: 100%;
+}
+
+/* מבטיח שהקומפוננטה תתפוס את מלוא הרוחב */
+.register-password {
+  display: block;
+  width: 100%;
+}
+
+/* הופך את העטיפה הפנימית לרוחב מלא */
+.register-password .p-password {
+  display: block;
+  width: 100%;
+}
+
+/* מוודא שגם העטיפה של ה-input נפרסת לרוחב מלא */
+.register-password .p-password-input {
+  width: 100%;
+  display: block;
+}
+
+/* ה-input עצמו */
+.register-password input {
+  width: 100% !important;
+  padding: 0.75rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* נטרול רקע כחול שמוסף באוטופיל של כרום */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    background-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+    color: #000 !important;
+}

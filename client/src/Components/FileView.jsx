@@ -2,8 +2,9 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
+import api from '../api';
 
 const FileView = () => {
   const { fileId } = useParams();
@@ -12,7 +13,7 @@ const FileView = () => {
   const [loading, setLoading] = useState(true);
   const { token } = useSelector((state) => state.token);
   const { user } = useSelector((state) => state.token);
-  const apiUrl = getConfig().API_URL;
+  // const apiUrl = getConfig().API_URL;
   const toast = useRef(null);
 
   useEffect(() => {
@@ -22,7 +23,8 @@ const FileView = () => {
 
   const fetchFile = async () => {
     try {
-      const response = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+      // const response = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
+      const response = await api.get(`/api/file/view/${fileId}`, {
         headers: { 'Authorization': `Bearer ${token}` }, // הוספת הטוקן ב-Headers
       });
       const { url, name, contentType } = response.data;

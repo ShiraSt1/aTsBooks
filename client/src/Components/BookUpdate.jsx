@@ -5,7 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import axios from 'axios';
 import { FileUpload } from "primereact/fileupload";
-import { getConfig } from '../config';
+// import { getConfig } from '../config';
+import api from '../api';
 
 const BookUpdate = (props) => {
     const { updateBook, visible, book = {}, setVisible } = props; // ברירת מחדל ל-book
@@ -15,11 +16,12 @@ const BookUpdate = (props) => {
     const [selectedGrades, setSelectedGrades] = useState([]);
     const nameRef = useRef("");
     const [name, setName] = useState(book?.name || "");
-    const apiUrl = getConfig().API_URL;
+    // const apiUrl = getConfig().API_URL;
 
     const AvailablGrade = async () => {
         try {
-            const res = await axios.get(`${apiUrl}api/grade`);
+            // const res = await axios.get(`${apiUrl}api/grade`);
+            const res = await api.get('/api/grade');
             if (res.status === 204) {
                 setGrades([]);
             } else {
