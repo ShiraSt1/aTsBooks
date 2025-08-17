@@ -4,7 +4,8 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL, 
 });
-
+console.log('API Base URL:', process.env.REACT_APP_API_URL);
+console.log('API Base URL:', api.defaults.baseURL);
 let isToastVisible = false;
 // כאן אנחנו מוסיפים interceptor - קוד שרץ אוטומטית כשיש תגובת שגיאה
 api.interceptors.response.use(
