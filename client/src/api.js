@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // יצירת אינסטנס של axios (זה בדיוק כמו axios, אבל אפשר להוסיף לו הגדרות גלובליות)
 const api = axios.create({
-  baseURL: REACT_APP_API_URL, 
+  baseURL: process.env.REACT_APP_API_URL, 
 });
 
 let isToastVisible = false;
