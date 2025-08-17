@@ -6,6 +6,11 @@ const api = axios.create({
 });
 console.log('API Base URL:', process.env.REACT_APP_API_URL);
 console.log('API Base URL:', api.defaults.baseURL);
+console.log('isVite:', typeof import.meta !== 'undefined');
+console.log('VITE_API_URL:', (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) || '(none)');
+console.log('REACT_APP_API_URL:', (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || '(none)');
+console.log('NEXT_PUBLIC_API_URL:', (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) || '(none)');
+
 let isToastVisible = false;
 // כאן אנחנו מוסיפים interceptor - קוד שרץ אוטומטית כשיש תגובת שגיאה
 api.interceptors.response.use(
