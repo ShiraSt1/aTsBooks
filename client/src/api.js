@@ -1,10 +1,14 @@
 import axios from 'axios';
 
 // יצירת אינסטנס של axios (זה בדיוק כמו axios, אבל אפשר להוסיף לו הגדרות גלובליות)
+const env = (typeof import.meta !== 'undefined' && import.meta.env) || {};
+const baseURL = (env.VITE_API_URL && String(env.VITE_API_URL).trim()) || '/';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/', 
+  baseURL: baseURL, 
+  // baseURL: import.meta.env.VITE_API_URL || '/', 
 });
-console.log('API Base URL:', import.meta.env.VITE_API_URL || '/');
+console.log('API Base URL:', baseURL);
 console.log('API Base URL:', api.defaults.baseURL);
 let isToastVisible = false;
 // כאן אנחנו מוסיפים interceptor - קוד שרץ אוטומטית כשיש תגובת שגיאה
