@@ -157,8 +157,8 @@ const Users = () => {
                 filter
                 filterBy="name"
                 breakpoint="1280px"
-                sourceHeader="Not Confirmed"
-                targetHeader="Confirmed"
+                sourceHeader={`Not Confirmed (${source.length})`}
+                targetHeader={`Confirmed (${target.length})`}
                 sourceStyle={{ height: '24rem' }}
                 targetStyle={{ height: '24rem' }}
                 sourceFilterPlaceholder="Search by name"
