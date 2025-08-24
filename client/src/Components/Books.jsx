@@ -194,7 +194,8 @@ export default function BooksDataView() {
             toast.current.show({ severity: 'error', detail: 'This book is not in use any more.', life: 3000 });
         }
         else {
-            navigate(`/titles/${book.name}`, { state: { bookId: book._id,bookName:book.name } });
+            // navigate(`/titles/${book.name}`, { state: { bookId: book._id,bookName:book.name } });
+            navigate(`/book/${book._id}/${book.name}`);
         }
     };
 
