@@ -100,74 +100,71 @@
     .register-button {
       font-size: 1rem;
     }
-  
-  
-  /*5555555555555555555555555555555555555555555555555555555555555555555555555555*/
-      
-  /* Match Password input with other inputs */
-  .register-password-wrapper {
-    width: 100%;
-  }
 
-  .register-password-wrapper .p-inputtext {
-    width: 100%;
-    padding: 0.75rem; /* להתאים לשאר האינפוטים אם יש */
-    font-size: 1rem;
-    box-sizing: border-box;
   }
-
-  /* הופך את קונטיינר הסיסמה לגובה מלא ורוחב מלא כמו שאר הקלטים */
+  /*555555555555555555555555555555555555555555555555555555555555555550*/
+  /* העטיפה של ה-Password */
   .register-password {
     width: 100%;
   }
 
-  /* שולט על ה-input עצמו של PrimeReact */
-  .register-password .p-inputtext {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-
-  /* דואג שגם ה-wrapper הפנימי של ה-Password לא יכביד */
-  .register-password .p-password-input {
-    width: 100%;
-  }
-
-  /* מבטיח שהקומפוננטה תתפוס את מלוא הרוחב */
-  .register-password {
-    display: block;
-    width: 100%;
-  }
-
-  /* הופך את העטיפה הפנימית לרוחב מלא */
+  /* ביטול עיצוב ברירת מחדל של ה-wrapper */
   .register-password .p-password {
-    display: block;
     width: 100%;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
-  /* מוודא שגם העטיפה של ה-input נפרסת לרוחב מלא */
+  /* ה-input הפנימי יקבל את אותו עיצוב כמו .register-input */
   .register-password .p-password-input {
     width: 100%;
-    display: block;
-  }
-
-  /* ה-input עצמו */
-  .register-password input {
-    width: 100% !important;
-    padding: 0.75rem;
+    padding: 0.8rem;
     font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border 0.2s ease;
     box-sizing: border-box;
   }
 
-  /* נטרול רקע כחול שמוסף באוטופיל של כרום */
-  input:-webkit-autofill,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:hover {
-      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-      box-shadow: 0 0 0px 1000px white inset !important;
-      background-color: white !important;
-      transition: background-color 5000s ease-in-out 0s;
-      color: #000 !important;
+  .register-password .p-password-input:focus {
+    border-color: #10a37f;
+    box-shadow: 0 0 4px rgba(16, 163, 127, 0.5);
   }
+
+  /* עטיפת ה-Password */
+.register-password {
+  width: 100%;
+}
+
+/* אם ה-wrapper של PrimeReact מוסיף padding/גבול – נבטל */
+.register-password .p-password {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* לוודא שה-INPUT מקבל את הגודל כמו .register-input ושומר מקום לאייקון העין */
+.register-password .p-password-input {
+  width: 100% !important;
+  padding: 0.8rem !important;      /* כמו .register-input */
+  font-size: 1rem !important;
+  border: 1px solid #ccc !important;
+  border-radius: 8px !important;
+  box-sizing: border-box;
+  padding-right: 9.5rem !important; /* מקום לאייקון העין כדי שלא יקצץ טקסט */
+}
+
+.register-password .p-password-input:focus {
+  border-color: #10a37f !important;
+  box-shadow: 0 0 4px rgba(16,163,127,.5) !important;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+  -webkit-text-fill-color: inherit !important;
 }

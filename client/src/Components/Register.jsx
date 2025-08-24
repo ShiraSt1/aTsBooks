@@ -153,20 +153,21 @@ const Register = () => {
 
                     <div className="register-input-wrapper">
                         <label className="register-label">Password</label>
-                        <Password
-                        //     value={password}
+                        {/*     value={password}
                         //     inputClassName="register-input"
                         //     onChange={(e) => validatePassword(e.target.value)}
                         //     placeholder="Enter your password"
                         //     toggleMask
                         //     feedback={false}
-                        // />
+                         />*/}
+                        <Password
                             value={password}
                             onChange={(e) => validatePassword(e.target.value)}
                             placeholder="Enter your password"
                             toggleMask
                             feedback={false}
                             className="register-password"
+                            inputClassName="register-input"
                         />
                         {errors.password && <small className="register-error">{errors.password}</small>}
                     </div>
