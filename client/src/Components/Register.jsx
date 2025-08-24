@@ -23,8 +23,16 @@ const Register = () => {
         phone: "",
     });
     const toast = useRef(null);
+    const [agreeToEmails, setAgreeToEmails] = useState(false); // ✅ Checkbox state
+    const [emailConsentError, setEmailConsentError] = useState(''); // ✅ Error state for checkbox
 
     const createUser = async (name, email, phone, password) => {
+        if (!agreeToEmails) {
+            setEmailConsentError('You must agree to receive emails.');
+            return;
+        } else {
+            setEmailConsentError('');
+        }
         setLoading(true);
         const newUser = { name, email, phone, password };
         try {
@@ -96,7 +104,7 @@ const Register = () => {
     };
 
     const isFormValid = Object.values(errors).every((error) => error === "") &&
-        email && name && password;
+        email && name && password && agreeToEmails;
 
     return (
         <div className="register-page-container">
@@ -146,12 +154,19 @@ const Register = () => {
                     <div className="register-input-wrapper">
                         <label className="register-label">Password</label>
                         <Password
+                        //     value={password}
+                        //     inputClassName="register-input"
+                        //     onChange={(e) => validatePassword(e.target.value)}
+                        //     placeholder="Enter your password"
+                        //     toggleMask
+                        //     feedback={false}
+                        // />
                             value={password}
-                            inputClassName="register-input"
                             onChange={(e) => validatePassword(e.target.value)}
                             placeholder="Enter your password"
                             toggleMask
                             feedback={false}
+                            className="register-password"
                         />
                         {errors.password && <small className="register-error">{errors.password}</small>}
                     </div>
@@ -167,7 +182,21 @@ const Register = () => {
                         />
                         {errors.phone && <small className="register-error">{errors.phone}</small>}
                     </div>
-                    <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
+                    {/* <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small> */}
+                    <div className="register-input-wrapper">
+                        <label className="register-checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={agreeToEmails}
+                                onChange={(e) => {
+                                    setAgreeToEmails(e.target.checked);
+                                    if (e.target.checked) setEmailConsentError('');
+                                }}
+                            />
+                            &nbsp; I agree to receive emails and updates.
+                        </label>
+                        {emailConsentError && <small className="register-error">{emailConsentError}</small>}
+                    </div>
                     <button
                         type="button"
                         onClick={() => createUser(name, email, phone, password)}
@@ -175,6 +204,7 @@ const Register = () => {
                         disabled={!isFormValid}>
                         Register
                     </button>
+                    <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
                 </form>
             </div>
         </div>
