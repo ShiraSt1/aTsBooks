@@ -478,8 +478,8 @@ const Titles = () => {
 
                     <div className="notice-body">
                         <p>
-                            All tests, photocopies, and materials — other than the official books, workbooks, and the
-                            teacher’s guide — are created and shared by teachers. We do not take any responsibility for
+                            All tests, photocopies, and materials - other than the official books, workbooks, and the
+                            teacher’s guide - are created and shared by teachers. We do not take any responsibility for
                             these materials.
                         </p>
                         <p>
