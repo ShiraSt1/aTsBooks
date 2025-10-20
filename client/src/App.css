@@ -469,3 +469,53 @@ color: inherit !important;     /* האייקון מקבל את צבע הטקסט
   0% { transform: rotate(0); }
   100% { transform: rotate(360deg); }
 }
+
+
+/*עיצוב הערה למורות*/
+/* --- Notice Card --- */
+.notice-card {
+  background: #f7fbff;                 /* טון תכלת עדין */
+  border: 1px solid #dbeafe;           /* קו עדין */
+  border-left: 6px solid #3b82f6;      /* הדגשה אנכית עדינה */
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+.notice-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #1f2937;                      /* אפור כהה אלגנטי */
+  margin: 0;
+}
+
+.notice-body {
+  margin-top: 8px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #334155;                      /* עומק נעים לקריאה */
+  letter-spacing: 0.2px;
+}
+
+.notice-body p {
+  margin: 0 0 10px 0;                  /* מרווחים מסודרים בין פסקאות */
+}
+
+.notice-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #e0ecff;                 /* עיגול עדין לאייקון */
+  margin-right: 10px;
+}
+
+@media (min-width: 992px) {
+  .notice-wrap {
+    position: sticky;
+    top: 6rem;                          /* נשארת מול התוכן בגלילה */
+  }
+}
+ /*עד כאן עיצוב הערה למורות*/

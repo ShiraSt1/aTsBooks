@@ -31,7 +31,7 @@ const FilesDataView = ({ titleId }) => {
 
                 const bookRes = await axios.get(`${apiUrl}api/book/${title.book}`);
                 setBook(bookRes.data);
-                fetchFiles(); 
+                fetchFiles();
             } catch (err) {
                 console.error("Error fetching title or book:", err);
             }
@@ -89,7 +89,7 @@ const FilesDataView = ({ titleId }) => {
     const handleDownload = (fileId) => {
         window.open(`${apiUrl}api/file/download/${fileId}`, '_blank');
     };
-    
+
     const handleView = async (fileId) => {
         try {
             const res = await axios.get(`${apiUrl}api/file/view/${fileId}`, {
@@ -129,7 +129,7 @@ const FilesDataView = ({ titleId }) => {
 
             {/* אזור התוכן - שתי עמודות */}
             <div className="grid">
-                {/* צד שמאל - תמונה */}
+                {/*תמונה בשמאל */}
                 <div className="col-12 md:col-6 flex justify-content-center align-items-center">
                     {book?.image && (
                         <img
@@ -145,8 +145,7 @@ const FilesDataView = ({ titleId }) => {
                         />
                     )}
                 </div>
-
-                {/* צד ימין - קבצים */}
+                {/*קבצים מימין */}
                 <div className="col-12 md:col-6">
                     <div className="card">
                         <Button label="Add File" icon="pi pi-plus" onClick={() => setVisibleCreate(true)} className="mb-3" />

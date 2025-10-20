@@ -18,7 +18,7 @@ const Titles = () => {
     // const location = useLocation();
     // const bookName= location.state?.bookName;
     // const bookId = location.state?.bookId;
-    const {bookName, bookId} = useParams();
+    const { bookName, bookId } = useParams();
     const [items, setItems] = useState([]);
     const [visibleUpload, setVisibleUpload] = useState(false);
     const [uploadTitleId, setUploadTitleId] = useState(null);
@@ -40,7 +40,7 @@ const Titles = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             console.log("Book data:", res.data);
-            
+
             setBook(res.data);
 
         } catch (err) {
@@ -75,7 +75,7 @@ const Titles = () => {
         }
     };
 
-    useEffect(() => {        
+    useEffect(() => {
         fetchBook();
         fetchTitles();
     }, []);
@@ -241,8 +241,51 @@ const Titles = () => {
         }
     };
 
-    const [filePreview, setFilePreview] = useState(''); 
+    const [filePreview, setFilePreview] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    /*מכאן זה טיפול בהערה שקופצת למשתמש */
+    // const NoticeCard = () => (
+    //     <div className="notice-card" dir="ltr" style={{ width: '100%', maxWidth: 560, textAlign: 'left' }}>
+    //         <div className="flex align-items-center">
+    //             <span className="notice-icon">
+    //                 <i className="pi pi-info-circle" style={{ fontSize: '1rem', color: '#3b82f6' }} />
+    //             </span>
+    //             <h3 className="notice-title m-0">For your attention</h3>
+    //         </div>
+    //         <div className="notice-body">
+    //             <p>
+    //                 All tests, photocopies, and materials - other than the official books, workbooks, and the
+    //                 teacher’s guide - are created and shared by teachers. We do not take any responsibility for
+    //                 these materials.
+    //             </p>
+    //             <p>
+    //                 We would be happy to receive any new tests or other materials you may have and share them with others.
+    //             </p>
+    //         </div>
+    //     </div>
+    // );
+
+    const NOTICE_KEY = `notice_${user?._id || 'anon'}_v1`;
+
+    const [showNotice, setShowNotice] = useState(false);
+    const [dontShowAgain, setDontShowAgain] = useState(false);
+
+    useEffect(() => {
+        try {
+          const val = localStorage.getItem(NOTICE_KEY);
+          // אם אין ערך בכלל — מציגים כברירת מחדל
+          setShowNotice(val === null ? true : val !== '0');
+        } catch {}
+      }, [user?._id,NOTICE_KEY]);
+      
+
+    const handleCloseNotice = () => {
+        try {
+            if (dontShowAgain) localStorage.setItem(NOTICE_KEY, '0'); // 0 = אל תציג יותר
+        } catch { }
+        setShowNotice(false);
+    };
 
     return (
         <div className="p-4 ">
@@ -282,6 +325,49 @@ const Titles = () => {
                     <PanelMenu key={loadingId} model={items} className="w-full md:w-30rem" />
                 </div>
             </div>
+
+            {/* שמאל: תמונת הספר */}
+            {/* אמצע: רשימות הקבצים */}
+            {/* ימין: תיבת ההערה */}
+            {/* <div className="flex flex-column md:flex-row gap-4">
+                {book?.image && (
+                    <div className="flex justify-content-center md:w-4">
+                        <img
+                            src={book.image}
+                            alt="Book"
+                            className="border-round shadow-2"
+                            style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'contain' }}
+                        />
+                    </div>
+                )}
+
+                <div className="flex-grow-1 md:w-6">
+                    <PanelMenu key={loadingId} model={items} className="w-full md:w-30rem" />
+                </div>
+
+                <aside className="notice-wrap md:w-6">
+                    <div className="notice-card" dir="ltr" style={{ minWidth: 280, maxWidth: 380, textAlign: 'left' }}>
+                        <div className="flex align-items-center">
+                            <span className="notice-icon">
+                                <i className="pi pi-info-circle" style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                            </span>
+                            <h3 className="notice-title">For your attention</h3>
+                        </div>
+                        <div className="notice-body">
+                            <p>
+                                All tests, photocopies, and materials - other than the official books, workbooks, and the
+                                teacher’s guide - are created and shared by teachers. We do not take any responsibility for
+                                these materials.
+                            </p>
+                            <p>
+                                We would be happy to receive any new tests or other materials you may have and share them with others.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+            </div> */}
+
+
             <Dialog
                 header="Upload new file"
                 visible={visibleUpload}
@@ -366,6 +452,62 @@ const Titles = () => {
                     </div>
                 </div>
             </Dialog>
+
+            {/* Dialog: הודעת תשומת לב */}
+            <Dialog
+                visible={showNotice}
+                onHide={handleCloseNotice}
+                modal
+                blockScroll
+                dismissableMask={false}
+                showHeader={false}        // לא להציג פס עליון לבן
+                closable={false}          // לא להציג X מובנה
+                style={{ width: '680px', maxWidth: '95vw', background: 'transparent', boxShadow: 'none' }}
+                contentStyle={{ background: 'transparent', padding: 0, overflow: 'visible' }}
+            >
+                {/* אותו עיצוב בדיוק – משתמשים בקומפוננטה הממוחזרת כדי למנוע כפילות */}
+                <div className="notice-card" dir="ltr" style={{ width: '100%', textAlign: 'left' }}>
+                    <div className="flex align-items-center justify-content-between">
+                        <div className="flex align-items-center">
+                            <span className="notice-icon">
+                                <i className="pi pi-info-circle" style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                            </span>
+                            <h3 className="notice-title m-0">For your attention</h3>
+                        </div>
+                    </div>
+
+                    <div className="notice-body">
+                        <p>
+                            All tests, photocopies, and materials — other than the official books, workbooks, and the
+                            teacher’s guide — are created and shared by teachers. We do not take any responsibility for
+                            these materials.
+                        </p>
+                        <p>
+                            We would be happy to receive any new tests or other materials you may have and share them with others.
+                        </p>
+                    </div>
+
+                    {/* שורת פעולות */}
+                    <div className="flex align-items-center justify-content-between mt-3">
+                        <label className="flex align-items-center gap-2" style={{ cursor: 'pointer' }}>
+                            <input
+                                id="dontShowAgain"
+                                type="checkbox"
+                                checked={dontShowAgain}
+                                onChange={(e) => setDontShowAgain(e.target.checked)}
+                            />
+                            <span>Don’t show this again</span>
+                        </label>
+
+                        <Button
+                            label="Got it"
+                            onClick={handleCloseNotice}
+                            className="p-button-primary"
+                        />
+                    </div>
+                </div>
+            </Dialog>
+
             <Toast ref={toast} />
 
         </div>
