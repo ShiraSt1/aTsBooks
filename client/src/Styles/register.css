@@ -168,3 +168,30 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
   -webkit-text-fill-color: inherit !important;
 }
+
+
+
+
+
+
+
+.register-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+}
+
+.help-button.p-button {
+  padding: 0;            /* כפתור טקסט נקי */
+}
+
+.help-content ol {
+  padding-inline-start: 1.25rem;
+  margin: 0;
+}
+.help-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

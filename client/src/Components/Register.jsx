@@ -7,6 +7,8 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { getConfig } from '../config';
 import { Toast } from 'primereact/toast';
 import { Helmet } from 'react-helmet-async';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -25,6 +27,8 @@ const Register = () => {
     const toast = useRef(null);
     const [agreeToEmails, setAgreeToEmails] = useState(false); // ✅ Checkbox state
     const [emailConsentError, setEmailConsentError] = useState(''); // ✅ Error state for checkbox
+    const [helpOpen, setHelpOpen] = useState(false);
+
 
     const createUser = async (name, email, phone, password) => {
         if (!agreeToEmails) {
@@ -125,7 +129,20 @@ const Register = () => {
                         <p>Your request is being processed...</p>
                     </div>
                 )}
-                <h2 className="register-title">Create an Account</h2>
+                {/* <h2 className="register-title">Create an Account</h2> */}
+                <div className="register-title-row">
+                    <h2 className="register-title">Create an Account</h2>
+                    <Button
+                        type="button"
+                        label="Need help?"
+                        icon="pi pi-question-circle"
+                        text
+                        onClick={() => setHelpOpen(true)}
+                        className="help-button"
+                        aria-controls="register-help-dialog"
+                        aria-haspopup="dialog"
+                    />
+                </div>
                 <form className="register-form">
                     <div className="register-input-wrapper">
                         <label className="register-label">Full Name</label>
@@ -153,13 +170,6 @@ const Register = () => {
 
                     <div className="register-input-wrapper">
                         <label className="register-label">Password</label>
-                        {/*     value={password}
-                        //     inputClassName="register-input"
-                        //     onChange={(e) => validatePassword(e.target.value)}
-                        //     placeholder="Enter your password"
-                        //     toggleMask
-                        //     feedback={false}
-                         />*/}
                         <Password
                             value={password}
                             onChange={(e) => validatePassword(e.target.value)}
@@ -207,6 +217,37 @@ const Register = () => {
                     </button>
                     <small>*Your request to join will be sent to Tami Stern. You’ll receive an email once it’s approved.</small>
                 </form>
+
+                <Dialog
+                    id="register-help-dialog"
+                    header="How to sign up"
+                    visible={helpOpen}
+                    style={{ width: '32rem', maxWidth: '95vw' }}
+                    onHide={() => setHelpOpen(false)}
+                    dismissableMask
+                    closeOnEscape
+                >
+                    <div className="help-content">
+                        <ol>
+                            <li>Fill your <strong>Full Name</strong> as you want it to appear in your account.</li>
+                            <li>Use a valid <strong>Email</strong>, you’ll receive confirmation there.</li>
+                            <li>Create a <strong>Password</strong> you can use to log into the site every time (6+ chars).</li>
+                            <li>(Optional) Add your <strong>Phone Number</strong> – digits only.</li>
+                            <li>Check “I agree to receive emails and updates”.</li>
+                            <li>Click <strong>Register</strong>. You’ll be redirected to login if successful.</li>
+                        </ol>
+
+                        <p className="mt-3">
+                            Your request will be sent to <strong>Tami Stern</strong>. You’ll get an email once it’s approved.
+                        </p>
+                    </div>
+
+                    <div className="help-footer">
+                        <Button label="OK, got it" onClick={() => setHelpOpen(false)} autoFocus />
+                    </div>
+                </Dialog>
+
+
             </div>
         </div>
     );
