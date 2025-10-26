@@ -104,6 +104,35 @@ const register = async (req, res) => {
 `;
     sendEmail(process.env.GMAIL_ADMIN, 'New Registration to eTsbooks webSite 🎉', emailHtml)
 
+   // HTML (English)
+const emailToUserHtml = `
+<div style="font-family: Arial, sans-serif; line-height: 1.7; color: #333;">
+  <h2 style="color: rgb(23, 86, 221); margin-top: 0;">Registration received</h2>
+  <p>Hi <strong>${name}</strong>,</p>
+  <p>
+    Thanks for signing up. Your registration was received and is now pending admin approval.
+  </p>
+  <p>
+    You cannot sign in yet. Once your account is approved, you will receive another email confirming that your access has been activated.
+  </p>
+  <p style="margin: 16px 0;">
+    <a href="${projectLink}" style="display: inline-block; text-decoration: none; background-color: rgb(23, 86, 221); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 16px;">
+      Go to the website
+    </a>
+  </p>
+  <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+  <p style="font-size: 0.9em; color: #888;">This is an automated email. Please do not reply.</p>
+</div>
+`;
+// Send to the registering user:
+sendEmail(
+email,
+'Registration received – pending approval',
+emailToUserHtml
+);
+
+
+
     return res.status(201).json({
         message: `New user ${user.email} created`
     })
