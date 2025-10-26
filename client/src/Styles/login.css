@@ -61,20 +61,40 @@
     background-color: #0d8b6d;
 }
 
-.btn-secondary {
-    font-size: 0.9rem;
-    color: #10a37f;
-    text-align: right;
-    text-decoration: none;
-    cursor: pointer;
-    display: block;
+.auth-actions {
+    display: flex;
+    justify-content: space-between; /* אחד שמאלה, אחד ימינה */
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
     margin-bottom: 1rem;
-}
-
-.btn-secondary:hover {
+  }
+  
+  /* עיצוב זהה לשני הקישורים */
+  .link-action,
+  .link-action:link,
+  .link-action:visited {            /* מונע סגול אחרי ביקור */
+    font-size: 0.9rem;
+    color: #10a37f;                 /* ירוק */
+    text-decoration: none;          /* בלי קו תחתון */
+    cursor: pointer;
+  }
+  
+  /* קו תחתון רק ב-hover/keyboard focus */
+  .link-action:hover,
+  .link-action:focus {
     text-decoration: underline;
-}
-
+    outline: none;                  /* אם לא רוצים מסגרת ברירת-מחדל של הדפדפן */
+  }
+  
+  /* אופציונלי: אם אחד מהם יהיה button שמתחזה לקישור */
+  .link-action.buttonlike {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+  }
+/**************************************************/  
 .error-message {
     color: #e74c3c;
     font-size: 0.9rem;

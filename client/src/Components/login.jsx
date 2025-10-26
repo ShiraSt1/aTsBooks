@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Password } from 'primereact/password'; // Correct import for Password
 import { setToken, logOut } from '../redux/tokenSlice'
@@ -150,13 +150,21 @@ const Login = () => {
                             className="login-input"
                         />
                     </div>
-                    <a
-                        href="#"
-                        onClick={(e) => { e.preventDefault(); setForgotPassword(true); }}
-                        className="btn-secondary forgot-password-link"
-                    >
-                        Forgot Password?
-                    </a>
+
+                    <div className="auth-actions">
+                        <Link to="/register" className="link-action">
+                            Don't have an account?
+                        </Link>
+
+                        <a
+                            href="#"
+                            onClick={(e) => { e.preventDefault(); setForgotPassword(true); }}
+                            className="link-action"
+                        >
+                            Forgot Password?
+                        </a>
+                    </div>
+
                     <button onClick={login} className="login-button">
                         Login
                     </button>
