@@ -147,44 +147,185 @@ export default function BooksDataView() {
         }
     };
 
-    const createBook = async (name, selectedItem, image) => {
-        setLoading(true)
-        if (!image) {
-            toast.current.show({ severity: 'warn', detail: 'You must press uploal to confirm the image', life: 3000 });
-        }
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('grades', JSON.stringify(selectedItem));
-        formData.append('image', image);
-        try {
-            const res = await axios.post(`${apiUrl}api/book`, formData, {
+    const uploadBookImageToS3 = async (file) => {
+        console.log("BOOK IMAGE 1 - requesting presigned URL");
+    
+        const presignResponse = await axios.post(
+            `${apiUrl}api/file/presign`,
+            {
+                fileName: file.name,
+                fileType: file.type
+            },
+            {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data' // הגדרת התוכן כ-multipart
-                },
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+    
+        console.log("BOOK IMAGE 2 - presigned URL received");
+    
+        const { url, key } = presignResponse.data;
+    
+        await axios.put(url, file, {
+            headers: {
+                "Content-Type": file.type
+            }
+        });
+    
+        console.log("BOOK IMAGE 3 - image uploaded to S3");
+        console.log("BOOK IMAGE 4 - image key:", key);
+    
+        return key;
+    };
+
+    const createBook = async (name, selectedItem, image) => {
+        setLoading(true);
+    
+        console.log("1. createBook called with:", {
+            name,
+            selectedItem,
+            image
+        });
+    
+        if (!image) {
+            toast.current.show({
+                severity: "warn",
+                detail: "You must press upload to confirm the image",
+                life: 3000
             });
+    
+            setLoading(false);
+            return;
+        }
+    
+        try {
+            console.log("2. Uploading book image to S3");
+    
+            const imageKey = await uploadBookImageToS3(image);
+    
+            console.log("3. Image uploaded. Key:", imageKey);
+    
+            if (!imageKey) {
+                throw new Error("No image key was returned");
+            }
+    
+            console.log("4. Sending book details to server:", {
+                name,
+                grades: selectedItem,
+                imageKey
+            });
+    
+            const res = await axios.post(
+                `${apiUrl}api/book`,
+                {
+                    name,
+                    grades: selectedItem,
+                    imageKey
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+    
+            console.log("5. Response from server:", res);
+    
             if (res.status === 200 || res.status === 201) {
+                console.log("6. Book created successfully:", res.data);
+    
                 setVisibleCreatBook(false);
+    
                 if (gradeId) {
+                    console.log("7. Fetching books for gradeId:", gradeId);
                     getBooksByGrade(gradeId);
                 } else {
+                    console.log("8. Fetching all books");
                     getBooks();
                 }
             }
         } catch (e) {
+            console.error("9. Error creating book:", e);
+            console.error("Server response:", e.response?.data);
+            console.error("Status:", e.response?.status);
+    
             setVisibleCreatBook(false);
-            if (e.status === 400) {
-                console.error("Error creating book:", e);
-                toast.current.show({ severity: 'error', detail: 'Error creating book', life: 3000 });
+    
+            if (e.response?.status === 400) {
+                toast.current.show({
+                    severity: "error",
+                    detail: "Error creating book",
+                    life: 3000
+                });
+            } else if (e.response?.status === 402) {
+                toast.current.show({
+                    severity: "error",
+                    detail: "This book name already exists",
+                    life: 3000
+                });
+            } else {
+                toast.current.show({
+                    severity: "error",
+                    detail: "Error creating book",
+                    life: 3000
+                });
             }
-            if (e.status === 402) {
-                toast.current.show({ severity: 'error', detail: 'This book name already exists', life: 3000 });
-            }
-
         } finally {
+            console.log("10. Finally block executed");
             setLoading(false);
         }
     };
+
+    // const createBook = async (name, selectedItem, image) => {
+    //     setLoading(true)
+    //     console.log("1. createBook called with:", { name, selectedItem, image });
+    //     if (!image) {
+    //         toast.current.show({ severity: 'warn', detail: 'You must press uploal to confirm the image', life: 3000 });
+    //     }
+    //     console.log("2. Creating book with name:", name, "grades:", selectedItem, "image:", image);
+    //     const formData = new FormData();
+    //     formData.append('name', name);
+    //     formData.append('grades', JSON.stringify(selectedItem));
+    //     formData.append('image', image);
+    //     try {
+    //         console.log("3. In try")
+    //         console.log("3.2. formData contents:")
+            
+    //         const res = await axios.post(`${apiUrl}api/book`, formData, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'multipart/form-data' // הגדרת התוכן כ-multipart
+    //             },
+    //         });
+    //         console.log("4. Response from server:", res);
+    //         if (res.status === 200 || res.status === 201) {
+    //             console.log("5. Book created successfully:", res.data);
+    //             setVisibleCreatBook(false);
+    //             if (gradeId) {
+    //                 console.log("6. Fetching books for gradeId:", gradeId);
+    //                 getBooksByGrade(gradeId);
+    //             } else {
+    //                 console.log("7. Fetching all books");
+    //                 getBooks();
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.error("8. Error creating book:", e);
+    //         setVisibleCreatBook(false);
+    //         if (e.status === 400) {
+    //             console.error("9. Error creating book:", e);
+    //             toast.current.show({ severity: 'error', detail: 'Error creating book', life: 3000 });
+    //         }
+    //         if (e.status === 402) {
+    //             toast.current.show({ severity: 'error', detail: 'This book name already exists', life: 3000 });
+    //         }
+
+    //     } finally {
+    //         console.log("10. Finally block executed");
+    //         setLoading(false);
+    //     }
+    // };
 
     const handleNavigation = (book) => {
         if (!token) {

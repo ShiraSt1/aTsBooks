@@ -5,84 +5,198 @@ const { deleteTitle } = require('./titleController');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const s3 = require('../utils/s3Client');
+const { s3 } = require("../utils/s3Client");
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
+
 const BUCKET = process.env.S3_BUCKET_NAME;
 const upload = multer({ storage: multer.memoryStorage() });
 const NodeCache = require('node-cache');
 const myCache = new NodeCache({ stdTTL: 600 });
 
 const createNewBook = async (req, res) => {
-    const { name, grades } = req.body;
+    const { name, grades, imageKey } = req.body;
+
+    console.log("1. in function createNewBook, req.body:", req.body);
 
     if (!name) {
         return res.status(400).send("name is required");
     }
 
-    if (!req.file) {
+    if (!imageKey) {
         return res.status(400).send("image is required");
     }
 
     const existBook = await Book.findOne({ name }).populate("grades");
+
     if (existBook) {
         return res.status(402).send("invalid name");
     }
 
-    let image = null;
-    const filePath = req.file.path;
-    const fileStream = fs.createReadStream(filePath);
-    try {
-        const key = `bookImages/${Date.now()}_${req.file.originalname}`;
-        await s3.upload({
-            Bucket: BUCKET,
-            Key: key,
-            Body: fileStream,
-            ContentType: req.file.mimetype
-        }).promise();
-        await fs.promises.unlink(filePath);
+    console.log("2. book not exist");
+    console.log("3. image key received:", imageKey);
 
-        image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    const image =
+        `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${imageKey}`;
 
-    } catch (err) {
-        console.error("S3 upload error:", err.message);
-        return res.status(500).send("Failed to upload image");
-    }
+    console.log("4. image URL:", image);
 
     let gradesArr = grades;
     let gradeDocs = [];
+
     if (typeof gradesArr === "string" && gradesArr !== "[]") {
         try {
             gradesArr = JSON.parse(gradesArr);
+
             if (!Array.isArray(gradesArr)) {
                 return res.status(400).send("grades must be an array");
             }
+
             gradeDocs = await Promise.all(
-                gradesArr.map(grade => Grade.findOne({ name: grade }))
+                gradesArr.map(grade =>
+                    Grade.findOne({ name: grade })
+                )
             );
         } catch (error) {
             console.error("Failed to parse gradesArr:", error);
             return res.status(400).send("Invalid grades format");
         }
+    } else if (Array.isArray(gradesArr)) {
+        gradeDocs = await Promise.all(
+            gradesArr.map(grade =>
+                Grade.findOne({ name: grade })
+            )
+        );
     }
 
     const validGrades = gradeDocs.filter(doc => doc);
     const gradeIds = validGrades.map(doc => doc._id);
 
-    const book = await Book.create({ name, grades: gradeIds, image });
+    console.log("5. gradeIds:", gradeIds);
+
+    const book = await Book.create({
+        name,
+        grades: gradeIds,
+        image
+    });
+
     if (!book) {
         return res.status(400).send("invalid book");
     }
 
     try {
-        const titles = ['Books', 'Exams', 'Flash Cards', 'CD', 'Videos', 'Others']
+        const titles = [
+            "Books",
+            "Exams",
+            "Flash Cards",
+            "CD",
+            "Videos",
+            "Others"
+        ];
+
         await Promise.all(
-            titles.map(title => Title.create({ name: title, book: book._id }))
+            titles.map(title =>
+                Title.create({
+                    name: title,
+                    book: book._id
+                })
+            )
         );
-        res.json(book);
+
+        return res.json(book);
     } catch (error) {
-        console.error('Error creating titles:', error);
-        return res.status(500).json({ message: 'Failed to create titles', error: error.message });
+        console.error("Error creating titles:", error);
+
+        return res.status(500).json({
+            message: "Failed to create titles",
+            error: error.message
+        });
     }
 };
+
+// const createNewBook = async (req, res) => {
+//     const { name, grades } = req.body;
+//     console.log("1. in function createNewBook, req.body:", req.body);
+//     if (!name) {
+//         return res.status(400).send("name is required");
+//     }
+
+//     if (!req.file) {
+//         return res.status(400).send("image is required");
+//     }
+
+//     const existBook = await Book.findOne({ name }).populate("grades");
+//     if (existBook) {
+//         return res.status(402).send("invalid name");
+//     }
+//     console.log("2. book not exist")
+//     let image = null;
+//     const filePath = req.file.path;
+//     const fileStream = fs.createReadStream(filePath);
+//     try {
+//         const key = `bookImages/${Date.now()}_${req.file.originalname}`;
+//         console.log("3. key:", key);
+//         console.log("Imported s3Client:", s3);
+//         console.log("typeof s3.upload:", typeof s3.send);
+//         // await s3.upload({
+//         //     Bucket: BUCKET,
+//         //     Key: key,
+//         //     Body: fileStream,
+//         //     ContentType: req.file.mimetype
+//         // }).promise();
+//         const command = new PutObjectCommand({
+//             Bucket: BUCKET,
+//             Key: key,
+//             Body: fileStream,
+//             ContentType: req.file.mimetype
+//         });
+//         console.log("3.1. after command")
+//         await s3.send(command);
+//         console.log("3.2. after s3.send")
+//         await fs.promises.unlink(filePath);
+//         console.log("4. image uploaded to S3 successfully");
+//         image = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+//         console.log("5. image URL:", image);
+//     } catch (err) {
+//         console.error("S3 upload error:", err.message);
+//         return res.status(500).send("Failed to upload image");
+//     }
+
+//     let gradesArr = grades;
+//     let gradeDocs = [];
+//     if (typeof gradesArr === "string" && gradesArr !== "[]") {
+//         try {
+//             gradesArr = JSON.parse(gradesArr);
+//             if (!Array.isArray(gradesArr)) {
+//                 return res.status(400).send("grades must be an array");
+//             }
+//             gradeDocs = await Promise.all(
+//                 gradesArr.map(grade => Grade.findOne({ name: grade }))
+//             );
+//         } catch (error) {
+//             console.error("Failed to parse gradesArr:", error);
+//             return res.status(400).send("Invalid grades format");
+//         }
+//     }
+
+//     const validGrades = gradeDocs.filter(doc => doc);
+//     const gradeIds = validGrades.map(doc => doc._id);
+//     console.log("6. gradeIds:", gradeIds);
+//     const book = await Book.create({ name, grades: gradeIds, image });
+//     if (!book) {
+//         return res.status(400).send("invalid book");
+//     }
+
+//     try {
+//         const titles = ['Books', 'Exams', 'Flash Cards', 'CD', 'Videos', 'Others']
+//         await Promise.all(
+//             titles.map(title => Title.create({ name: title, book: book._id }))
+//         );
+//         res.json(book);
+//     } catch (error) {
+//         console.error('Error creating titles:', error);
+//         return res.status(500).json({ message: 'Failed to create titles', error: error.message });
+//     }
+// };
 
 const getAllBooks = async (req, res) => {
     
